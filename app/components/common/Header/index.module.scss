@@ -1,0 +1,29 @@
+.image {
+  margin-left: 16px;
+  margin-right: 8px;
+}
+.agGridContainer {
+  width: 100%;
+  border-radius: 12px;
+  background: #fff;
+  border: 1px solid #e4e7ec;
+
+  .ag-root-wrapper.ag-layout-normal {
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
+    outline: none;
+    border: none;
+  }
+
+  .ag-header-cell {
+    background: #f0f2f5;
+    color: #344054;
+    font-weight: 500;
+    font-size: 12px;
+  }
+}
+.wFull {
+  width: 100%;
+  // object-fit: cover;
+
+}
