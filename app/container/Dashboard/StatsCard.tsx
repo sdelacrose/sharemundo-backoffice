@@ -11,7 +11,7 @@ const StatsCard = ({ icon, title, value, percentage, isPositive,checkIcon }: any
           border: "1px solid #E4E7EC",
           background: "#fff",
           padding: "16px",
-          maxWidth: "321px",
+          maxWidth: "481px",
           width: "100%",
         }}
       >

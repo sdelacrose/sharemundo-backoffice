@@ -20,7 +20,7 @@ const StatsContainer = ({ heading, stats }: any) => {
           sx={{
             display: "flex",
             alignItems: "center",
-            // gap: "16px",
+            gap: "16px",
             width: "100%",
             justifyContent: "space-between",
           }}

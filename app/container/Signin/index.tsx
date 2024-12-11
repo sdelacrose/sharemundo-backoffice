@@ -11,12 +11,37 @@ import React, { useState } from "react";
 import logo from "../../assets/images/logo-signin.png";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import CustomButton from "@/app/components/common/CustomButton";
+import { useRouter } from "next/navigation";
+import Cookies from "js-cookie";
+import Loader from "@/app/components/common/Loader";
+
 const Signin = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const router = useRouter();
 
   const handleTogglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
+
+  const handleSignin = () => {
+    if (email && password) {
+      setIsLoading(true);
+      Cookies.set("isAuthenticated", "true");
+      setTimeout(() => {
+        router.push("/dashboard");
+      }, 1000);
+    } else {
+      alert("Please enter valid credentials.");
+    }
+  };
+
+  if (isLoading) {
+    return <Loader />;
+  }
   return (
     <Box
       sx={{
@@ -58,6 +83,8 @@ const Signin = () => {
             variant="outlined"
             fullWidth
             margin="normal"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
           />
           <TextField
             label="Password"
@@ -65,6 +92,8 @@ const Signin = () => {
             variant="outlined"
             fullWidth
             margin="normal"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
             InputProps={{
               endAdornment: (
                 <InputAdornment position="end">
@@ -83,6 +112,7 @@ const Signin = () => {
 
         <CustomButton
           variant="contained"
+          onClick={handleSignin}
           fullWidth
           sx={{
             bgcolor: "#0057B7",

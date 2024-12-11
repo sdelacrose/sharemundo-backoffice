@@ -7,7 +7,7 @@ import Image from "next/image";
 import SharemundoLinks from "../../../assets/icons/SharemundoLinks.png";
 import { Box } from "@mui/material";
 import logoMin from "../../../assets/images/logoMin.png";
-import { Dropdown, HambergerIcon } from "@/app/assets/icons";
+import { Dropdown, HambergerIcon, Logo } from "@/app/assets/icons";
 
 interface SideBarProps {
   isCollapsed: boolean;
@@ -26,7 +26,10 @@ const SideBar: React.FC<SideBarProps> = ({ isCollapsed, toggleSidebar }) => {
       toggleSidebar();
     }
   };
-
+  const handleSidebarToggle = () => {
+    setExpanded({});
+    toggleSidebar();
+  };
   return (
     <div
       className={`${styles.sideBar} ${
@@ -42,15 +45,17 @@ const SideBar: React.FC<SideBarProps> = ({ isCollapsed, toggleSidebar }) => {
         {isCollapsed ? (
           <Image src={logoMin} alt="logo" className={styles.image} />
         ) : (
-          <Image
-            src={SharemundoLinks}
-            alt="SharemundoLinks"
-            className={styles.iconLogo}
-            height={94}
-            width={200}
-          />
+          // <Image
+          //   src={SharemundoLinks}
+          //   alt="SharemundoLinks"
+          //   className={styles.iconLogo}
+          //   height={94}
+          //   width={200}
+          // />
+          <Logo className={styles.iconLogo} />
         )}
         <Box
+          onClick={handleSidebarToggle}
           sx={{
             marginLeft: !isCollapsed ? "16px" : "0px",
             cursor: "pointer",
