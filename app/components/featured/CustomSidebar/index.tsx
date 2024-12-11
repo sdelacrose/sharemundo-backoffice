@@ -1,10 +1,9 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, {  useState } from "react";
 import Link from "next/link";
 import styles from "./index.module.scss";
 import { sidebarItems } from "./sidebarData";
 import Image from "next/image";
-import SharemundoLinks from "../../../assets/icons/SharemundoLinks.png";
 import { Box } from "@mui/material";
 import logoMin from "../../../assets/images/logoMin.png";
 import { Dropdown, HambergerIcon, Logo } from "@/app/assets/icons";

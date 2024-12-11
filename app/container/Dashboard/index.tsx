@@ -1,6 +1,6 @@
 "use client";
 import { Box, Divider, Typography } from "@mui/material";
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext } from "react";
 import { billingData, homeBreadcrumb, statsData } from "./data";
 import StatsContainer from "./StatsContainer";
 import useColumnSolutions from "@/app/hooks/Grid-Table/useColumnSolutions";
@@ -9,9 +9,6 @@ import AgGridTable from "@/app/ag-grid";
 import { SolutionsRow } from "@/app/const/GridTable/RowData";
 import Activity from "./Activity";
 import Header from "@/app/components/common/Header";
-import { DateRange } from "@mui/x-date-pickers-pro";
-import { Dayjs } from "dayjs";
-import DateRangePickerComponent from "@/app/components/common/DateRangePicker/DateRangePicker";
 import SelectDatePicker from "@/app/components/common/DatePicker/DatePicker";
 interface SidebarContextType {
   isSidebarCollapsed: boolean;
@@ -21,9 +18,9 @@ export const SidebarContext = createContext<SidebarContextType | undefined>(
 );
 const Dashboard = () => {
   const context = useContext(SidebarContext);
-  const handleDateSelect = () => {
-    console.log("Date selector clicked!");
-  };
+  // const handleDateSelect = () => {
+  //   console.log("Date selector clicked!");
+  // };
   const solutionCol = useColumnSolutions(solutionColumnDefs);
   if (context === undefined) {
     return <div>Error: Sidebar context is undefined!</div>;

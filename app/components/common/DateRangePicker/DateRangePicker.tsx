@@ -7,7 +7,6 @@ import { DateRange } from "@mui/x-date-pickers-pro/models";
 import TextField from "@mui/material/TextField";
 import InputAdornment from "@mui/material/InputAdornment";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
-import Box from "@mui/material/Box";
 
 interface DateRangePickerComponentProps {
   value?: DateRange<Dayjs>;
@@ -58,7 +57,7 @@ const DateRangePickerComponent: React.FC<DateRangePickerComponentProps> = ({
         onChange={handleDateRangeChange}
         slots={{ textField: TextField }}
         slotProps={{
-          textField: ({ position }) => ({
+          textField: () => ({
             InputProps: {
               startAdornment: (
                 <InputAdornment position="start">

@@ -1,10 +1,9 @@
 import React, { useState } from "react";
-import { TextField, InputAdornment, Box } from "@mui/material";
-import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
+import { TextField, Box } from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import dayjs, { Dayjs } from "dayjs";
+import  { Dayjs } from "dayjs";
 
 const SelectDatePicker = () => {
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null);

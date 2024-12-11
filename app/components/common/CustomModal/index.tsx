@@ -1,9 +1,8 @@
-'use client';
-import React from 'react';
-import { Box, Typography, Modal } from '@mui/material';
-
-import { CustomButton, CustomCheckbox } from '@/app/components';
-import { Cross } from '@/app/assets/icons';
+"use client";
+import React from "react";
+import { Box, Typography, Modal } from "@mui/material";
+import CustomCheckbox from "../CustomCheckBox";
+import CustomButton from "../CustomButton";
 
 const CustomModal: React.FC<any> = ({
   title,
@@ -26,43 +25,43 @@ const CustomModal: React.FC<any> = ({
     >
       <Box
         sx={{
-          borderRadius: '4px',
-          background: '#fff',
-          border: '1px solid #E4E7EC',
-          padding: '20px',
-          width: checkBox ? '656px' : '562px',
-          position: 'absolute',
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
+          borderRadius: "4px",
+          background: "#fff",
+          border: "1px solid #E4E7EC",
+          padding: "20px",
+          width: checkBox ? "656px" : "562px",
+          position: "absolute",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
         }}
       >
         <Box
           sx={{
-            display: 'flex',
-            alignItems: 'flex-start',
-            gap: '16px',
-            justifyContent: 'space-between',
+            display: "flex",
+            alignItems: "flex-start",
+            gap: "16px",
+            justifyContent: "space-between",
           }}
         >
           <Box
             sx={{
-              display: 'flex',
-              flexDirection: 'row',
-              gap: '16px',
+              display: "flex",
+              flexDirection: "row",
+              gap: "16px",
             }}
           >
             <Box
               sx={{
-                display: 'flex',
-                width: '32px',
-                height: '32px',
-                padding: '8px',
-                justifyContent: 'center',
-                alignItems: 'center',
+                display: "flex",
+                width: "32px",
+                height: "32px",
+                padding: "8px",
+                justifyContent: "center",
+                alignItems: "center",
                 flexShrink: 0,
                 backgroundColor: `${iconBackgroundColor}`,
-                borderRadius: '8px',
+                borderRadius: "8px",
                 border: `1px solid ${IconBorderColor}`,
               }}
             >
@@ -70,29 +69,29 @@ const CustomModal: React.FC<any> = ({
             </Box>
             <Box
               sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '16px',
-                paddingRight: '4px',
+                display: "flex",
+                flexDirection: "column",
+                gap: "16px",
+                paddingRight: "4px",
               }}
             >
               <Box
                 sx={{
-                  display: 'flex',
-                  alignItems: 'flex-start',
-                  flexDirection: 'column',
-                  gap: '4px',
+                  display: "flex",
+                  alignItems: "flex-start",
+                  flexDirection: "column",
+                  gap: "4px",
                 }}
               >
                 <Typography
                   variant="body1"
                   sx={{
-                    fontSize: '16px',
-                    color: 'var(--Grey-900, #101928)',
-                    fontFamily: 'Mulish',
-                    fontStyle: 'normal',
+                    fontSize: "16px",
+                    color: "var(--Grey-900, #101928)",
+                    fontFamily: "Mulish",
+                    fontStyle: "normal",
                     fontWeight: 600,
-                    lineHeight: '145%',
+                    lineHeight: "145%",
                   }}
                   id="modal-title"
                 >
@@ -101,12 +100,12 @@ const CustomModal: React.FC<any> = ({
                 <Typography
                   variant="body1"
                   sx={{
-                    fontSize: '14px',
-                    color: 'var(--Grey-600, #475367)',
-                    fontFamily: 'Mulish',
-                    fontStyle: 'normal',
+                    fontSize: "14px",
+                    color: "var(--Grey-600, #475367)",
+                    fontFamily: "Mulish",
+                    fontStyle: "normal",
                     fontWeight: 400,
-                    lineHeight: '145%',
+                    lineHeight: "145%",
                   }}
                   id="modal-description"
                 >
@@ -115,7 +114,7 @@ const CustomModal: React.FC<any> = ({
                 {checkBox !== false && (
                   <Box>
                     <CustomCheckbox label="Require selected users to provide contact methods again" />
-                    <Box sx={{ marginBottom: '-4px', marginTop: '-4px' }}>
+                    <Box sx={{ marginBottom: "-4px", marginTop: "-4px" }}>
                       <CustomCheckbox label="Delete all existing app passwords generated by the selected users" />
                     </Box>
                     <CustomCheckbox label="Restore multi-factor authentication on all remembered devices" />
@@ -124,13 +123,13 @@ const CustomModal: React.FC<any> = ({
               </Box>
               <Box
                 sx={{
-                  display: 'flex',
-                  flexDirection: 'row',
-                  alignItems: 'flex-start',
-                  alignContent: 'center',
-                  gap: '8px',
-                  flexWrap: 'wrap',
-                  marginTop: !description && !checkBox ? '52px' : '0px',
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "flex-start",
+                  alignContent: "center",
+                  gap: "8px",
+                  flexWrap: "wrap",
+                  marginTop: !description && !checkBox ? "52px" : "0px",
                 }}
               >
                 {primaryButtonText !== null && (
@@ -150,7 +149,7 @@ const CustomModal: React.FC<any> = ({
               </Box>
             </Box>
           </Box>
-          <Box sx={{ height: '100%', display: 'flex' }}>
+          {/* <Box sx={{ height: '100%', display: 'flex' }}>
             <Box
               sx={{
                 display: 'flex',
@@ -164,7 +163,7 @@ const CustomModal: React.FC<any> = ({
             >
               <Cross />
             </Box>
-          </Box>
+          </Box> */}
         </Box>
       </Box>
     </Modal>

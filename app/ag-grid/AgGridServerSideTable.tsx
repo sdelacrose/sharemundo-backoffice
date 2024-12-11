@@ -1,7 +1,6 @@
-import React, { useMemo, useRef, useState } from 'react';
+import React, { useMemo, useRef } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import './index.css';
-import { AgGridTableProps } from '../types/AgGridProps';
 import { Box, Typography } from '@mui/material';
 import NavButton from './NavButton';
 import { RowSelectionOptions } from 'ag-grid-community';
@@ -12,7 +11,7 @@ const AgGridServerSideTable: React.FC<any> = ({
   height = 328,
   width,
   rowHeight = 60,
-  paginationPageSize = 10,
+  // paginationPageSize = 10,
   onRowClicked,
   disablePagination = false,
   rowSelection = false,
