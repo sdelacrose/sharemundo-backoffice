@@ -1,9 +1,14 @@
 "use client";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { createContext, useState } from "react";
 import SideBar from "../components/featured/CustomSidebar";
-import { SidebarContext } from "../container/Dashboard";
-
+// import { SidebarContext } from "../container/Dashboard";
+interface SidebarContextType {
+  isSidebarCollapsed: boolean;
+}
+export const SidebarContext = createContext<SidebarContextType | undefined>(
+  undefined
+);
 export default function DashboardLayout({
   children,
 }: Readonly<{

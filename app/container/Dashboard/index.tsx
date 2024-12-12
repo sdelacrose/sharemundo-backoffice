@@ -10,12 +10,8 @@ import { SolutionsRow } from "@/app/const/GridTable/RowData";
 import Activity from "./Activity";
 import Header from "@/app/components/common/Header";
 import SelectDatePicker from "@/app/components/common/DatePicker/DatePicker";
-interface SidebarContextType {
-  isSidebarCollapsed: boolean;
-}
-export const SidebarContext = createContext<SidebarContextType | undefined>(
-  undefined
-);
+import { SidebarContext } from "@/app/(pages)/layout";
+
 const Dashboard = () => {
   const context = useContext(SidebarContext);
   // const handleDateSelect = () => {
@@ -49,7 +45,7 @@ const Dashboard = () => {
             <Typography variant="h2">Hello, Admin!</Typography>
             <SelectDatePicker />
           </Box>
-          <Typography variant="body2" color="#475367" >
+          <Typography variant="body2" color="#475367" mt={1.5}>
             Sharemundo Back Office
           </Typography>
           <Divider
