@@ -1,22 +1,34 @@
 "use client";
-import { Box, Divider, Typography } from "@mui/material";
-import React, { createContext, useContext } from "react";
+import { Box, Button, ButtonGroup, Divider, Typography } from "@mui/material";
+import React, { createContext, useContext, useState } from "react";
 import useColumnSolutions from "@/app/hooks/Grid-Table/useColumnSolutions";
 import { solutionColumnDefs } from "@/app/const/GridTable/ColDef";
 import AgGridTable from "@/app/ag-grid";
 import { SolutionsRow } from "@/app/const/GridTable/RowData";
 import Header from "@/app/components/common/Header";
 import SelectDatePicker from "@/app/components/common/DatePicker/DatePicker";
-import { customersBreadcrumb } from "./manageData";
+import { customersBreadcrumb, filterItems } from "./manageData";
 import { SidebarContext } from "@/app/(pages)/layout";
-
+import { Adduser, BlockUser, Search } from "@/app/assets/icons";
+import CustomSearchField from "@/app/components/common/CustomSearch";
+import CustomFilterSelect from "@/app/components/common/CustomFilterSelect";
 
 const ManageCustomers = () => {
   const context = useContext(SidebarContext);
-
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const query = event.target.value;
+  };
   if (context === undefined) {
     return <div>Error: Sidebar context is undefined!</div>;
   }
+  const [selectedFilter, setSelectedFilter] = useState<string | null>(null);
+
+
+
+  const handleSelect = (label: string | null) => {
+    console.log("Selected filter:", label);
+    setSelectedFilter(label);
+  };
   return (
     <>
       <Box
@@ -31,10 +43,10 @@ const ManageCustomers = () => {
         <Box sx={{ marginLeft: "-24px" }}>
           <Header breadcrumbItems={customersBreadcrumb} />
         </Box>
-
         <Box sx={{ margin: "24px 24px 24px 0" }}>
-         
-            <Typography variant="h2" paddingBottom={"8px"}>Manage Customers</Typography>
+          <Typography variant="h2" paddingBottom={"8px"}>
+            Manage Customers
+          </Typography>
           <Typography variant="body2" color="#475367" mt={1.5}>
             Sharemundo Back Office
           </Typography>
@@ -45,6 +57,25 @@ const ManageCustomers = () => {
               marginBottom: "24px",
             }}
           />
+        </Box>
+        <Box
+          display={"flex"}
+          justifyContent={"space-between"}
+          alignItems={"center"}
+        >
+          <ButtonGroup variant="outlined" aria-label="Basic button group">
+            <Button startIcon={<Adduser />}>Add Users </Button>
+            <Button startIcon={<BlockUser />}> Block User</Button>
+          </ButtonGroup>
+          <Box mr={4} display={"flex"} alignItems={"center"} gap={2}>
+            <CustomSearchField
+              startIcon={<Search />}
+              placeholder="Search here..."
+              onChange={handleSearchChange}
+              width="340px"
+            />{" "}
+            <CustomFilterSelect items={filterItems} onSelect={handleSelect} />
+          </Box>
         </Box>
       </Box>
     </>
