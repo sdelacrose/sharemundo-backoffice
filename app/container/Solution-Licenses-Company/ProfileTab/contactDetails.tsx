@@ -15,7 +15,7 @@ const ContactDetails = () => {
             marginBottom: "24px",
           }}
         />
-        <Stack gap={3}>
+        <Stack gap={3} mr={15}>
           <Box
             display={"flex"}
             justifyContent={"space-between"}
@@ -113,7 +113,7 @@ const ContactDetails = () => {
             marginBottom: "24px",
           }}
         />
-        <Stack gap={3}>
+        <Stack gap={3} mr={15}>
           <Box
             display={"flex"}
             justifyContent={"space-between"}

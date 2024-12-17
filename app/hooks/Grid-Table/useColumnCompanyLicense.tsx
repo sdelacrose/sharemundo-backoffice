@@ -8,7 +8,7 @@ interface Column {
   width?: number;
 }
 
-const useColumnLicense = (columns: Column[]) => {
+const useColumnCompanyLicense = (columns: Column[]) => {
   return useMemo(() => {
     return columns.map((col: any) => {
       switch (col.field) {
@@ -23,9 +23,9 @@ const useColumnLicense = (columns: Column[]) => {
             headerName: "Total License",
             width: 120,
           };
-        case "available_license":
+        case "available_licenses":
           return {
-            field: "available_license",
+            field: "available_licenses",
             headerName: "Available License",
             width: 120,
           };
@@ -56,4 +56,4 @@ const useColumnLicense = (columns: Column[]) => {
   }, [columns]);
 };
 
-export default useColumnLicense;
+export default useColumnCompanyLicense;

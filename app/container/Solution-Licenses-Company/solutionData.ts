@@ -4,7 +4,7 @@ export const tabs = [
   { label: "Profile" },
   { label: "User" },
   { label: "Billing" },
-  { label: "License" },
+  { label: "Licenses" },
 ];
 export const filterItems = [
   { label: "1 Month" },

@@ -10,7 +10,7 @@ import UserConnectionTab from "./userConnectionTab";
 import LicenseTab from "./licenseTab";
 import ProfileTab from "./ProfileTab";
 
-const SolutionLicenses = () => {
+const SolutionLicenseCompany = () => {
   const context = useContext(SidebarContext);
   if (context === undefined) {
     return <div>Error: Sidebar context is undefined!</div>;
@@ -51,7 +51,7 @@ const SolutionLicenses = () => {
           <Typography variant="h2" paddingBottom={"8px"}>
             XYZ Solar Limited, Berlin,GR{" "}
           </Typography>
-          <Typography variant="body2" color="#0057b7" mt={1.5} fontSize={16}>
+          <Typography variant="body2" color="#0057b7" mt={1} fontSize={16}>
             Company
           </Typography>
           <Divider
@@ -72,4 +72,4 @@ const SolutionLicenses = () => {
   );
 };
 
-export default SolutionLicenses;
+export default SolutionLicenseCompany;

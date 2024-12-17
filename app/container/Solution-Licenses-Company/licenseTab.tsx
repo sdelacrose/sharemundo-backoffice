@@ -1,12 +1,12 @@
 import AgGridTable from "@/app/ag-grid";
 import { LicenseColumnDefs } from "@/app/const/GridTable/ColDef";
-import { LicenseRow } from "@/app/const/GridTable/RowData";
-import useColumnLicense from "@/app/hooks/Grid-Table/useColumnLicense";
+import { LicenseCompanyRow } from "@/app/const/GridTable/RowData";
+import useColumnCompanyLicense from "@/app/hooks/Grid-Table/useColumnCompanyLicense";
 import { Box } from "@mui/material";
 import React from "react";
 
 const LicenseTab = () => {
-  const LicenseCol = useColumnLicense(LicenseColumnDefs);
+  const LicenseCol = useColumnCompanyLicense(LicenseColumnDefs);
 
   return (
     <Box
@@ -20,7 +20,7 @@ const LicenseTab = () => {
         marginRight: "32px",
       }}
     >
-      <AgGridTable rowData={LicenseRow} columnDefs={LicenseCol} />
+      <AgGridTable rowData={LicenseCompanyRow} columnDefs={LicenseCol} />
     </Box>
   );
 };

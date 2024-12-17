@@ -1,13 +1,13 @@
 import AgGridTable from "@/app/ag-grid";
 import SelectDatePicker from "@/app/components/common/DatePicker/DatePicker";
 import { BillingColumnDefs } from "@/app/const/GridTable/ColDef";
-import { BillingRow } from "@/app/const/GridTable/RowData";
-import useColumnBilling from "@/app/hooks/Grid-Table/useColumnBilling";
+import { BillingCompanyRow } from "@/app/const/GridTable/RowData";
+import useColumnBillingCompany from "@/app/hooks/Grid-Table/useColumnBillingCompany";
 import { Box } from "@mui/material";
 import React from "react";
 
 const BillingTab = () => {
-  const BillingCol = useColumnBilling(BillingColumnDefs);
+  const BillingCol = useColumnBillingCompany(BillingColumnDefs);
 
   return (
     <>
@@ -25,7 +25,7 @@ const BillingTab = () => {
         <Box m={2} display={"flex"} justifyContent={"end"}>
           <SelectDatePicker />
         </Box>
-        <AgGridTable rowData={BillingRow} columnDefs={BillingCol} />
+        <AgGridTable rowData={BillingCompanyRow} columnDefs={BillingCol} />
       </Box>
     </>
   );

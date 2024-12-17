@@ -8,7 +8,7 @@ interface Column {
   width?: number;
 }
 
-const useColumnBilling = (columns: Column[]) => {
+const useColumnBillingCompany = (columns: Column[]) => {
   return useMemo(() => {
     return columns.map((col: any) => {
       switch (col.field) {
@@ -16,6 +16,7 @@ const useColumnBilling = (columns: Column[]) => {
           return {
             field: "id",
             headerName: "ID",
+            flex: 2,
           };
         case "invoice_date":
           return {
@@ -40,6 +41,7 @@ const useColumnBilling = (columns: Column[]) => {
             field: "payment_method",
             headerName: "Payment Method",
             width: 120,
+            flex: 1.8,
           };
         case "invoice":
           return {
@@ -47,6 +49,7 @@ const useColumnBilling = (columns: Column[]) => {
             headerName: "Invoice",
             width: 120,
             cellRenderer: BlueText,
+            flex: 2,
           };
         case "status":
           return {
@@ -62,4 +65,4 @@ const useColumnBilling = (columns: Column[]) => {
   }, [columns]);
 };
 
-export default useColumnBilling;
+export default useColumnBillingCompany;
