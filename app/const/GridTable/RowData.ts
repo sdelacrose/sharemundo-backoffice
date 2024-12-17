@@ -50,7 +50,7 @@ export const manageCustomersRow = [
     action: "View details",
   },
 ];
-export const solutionsLicenseRow = [
+export const UserRow = [
   {
     name: "John Dow",
     email: "hello@gmail.com",
@@ -82,5 +82,119 @@ export const solutionsLicenseRow = [
     status: "Active",
     role: "Admin",
     assigned_license: "1",
+  },
+];
+export const UserConnectionRow = [
+  {
+    name: "Energy Consultant",
+    sharemundo_link: "jasd7gdf8akl92w0xqz",
+    type: "Company",
+    connection_date: "01/01/2024",
+    actions: "View",
+  },
+  {
+    name: "Energy Consultant",
+    sharemundo_link: "jasd7gdf8akl92w0xqz",
+    type: "Company",
+    connection_date: "01/01/2024",
+    actions: "View",
+  },
+  {
+    name: "Energy Consultant",
+    sharemundo_link: "jasd7gdf8akl92w0xqz",
+    type: "Company",
+    connection_date: "01/01/2024",
+    actions: "View",
+  },
+  {
+    name: "Energy Consultant",
+    sharemundo_link: "jasd7gdf8akl92w0xqz",
+    type: "Company",
+    connection_date: "01/01/2024",
+    actions: "View",
+  },
+  {
+    name: "Energy Consultant",
+    sharemundo_link: "jasd7gdf8akl92w0xqz",
+    type: "Company",
+    connection_date: "01/01/2024",
+    actions: "View",
+  },
+  {
+    name: "Energy Consultant",
+    sharemundo_link: "jasd7gdf8akl92w0xqz",
+    type: "Company",
+    connection_date: "01/01/2024",
+    actions: "View",
+  },
+  {
+    name: "Energy Consultant",
+    sharemundo_link: "jasd7gdf8akl92w0xqz",
+    type: "Company",
+    connection_date: "01/01/2024",
+    actions: "View",
+  },
+];
+export const BillingRow = [
+  {
+    id: "G8834324089089",
+    invoice_date: "9/10/2025",
+    total_amount: "$0.00",
+    total_licenses: "23",
+    payment_method: "Debit Card 2211***",
+    invoice: "Download invoice",
+    status: "Paid",
+  },
+  {
+    id: "G8834324089089",
+    invoice_date: "9/10/2025",
+    total_amount: "$0.00",
+    total_licenses: "23",
+    payment_method: "Debit Card 2211***",
+    invoice: "Download invoice",
+    status: "Paid",
+  },
+  {
+    id: "G8834324089089",
+    invoice_date: "9/10/2025",
+    total_amount: "$0.00",
+    total_licenses: "23",
+    payment_method: "Debit Card 2211***",
+    invoice: "Download invoice",
+    status: "Paid",
+  },
+];
+export const LicenseRow = [
+  {
+    product_name: "Energy Consultant",
+    total_license: "10",
+    available_license: "4",
+    assigned_license: "5",
+    renewal_date: "Multiple Dates",
+    actions: "View details",
+  },
+  {
+    product_name: "Energy Consultant",
+    total_license: "10",
+    available_license: "4",
+    assigned_license: "5",
+    renewal_date: "Multiple Dates",
+    actions: "View details",
+  },
+  {
+    product_name: "Energy Consultant",
+    total_license: "10",
+    available_license: "4",
+    assigned_license: "5",
+    renewal_date: "Multiple Dates",
+    actions: "View details",
+  },
+  {
+    product_name: "Energy Consultant",
+    total_license: "10",
+    available_license: "4",
+    assigned_license: "5",
+    renewal_date: "Multiple Dates",
+    actions: "View details",
   },
 ];

@@ -1,4 +1,4 @@
-import SolutionLicenses from "@/app/container/Solution-Licenses";
+import SolutionLicenses from "@/app/container/Solution-Licenses-Company";
 import React from "react";
 
 const page = () => {
