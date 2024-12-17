@@ -1,4 +1,4 @@
-import React, {  useRef } from "react";
+import React, { useRef } from "react";
 import { AgGridReact } from "ag-grid-react";
 import "./index.css";
 import { AgGridTableProps } from "../types/AgGridProps";

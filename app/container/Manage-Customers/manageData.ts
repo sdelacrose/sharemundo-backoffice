@@ -6,3 +6,7 @@ export const filterItems = [
   { label: "2 Month" },
   { label: "Year" },
 ];
+export const Role = [
+  { value: "1", label: "Freelancer" },
+  { value: "2", label: "Company" },
+];

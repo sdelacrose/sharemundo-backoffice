@@ -25,8 +25,9 @@ import TotalUser from "./TotalUser.svg";
 import BillingCard from "./BillingCard.svg";
 import Progress from "./Progress.svg";
 import Downfall from "./Downfall.svg";
-import ProductIcon from "./Product.svg"
-import Logo from "./Logo.svg"
+import ProductIcon from "./Product.svg";
+import Logo from "./Logo.svg";
+import Cross from "./Cross.svg";
 export {
   Card,
   Adduser,
@@ -56,5 +57,6 @@ export {
   Progress,
   Downfall,
   ProductIcon,
-  Logo
+  Logo,
+  Cross,
 };
