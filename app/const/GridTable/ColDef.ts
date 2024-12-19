@@ -91,3 +91,10 @@ export const InternaluserLicenseColumnDefs = [
   { field: "renewal_date", headerName: "Renewal Date" },
   { field: "actions", headerName: "Actions" },
 ];
+export const SolutionMainColumnDefs = [
+  { field: "solution_name", headerName: "Solution Name" },
+  { field: "total_bought_license", headerName: "Total Bought License" },
+  { field: "price_per_month", headerName: "Price Per Month" },
+  { field: "status", headerName: "Status" },
+  { field: "actions", headerName: "Actions" },
+];

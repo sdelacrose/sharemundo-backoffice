@@ -13,10 +13,10 @@ import LicenseTab from "./licenseTab";
 
 const SolutionLicenseFreeLancer = () => {
   const context = useContext(SidebarContext);
+  const [activeTab, setActiveTab] = useState(0);
   if (context === undefined) {
     return <div>Error: Sidebar context is undefined!</div>;
   }
-  const [activeTab, setActiveTab] = useState(0);
   const handleTabChange = (newValue: number) => {
     setActiveTab(newValue);
   };

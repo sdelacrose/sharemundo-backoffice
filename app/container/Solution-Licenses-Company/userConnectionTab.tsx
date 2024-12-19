@@ -1,8 +1,8 @@
-import { Adduser, BlockUser, Search } from "@/app/assets/icons";
+import {  Search } from "@/app/assets/icons";
 import CustomButton from "@/app/components/common/CustomButton";
 import CustomFilterSelect from "@/app/components/common/CustomFilterSelect";
 import CustomSearchField from "@/app/components/common/CustomSearch";
-import { Box, Button, ButtonGroup, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import React, { useState } from "react";
 import { filterItems } from "./solutionData";
 import AgGridTable from "@/app/ag-grid";
@@ -12,9 +12,11 @@ import { UserConnectionRow } from "@/app/const/GridTable/RowData";
 
 const UserConnectionTab = () => {
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const query = event.target.value;
+     const query=event.target.value;
+     console.log(query)
+
   };
-  const [selectedFilter, setSelectedFilter] = useState<string | null>(null);
+  const [, setSelectedFilter] = useState<string | null>(null);
 
   const handleSelect = (label: string | null) => {
     console.log("Selected filter:", label);

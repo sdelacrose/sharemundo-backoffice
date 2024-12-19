@@ -1,5 +1,3 @@
-import CustomHeader from "@/app/components/common/CustomHeader";
-import LastColumnHeader from "@/app/components/common/LastColumnHeader";
 import { HeaderCheck } from "@/app/components/Data-Table/HeaderCheck";
 import NameCheck from "@/app/components/Data-Table/NameCheck";
 import StatusCheck from "@/app/components/Data-Table/StatusCheck";

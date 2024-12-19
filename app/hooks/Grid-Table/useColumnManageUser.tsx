@@ -49,7 +49,7 @@ const useColumnManageUserDefs = (
             field: "action",
             headerName: "Actions",
             headerComponent: LastColumnHeader,
-            cellRenderer: (params: any) => (
+            cellRenderer: () => (
               <Button
                 // onClick={() => onViewClicked(params.data)}
                 style={{ color: "#0057b7" }}

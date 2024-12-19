@@ -1,4 +1,3 @@
-import { Cross } from "@/app/assets/icons";
 import CustomButton from "@/app/components/common/CustomButton";
 import CustomSelect from "@/app/components/common/CustomSelect";
 import CustomTextField from "@/app/components/common/CustomTextfield";
@@ -23,9 +22,8 @@ const AddUserDrawer: React.FC<CreateNewDrawerProps> = ({
   open,
   handleClose,
 }) => {
-  const [newFieldName, setNewFieldName] = useState("");
   const [selectedrole, setSelectedRole] = useState("");
-  const [password, setPassword] = useState("password");
+  const [password, ] = useState("password");
 
   const handleSelectChange = (event: SelectChangeEvent) => {
     setSelectedRole(event.target.value as string);
@@ -66,7 +64,7 @@ const AddUserDrawer: React.FC<CreateNewDrawerProps> = ({
               }}
             />
             <Typography variant="caption" fontSize={14} color="#667185" ml={4}>
-              To get started, fill out some basic information about who you're
+              To get started, fill out some basic information about who you re
               adding as a user.
             </Typography>
             <Box mt={-0.5} ml={4}>
@@ -74,7 +72,6 @@ const AddUserDrawer: React.FC<CreateNewDrawerProps> = ({
                 label="First name"
                 placeholder="john"
                 fullWidth
-                onChange={(e) => setNewFieldName(e.target.value)}
               />
             </Box>
             <Box ml={4}>
@@ -82,7 +79,6 @@ const AddUserDrawer: React.FC<CreateNewDrawerProps> = ({
                 label="Last name"
                 placeholder="Doe"
                 fullWidth
-                onChange={(e) => setNewFieldName(e.target.value)}
               />
             </Box>
             <Box ml={4}>
@@ -90,7 +86,6 @@ const AddUserDrawer: React.FC<CreateNewDrawerProps> = ({
                 label="Email"
                 placeholder="email@gmail.com"
                 fullWidth
-                onChange={(e) => setNewFieldName(e.target.value)}
               />
             </Box>
             <Box ml={4}>

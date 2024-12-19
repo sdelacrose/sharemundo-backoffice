@@ -1,23 +1,23 @@
-import { CSSProperties } from 'react';
+import { CSSProperties } from "react";
 type ValueFunction<TValue, TArg> = (arg: TArg) => TValue;
 type ValueOrFunction<TValue, TArg> = TValue | ValueFunction<TValue, TArg>;
 export declare const resolveValue: <TValue, TArg>(
   valOrFunction: ValueOrFunction<TValue, TArg>,
-  arg: TArg,
+  arg: TArg
 ) => TValue;
-type Renderable = JSX.Element | string | null;
+type Renderable = Element | string | null;
 interface IconTheme {
   primary: string;
   secondary: string;
 }
-type ToastType = 'success' | 'error' | 'loading' | 'blank' | 'custom';
+type ToastType = "success" | "error" | "loading" | "blank" | "custom";
 type ToastPosition =
-  | 'top-left'
-  | 'top-center'
-  | 'top-right'
-  | 'bottom-left'
-  | 'bottom-center'
-  | 'bottom-right';
+  | "top-left"
+  | "top-center"
+  | "top-right"
+  | "bottom-left"
+  | "bottom-center"
+  | "bottom-right";
 interface Toast {
   type: ToastType;
   id: string;
@@ -27,8 +27,8 @@ interface Toast {
   pauseDuration: number;
   position?: ToastPosition;
   ariaProps: {
-    role: 'status' | 'alert';
-    'aria-live': 'assertive' | 'off' | 'polite';
+    role: "status" | "alert";
+    "aria-live": "assertive" | "off" | "polite";
   };
   style?: CSSProperties;
   className?: string;
@@ -40,14 +40,14 @@ interface Toast {
 type ToastOptions = Partial<
   Pick<
     Toast,
-    | 'id'
-    | 'icon'
-    | 'duration'
-    | 'ariaProps'
-    | 'className'
-    | 'style'
-    | 'position'
-    | 'iconTheme'
+    | "id"
+    | "icon"
+    | "duration"
+    | "ariaProps"
+    | "className"
+    | "style"
+    | "position"
+    | "iconTheme"
   >
 >;
 type DefaultToastOptions = ToastOptions & {
@@ -60,5 +60,5 @@ export interface ToasterProps {
   gutter?: number;
   containerStyle?: React.CSSProperties;
   containerClassName?: string;
-  children?: (toast: Toast) => JSX.Element;
+  children?: (toast: Toast) => Element;
 }

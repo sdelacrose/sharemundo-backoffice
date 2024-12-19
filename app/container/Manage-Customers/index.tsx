@@ -7,29 +7,20 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import React, { createContext, useContext, useState } from "react";
-import useColumnSolutions from "@/app/hooks/Grid-Table/useColumnSolutions";
-import {
-  manageCustomersColumnDefs,
-  solutionColumnDefs,
-} from "@/app/const/GridTable/ColDef";
+import React, { useContext, useState } from "react";
+import { manageCustomersColumnDefs } from "@/app/const/GridTable/ColDef";
 import AgGridTable from "@/app/ag-grid";
-import {
-  manageCustomersRow,
-  SolutionsRow,
-} from "@/app/const/GridTable/RowData";
+import { manageCustomersRow } from "@/app/const/GridTable/RowData";
 import Header from "@/app/components/common/Header";
-import SelectDatePicker from "@/app/components/common/DatePicker/DatePicker";
 import { customersBreadcrumb, filterItems } from "./manageData";
 import { SidebarContext } from "@/app/(pages)/layout";
 import { Adduser, BlockUser, Search } from "@/app/assets/icons";
 import CustomSearchField from "@/app/components/common/CustomSearch";
 import CustomFilterSelect from "@/app/components/common/CustomFilterSelect";
-import lineChart from "../../assets/images/Line Chart.png";
-import Image from "next/image";
 import useColumnManageUserDefs from "@/app/hooks/Grid-Table/useColumnManageUser";
 import AddCustomerDrawer from "./addCustomerDrawer";
 import BlockDrawer from "./addBlockDrawer";
+import SharpLineChart from "@/app/components/common/SharpLineChart";
 const ManageCustomers = () => {
   const context = useContext(SidebarContext);
   const [addDrawer, setAddDrawer] = useState(false);
@@ -49,18 +40,19 @@ const ManageCustomers = () => {
     setBlockDrawer(false);
   };
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const query = event.target.value;
+   const query= event.target.value;
+   console.log(query)
   };
-  if (context === undefined) {
-    return <div>Error: Sidebar context is undefined!</div>;
-  }
-  const [selectedFilter, setSelectedFilter] = useState<string | null>(null);
-
+  const [, setSelectedFilter] = useState<string | null>(null);
+  
   const handleSelect = (label: string | null) => {
     console.log("Selected filter:", label);
     setSelectedFilter(label);
   };
   const manageUserCol = useColumnManageUserDefs(manageCustomersColumnDefs);
+  if (context === undefined) {
+    return <div>Error: Sidebar context is undefined!</div>;
+  }
   return (
     <>
       <Box
@@ -102,7 +94,7 @@ const ManageCustomers = () => {
           <Typography variant="h5" mb={2}>
             Number of customers per month
           </Typography>
-          <Image src={lineChart} alt="Line chart" style={{ width: "100%" }} />
+          <SharpLineChart />
         </Stack>
         <Box
           display={"flex"}

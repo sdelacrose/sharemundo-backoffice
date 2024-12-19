@@ -8,11 +8,15 @@ const StatusCheck = (props: CustomCellRendererProps) => {
   let text = "Failed";
   const normalizedStatus = props.value;
 
-  if (normalizedStatus) {
+  if (normalizedStatus === "active") {
     background = "#E7F6EC";
     color = "#036B26";
     text = "Active";
-  } else if (!normalizedStatus) {
+  } else if (normalizedStatus === "stopped") {
+    background = "#FEF6E7";
+    color = "#865503";
+    text = "Stopped";
+  } else if (normalizedStatus === "disabled") {
     color = "#344054";
     background = "#F0F2F5";
     text = "Disabled";

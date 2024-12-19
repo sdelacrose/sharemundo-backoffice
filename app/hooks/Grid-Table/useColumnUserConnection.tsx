@@ -1,9 +1,4 @@
-import CustomHeader from "@/app/components/common/CustomHeader";
-import LastColumnHeader from "@/app/components/common/LastColumnHeader";
 import Actions from "@/app/components/Data-Table/Actions";
-import { HeaderCheck } from "@/app/components/Data-Table/HeaderCheck";
-import NameCheck from "@/app/components/Data-Table/NameCheck";
-import StatusCheck from "@/app/components/Data-Table/StatusCheck";
 
 import { useMemo } from "react";
 

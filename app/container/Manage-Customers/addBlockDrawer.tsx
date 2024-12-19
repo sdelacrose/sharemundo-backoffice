@@ -1,8 +1,7 @@
 import { Cross } from "@/app/assets/icons";
 import CustomButton from "@/app/components/common/CustomButton";
-import CustomTextField from "@/app/components/common/CustomTextfield";
 import { Box, Drawer, Stack, Typography } from "@mui/material";
-import React, { useState } from "react";
+import React from "react";
 interface CreateNewDrawerProps {
   open: boolean;
   handleClose: () => void;

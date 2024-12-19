@@ -6,7 +6,6 @@ import { Box, Button, ButtonGroup } from "@mui/material";
 import React, { useState } from "react";
 import { filterItems } from "./solutionData";
 import AgGridTable from "@/app/ag-grid";
-import useColumnSolutionLicense from "@/app/hooks/Grid-Table/useColumnUser";
 import AddUserDrawer from "./addUserDrawer";
 import useColumnUser from "@/app/hooks/Grid-Table/useColumnUser";
 import { UserColumnDefs } from "@/app/const/GridTable/ColDef";
@@ -15,15 +14,16 @@ import { UserRow } from "@/app/const/GridTable/RowData";
 const UserTab = () => {
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const query = event.target.value;
+    console.log(query);
   };
-  const [selectedFilter, setSelectedFilter] = useState<string | null>(null);
+  const [, setSelectedFilter] = useState<string | null>(null);
 
   const handleSelect = (label: string | null) => {
     console.log("Selected filter:", label);
     setSelectedFilter(label);
   };
   const userCol = useColumnUser(UserColumnDefs);
-  const [openBlockDrawer, setBlockDrawer] = useState(false);
+  const [, setBlockDrawer] = useState(false);
   const [userDrawer, setUserDrawer] = useState(false);
   const handleUserDrawer = () => {
     setUserDrawer(true);
@@ -32,9 +32,9 @@ const UserTab = () => {
   const handleCloseDrawer = () => {
     setUserDrawer(false);
   };
-  const handleCloseBlockDrawer = () => {
-    setBlockDrawer(false);
-  };
+  // const handleCloseBlockDrawer = () => {
+  //   setBlockDrawer(false);
+  // };
   const handleBlockDrawer = () => {
     setBlockDrawer(true);
   };

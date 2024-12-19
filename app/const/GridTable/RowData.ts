@@ -426,3 +426,40 @@ export const InternaluserLicenseRow = [
     actions: "View details",
   },
 ];
+export const SolutionMainRow = [
+  {
+    solution_name: "Energy Consultant",
+    total_bought_license: "1200",
+    price_per_month: "$99.9",
+    status: "active",
+    actions: "action view",
+  },
+  {
+    solution_name: "Energy Consultant",
+    total_bought_license: "1200",
+    price_per_month: "$99.9",
+    status: "stopped",
+    actions: "action view",
+  },
+  {
+    solution_name: "Energy Consultant",
+    total_bought_license: "1200",
+    price_per_month: "$99.9",
+    status: "active",
+    actions: "action view",
+  },
+  {
+    solution_name: "Energy Consultant",
+    total_bought_license: "1200",
+    price_per_month: "$99.9",
+    status: "stopped",
+    actions: "action view",
+  },
+  {
+    solution_name: "Energy Consultant",
+    total_bought_license: "1200",
+    price_per_month: "$99.9",
+    status: "active",
+    actions: "action view",
+  },
+];

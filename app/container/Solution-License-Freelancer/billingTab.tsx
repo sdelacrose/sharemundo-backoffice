@@ -2,7 +2,7 @@ import AgGridTable from "@/app/ag-grid";
 import SelectDatePicker from "@/app/components/common/DatePicker/DatePicker";
 import { BillingColumnDefs } from "@/app/const/GridTable/ColDef";
 import {
-  BillingCompanyRow,
+  
   BillingFreelancerRow,
 } from "@/app/const/GridTable/RowData";
 import useColumnBilling from "@/app/hooks/Grid-Table/useColumnBillingCompany";

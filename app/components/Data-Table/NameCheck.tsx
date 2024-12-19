@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Box, Typography, Checkbox } from "@mui/material";
+import React from "react";
+import { Box, Typography} from "@mui/material";
 import Image from "next/image";
 // import Actions from './Actions';
 import { CustomCellRendererProps } from "ag-grid-react";
@@ -10,7 +10,7 @@ interface ActiveUserNameProps extends CustomCellRendererProps {
 }
 
 const NameCheck: React.FC<ActiveUserNameProps> = (params) => {
-  const { shouldRenderActions, shouldRenderImage } = params;
+  const {  shouldRenderImage } = params;
 
   const name =
     params.data?.product_name ||
@@ -20,20 +20,20 @@ const NameCheck: React.FC<ActiveUserNameProps> = (params) => {
 
   // const productImage = params.data?.image || "";
 
-  const [checked, setChecked] = useState<boolean>(
-    params.data?.checked || false
-  );
+  // const [checked, setChecked] = useState<boolean>(
+  //   params.data?.checked || false
+  // );
 
-  const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const isChecked = event.target.checked;
-    setChecked(isChecked);
-    if (params.data) {
-      params.data.checked = isChecked;
-    }
-    if (params.node && params.api) {
-      params.api.refreshCells({ rowNodes: [params.node] });
-    }
-  };
+  // const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   const isChecked = event.target.checked;
+  //   setChecked(isChecked);
+  //   if (params.data) {
+  //     params.data.checked = isChecked;
+  //   }
+  //   if (params.node && params.api) {
+  //     params.api.refreshCells({ rowNodes: [params.node] });
+  //   }
+  // };
 
   return (
     <Box

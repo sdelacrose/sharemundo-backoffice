@@ -12,11 +12,11 @@ import ConnectionTab from "./usersTab";
 import LicenseTab from "./licenseTab";
 
 const SolutionLicenseInternalUser = () => {
+  const [activeTab, setActiveTab] = useState(0);
   const context = useContext(SidebarContext);
   if (context === undefined) {
     return <div>Error: Sidebar context is undefined!</div>;
   }
-  const [activeTab, setActiveTab] = useState(0);
   const handleTabChange = (newValue: number) => {
     setActiveTab(newValue);
   };
@@ -50,10 +50,10 @@ const SolutionLicenseInternalUser = () => {
         </Box>
         <Box sx={{ margin: "24px 24px 24px 0" }}>
           <Typography variant="h2" paddingBottom={"8px"}>
-          XYZ Solar Limited, Berlin,GR
+            XYZ Solar Limited, Berlin,GR
           </Typography>
           <Typography variant="body2" color="#0057b7" mt={1} fontSize={16}>
-           Company
+            Company
           </Typography>
           <Divider
             sx={{

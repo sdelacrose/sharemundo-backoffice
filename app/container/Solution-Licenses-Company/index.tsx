@@ -12,10 +12,10 @@ import ProfileTab from "./ProfileTab";
 
 const SolutionLicenseCompany = () => {
   const context = useContext(SidebarContext);
+  const [activeTab, setActiveTab] = useState(0);
   if (context === undefined) {
     return <div>Error: Sidebar context is undefined!</div>;
   }
-  const [activeTab, setActiveTab] = useState(0);
   const handleTabChange = (newValue: number) => {
     setActiveTab(newValue);
   };
