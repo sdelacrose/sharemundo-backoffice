@@ -67,3 +67,27 @@ export const LicenseFreelancerDefs = [
   { field: "renewal_date", headerName: "Renewal Date" },
   { field: "actions", headerName: "Actions" },
 ];
+export const InternalUsersColumnDefs = [
+  { field: "name", headerName: "Name" },
+  { field: "sharemundo_link", headerName: "Sharemundo Link" },
+  { field: "type", headerName: "Type" },
+  { field: "connection_date", headerName: "Connection Date" },
+  { field: "actions", headerName: "Actions" },
+];
+export const InternaluserbillingColumnDefs = [
+  { field: "id", headerName: "ID" },
+  { field: "invoice_date", headerName: "Invoice Date" },
+  { field: "total_amount", headerName: "Total Amount" },
+  { field: "total_licenses", headerName: "Total Licenses" },
+  { field: "payment_method", headerName: "Payment Method" },
+  { field: "invoice", headerName: "Invoice" },
+  { field: "status", headerName: "Status" },
+];
+export const InternaluserLicenseColumnDefs = [
+  { field: "product_name", headerName: "Product Name" },
+  { field: "total_license", headerName: "Total License" },
+  { field: "available_licenses", headerName: "Available Licenses" },
+  { field: "assigned_license", headerName: "Assigned License" },
+  { field: "renewal_date", headerName: "Renewal Date" },
+  { field: "actions", headerName: "Actions" },
+];

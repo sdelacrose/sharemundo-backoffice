@@ -47,6 +47,10 @@ const useColumnFreelancerConnection = (columns: Column[]) => {
             width: 180,
             cellRenderer: Actions,
 
+            cellRendererParams: {
+              viewText: "View", 
+              removeText: "Remove",    
+            },
             headerStyle: {
               justifyContent: "end",
               display: "flex",

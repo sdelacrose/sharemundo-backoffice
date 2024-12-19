@@ -53,7 +53,10 @@ const useColumnUserConnection = (columns: Column[]) => {
             headerName: "Actions",
             width: 180,
             cellRenderer: Actions,
-
+            cellRendererParams: {
+              viewText: "View",
+              removeText: "Remove",
+            },
             headerStyle: {
               justifyContent: "start",
               display: "flex",
