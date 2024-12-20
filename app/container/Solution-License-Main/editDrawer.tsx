@@ -33,7 +33,7 @@ const EditDrawer: React.FC<CreateNewDrawerProps> = ({ open, handleClose }) => {
       >
         <Box
           sx={{
-            mt:"200px",
+            mt:"160px",
             minHeight: "690px",
             position: "relative",
           }}
@@ -84,7 +84,7 @@ const EditDrawer: React.FC<CreateNewDrawerProps> = ({ open, handleClose }) => {
             sx={{
               position: "absolute",
               right: "4%",
-              top: "-29%",
+              top: "-24%",
               cursor: "pointer",
             }}
             onClick={handleClose}

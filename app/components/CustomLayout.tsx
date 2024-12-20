@@ -1,6 +1,7 @@
 "use client";
 import theme from "../theme";
 import { ThemeProvider } from "@emotion/react";
+import "../globals.scss";
 
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";

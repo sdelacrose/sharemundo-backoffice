@@ -98,3 +98,28 @@ export const SolutionMainColumnDefs = [
   { field: "status", headerName: "Status" },
   { field: "actions", headerName: "Actions" },
 ];
+export const BillingPaymentColumnDefs = [
+  { field: "customer_name", headerName: "Customer Name" },
+  { field: "sharemundo_links_id", headerName: "Sharemundo Links ID" },
+  { field: "type", headerName: "Type" },
+  { field: "issue", headerName: "Issue" },
+  { field: "amount", headerName: "Amount" },
+  { field: "date", headerName: "Date" },
+  { field: "actions", headerName: "Actions" },
+];
+export const BillingCustomerColumnDefs = [
+  { field: "name", headerName: "Name" },
+  { field: "sharemundo_links_id", headerName: "Sharemundo Links ID" },
+  { field: "role", headerName: "Role" },
+  { field: "next_12_month_revenue", headerName: "Next 12 Month Revenue" },
+  { field: "last_12_month_revenue", headerName: "Last 12 Month Revenue" },
+  { field: "total_revenue", headerName: "Total Revenue" },
+  { field: "actions", headerName: "Actions" },
+];
+export const userManagementColumnDefs = [
+  { field: "name", headerName: "Name" },
+  { field: "sharemundo_links_id", headerName: "Sharemundo Links ID" },
+  { field: "type", headerName: "Type" },
+  { field: "creation_date", headerName: "Creation Date" },
+  { field: "actions", headerName: "Actions" },
+];

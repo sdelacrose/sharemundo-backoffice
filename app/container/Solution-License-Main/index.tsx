@@ -18,15 +18,18 @@ import AgGridTable from "@/app/ag-grid";
 import { SolutionMainRow } from "@/app/const/GridTable/RowData";
 import ResumeDrawer from "./resumeDrawer";
 import EditDrawer from "./editDrawer";
+import StopDrawer from "./stopDrawer";
+import NewSolutionDrawer from "./newSolutionDrawer";
 
 const SolutionLicenseMain = () => {
   const [openStopDrawer, setStopDrawer] = useState(false);
-
-  const handleOpenDrawer = () => {
-    setStopDrawer(true);
+  const [drawerType, setDrawerType] = useState<string | null>(null);
+  const handleOpenDrawer = (actionType: string) => {
+    setDrawerType(actionType);
   };
+
   const handleCloseDrawer = () => {
-    setStopDrawer(false);
+    setDrawerType(null);
   };
   const SolutionMainCol = useColumnSolutionMain(
     SolutionMainColumnDefs,
@@ -34,16 +37,23 @@ const SolutionLicenseMain = () => {
   );
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const query = event.target.value;
-    console.log(query)
-
+    console.log(query);
   };
   const context = useContext(SidebarContext);
   const [activeTab, setActiveTab] = useState(0);
+  const [newSolution, setNewSolution] = useState(false);
+
   if (context === undefined) {
     return <div>Error: Sidebar context is undefined!</div>;
   }
   const handleTabChange = (newValue: number) => {
     setActiveTab(newValue);
+  };
+  const handleOpenNewSolution = () => {
+    setNewSolution(true);
+  };
+  const handleCloseNewSolution = () => {
+    setNewSolution(false);
   };
 
   const renderChart = () => {
@@ -58,6 +68,7 @@ const SolutionLicenseMain = () => {
         return <div>chart here</div>;
     }
   };
+
   return (
     <>
       <Box
@@ -112,7 +123,9 @@ const SolutionLicenseMain = () => {
               onChange={handleSearchChange}
               height="36px"
             />{" "}
-            <CustomButton variant="contained">Add Solution</CustomButton>
+            <CustomButton variant="contained" onClick={handleOpenNewSolution}>
+              Add Solution
+            </CustomButton>
           </Box>
           <Box
             sx={{
@@ -128,14 +141,24 @@ const SolutionLicenseMain = () => {
               rowData={SolutionMainRow}
               columnDefs={SolutionMainCol}
             />
-            <ResumeDrawer
-              open={openStopDrawer}
-              handleClose={handleCloseDrawer}
-            />
-             <EditDrawer
-              open={openStopDrawer}
-              handleClose={handleCloseDrawer}
-            />
+            {drawerType === "resume" && (
+              <ResumeDrawer
+                open={!!drawerType}
+                handleClose={handleCloseDrawer}
+              />
+            )}
+            {drawerType === "edit" && (
+              <EditDrawer open={!!drawerType} handleClose={handleCloseDrawer} />
+            )}
+            {drawerType === "stop" && (
+              <StopDrawer open={!!drawerType} handleClose={handleCloseDrawer} />
+            )}
+            {newSolution && (
+              <NewSolutionDrawer
+                open={newSolution}
+                handleClose={handleCloseNewSolution}
+              />
+            )}
           </Box>
         </Box>
       </Box>
