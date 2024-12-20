@@ -28,6 +28,7 @@ import Downfall from "./Downfall.svg";
 import ProductIcon from "./Product.svg";
 import Logo from "./Logo.svg";
 import Cross from "./Cross.svg";
+import ExportExcel from "./ExportExcel.svg";
 export {
   Card,
   Adduser,
@@ -59,4 +60,5 @@ export {
   ProductIcon,
   Logo,
   Cross,
+  ExportExcel,
 };

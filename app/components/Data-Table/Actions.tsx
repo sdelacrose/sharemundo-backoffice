@@ -4,7 +4,7 @@ import React from "react";
 interface ActionsProps {
   viewText: string;
   removeText: string;
-  handleOpenDrawer?: () => void;
+  handleOpenDrawer?: (actionType: string) => void;
 }
 
 const Actions: React.FC<ActionsProps> = ({
@@ -25,27 +25,27 @@ const Actions: React.FC<ActionsProps> = ({
     }
   };
 
-  const handleClick = () => {
-    if (
-      (handleOpenDrawer && removeText.toLowerCase() === "resume") ||
-      (handleOpenDrawer && removeText.toLowerCase() === "stop") ||
-      (handleOpenDrawer && removeText.toLowerCase() === "edit") ||
-      (handleOpenDrawer && removeText.toLowerCase() === "new")
-    ) {
-      handleOpenDrawer();
+  const handleClick = (actionType: string) => {
+    if (handleOpenDrawer) {
+      handleOpenDrawer(actionType);
     }
   };
 
   return (
     <Box display="flex" gap={1} alignItems="center">
-      <Typography variant="caption" color="#0057b7" fontSize={14}>
+      <Typography
+        variant="caption"
+        color="#0057b7"
+        fontSize={14}
+        onClick={() => handleClick(viewText.toLowerCase())}
+      >
         {viewText}
       </Typography>
       <Typography
         variant="caption"
         color={getActionColor(removeText)}
         fontSize={14}
-        onClick={handleClick}
+        onClick={() => handleClick(removeText.toLowerCase())}
       >
         {removeText}
       </Typography>

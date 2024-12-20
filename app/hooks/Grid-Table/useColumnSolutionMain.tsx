@@ -10,7 +10,7 @@ interface Column {
 
 const useColumnSolutionMain = (
   columns: Column[],
-  handleOpenDrawer: () => void
+  handleOpenDrawer: (action: string) => void
 ) => {
   return useMemo(() => {
     return columns.map((col: any) => {

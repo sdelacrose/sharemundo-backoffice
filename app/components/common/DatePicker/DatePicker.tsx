@@ -3,7 +3,7 @@ import { TextField, Box } from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import  { Dayjs } from "dayjs";
+import { Dayjs } from "dayjs";
 
 const SelectDatePicker = () => {
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null);
@@ -33,7 +33,7 @@ const SelectDatePicker = () => {
                 color: "#344054",
                 fontSize: "14px",
                 fontWeight: "400",
-                boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
+                // boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
                 "& .MuiOutlinedInput-root": {
                   height: "40px",
                   paddingLeft: "10px",
