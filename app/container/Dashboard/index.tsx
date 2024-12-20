@@ -1,7 +1,13 @@
 "use client";
-import { Box, Divider, Typography } from "@mui/material";
-import React, {  useContext } from "react";
-import { billingData, homeBreadcrumb, statsData } from "./data";
+import { Box, Divider, Stack, Typography } from "@mui/material";
+import React, { useContext, useState } from "react";
+import {
+  billingData,
+  CustomersData,
+  filterItems,
+  homeBreadcrumb,
+  statsData,
+} from "./data";
 import StatsContainer from "./StatsContainer";
 import useColumnSolutions from "@/app/hooks/Grid-Table/useColumnSolutions";
 import { solutionColumnDefs } from "@/app/const/GridTable/ColDef";
@@ -11,16 +17,21 @@ import Activity from "./Activity";
 import Header from "@/app/components/common/Header";
 import SelectDatePicker from "@/app/components/common/DatePicker/DatePicker";
 import { SidebarContext } from "@/app/(pages)/layout";
+import CustomFilterSelect from "@/app/components/common/CustomFilterSelect";
 
 const Dashboard = () => {
   const context = useContext(SidebarContext);
-  // const handleDateSelect = () => {
-  //   console.log("Date selector clicked!");
-  // };
+
   const solutionCol = useColumnSolutions(solutionColumnDefs);
+  const [, setSelectedFilter] = useState<string | null>(null);
+
   if (context === undefined) {
     return <div>Error: Sidebar context is undefined!</div>;
   }
+  const handleSelect = (label: string | null) => {
+    console.log("Selected filter:", label);
+    setSelectedFilter(label);
+  };
   return (
     <>
       <Box
@@ -43,7 +54,7 @@ const Dashboard = () => {
             alignItems={"center"}
           >
             <Typography variant="h2">Hello, Admin!</Typography>
-            <SelectDatePicker />
+            <CustomFilterSelect items={filterItems} onSelect={handleSelect} />
           </Box>
           <Typography variant="body2" color="#475367" mt={1.5}>
             Sharemundo Back Office
@@ -56,38 +67,45 @@ const Dashboard = () => {
             }}
           />
           <Box mb={3}>
-            <StatsContainer heading="User Stats" stats={statsData} />
+            <StatsContainer heading="Customers" stats={CustomersData} />
           </Box>
+          <Box mb={3}>
+            <StatsContainer heading="Users" stats={statsData} />
+          </Box>
+
           <Box mb={3}>
             <StatsContainer heading="Billings" stats={billingData} />
           </Box>
           <Box sx={{ display: "flex", alignItems: "center", gap: "20px" }}>
-            <Box
-              sx={{
-                width: "50%",
-                borderRadius: "12px",
-                background: "#fff",
-                border: "1px solid #E4E7EC",
-                "& .ag-root-wrapper.ag-layout-normal": {
-                  borderBottomLeftRadius: "12px",
-                  borderBottomRightRadius: "12px",
-                  outline: "none",
-                  border: "none",
-                },
-              }}
-            >
-              <Typography
-                variant="body1"
+            <Stack>
+              <Box
                 sx={{
-                  padding: "12px 24px",
-                  color: "#101928",
-                  fontSize: "20px",
+                  width: "50%",
+                  borderRadius: "12px",
+                  background: "#fff",
+                  border: "1px solid #E4E7EC",
+                  "& .ag-root-wrapper.ag-layout-normal": {
+                    borderBottomLeftRadius: "12px",
+                    borderBottomRightRadius: "12px",
+                    outline: "none",
+                    border: "none",
+                  },
                 }}
               >
-                Solutions
-              </Typography>
-              <AgGridTable rowData={SolutionsRow} columnDefs={solutionCol} />
-            </Box>
+                <Typography
+                  variant="body1"
+                  sx={{
+                    padding: "12px 24px",
+                    color: "#101928",
+                    fontSize: "18px",
+                  }}
+                >
+                  Solutions
+                </Typography>
+                <AgGridTable rowData={SolutionsRow} columnDefs={solutionCol} />
+              </Box>
+            </Stack>
+
             <Activity />
           </Box>
         </Box>

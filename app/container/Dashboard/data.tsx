@@ -9,6 +9,11 @@ import {
 } from "@/app/assets/icons";
 
 export const homeBreadcrumb = [{ title: "Home", icon: HomeBlackIcon }];
+export const filterItems = [
+  { label: "1 Month" },
+  { label: "2 Month" },
+  { label: "Year" },
+];
 export const statsData = [
   {
     icon: <ActiveUser />,
@@ -35,6 +40,40 @@ export const statsData = [
     checkIcon: <Progress />,
   },
 ];
+export const CustomersData = [
+  {
+    icon: <ActiveUser />,
+    title: "Total Customers",
+    value: "29,405",
+    percentage: 15,
+    isPositive: true,
+    checkIcon: <Progress />,
+  },
+  {
+    icon: <BlockUser />,
+    title: "Companies",
+    value: "2.40%",
+    percentage: -6,
+    isPositive: false,
+    checkIcon: <Downfall />,
+  },
+  {
+    icon: <TotalUser />,
+    title: "Freelancers",
+    value: "2.40%",
+    percentage: 6,
+    isPositive: true,
+    checkIcon: <Progress />,
+  },
+  {
+    icon: <TotalUser />,
+    title: "Internal user",
+    value: "2.40%",
+    percentage: 6,
+    isPositive: true,
+    checkIcon: <Progress />,
+  },
+];
 
 export const billingData = [
   {
@@ -47,7 +86,7 @@ export const billingData = [
   },
   {
     icon: <BillingCard />,
-    title: "Next Billings",
+    title: "Next Moth Revenue (approx.)",
     value: "2.40%",
     percentage: -6,
     isPositive: false,
@@ -55,7 +94,15 @@ export const billingData = [
   },
   {
     icon: <BillingCard />,
-    title: "Total Users",
+    title: "Last 12 months Revenue",
+    value: "2.40%",
+    percentage: -6,
+    isPositive: false,
+    checkIcon: <Downfall />,
+  },
+  {
+    icon: <BillingCard />,
+    title: "Next 12 months Revenue (approx.) ",
     value: "2.40%",
     percentage: 6,
     isPositive: true,

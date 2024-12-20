@@ -1,7 +1,14 @@
 import { Box, Stack, Typography } from "@mui/material";
 import React from "react";
 
-const StatsCard = ({ icon, title, value, percentage, isPositive,checkIcon }: any) => {
+const StatsCard = ({
+  icon,
+  title,
+  value,
+  percentage,
+  isPositive,
+  checkIcon,
+}: any) => {
   return (
     <>
       <Box
@@ -19,11 +26,11 @@ const StatsCard = ({ icon, title, value, percentage, isPositive,checkIcon }: any
           <Typography variant="caption" mt={5.2} fontSize={14} color="#667185">
             {title}
           </Typography>
-          <Box display={"flex"} alignItems={"center"} gap={"10px"}>
-            <Typography variant="body1" fontSize={14}>
+          <Box display={"flex"} alignItems={"center"} gap={"10px"} mt={1}>
+            <Typography variant="body1" fontSize={18}>
               {value}
             </Typography>
-            <Box
+            {/* <Box
             bgcolor={isPositive ? "#E7F6EC" : "#FBEAE9"}
             display={"flex"}
               alignItems={"center"}
@@ -37,7 +44,7 @@ const StatsCard = ({ icon, title, value, percentage, isPositive,checkIcon }: any
               >
                 {isPositive ? `+${percentage}%` : `${percentage}%`}
               </Typography>
-            </Box>
+            </Box> */}
           </Box>
         </Stack>
       </Box>

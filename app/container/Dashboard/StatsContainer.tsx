@@ -13,7 +13,7 @@ const StatsContainer = ({ heading, stats }: any) => {
           padding: "16px",
         }}
       >
-        <Typography variant="h5" color="#475367" mb={2.4}>
+        <Typography variant="h5" color="#475367" mb={2}>
           {heading}
         </Typography>
         <Box
@@ -36,9 +36,6 @@ const StatsContainer = ({ heading, stats }: any) => {
               checkIcon={stat.checkIcon}
             />
           ))}
-          {/* <StatsCard />
-          <StatsCard />
-          <StatsCard /> */}
         </Box>
       </Box>
     </>

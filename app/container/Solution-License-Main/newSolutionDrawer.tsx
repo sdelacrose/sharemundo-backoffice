@@ -45,7 +45,7 @@ const NewSolutionDrawer: React.FC<CreateNewDrawerProps> = ({
             <Typography variant="h3" letterSpacing={"0.4px"}>
               Create New Solution?
             </Typography>
-            <Typography variant="caption" fontSize={14} color="#667185" >
+            <Typography variant="caption" fontSize={14} color="#667185"  mt={-1}>
               New Solution
             </Typography>
             <Stack gap={2.4}>
