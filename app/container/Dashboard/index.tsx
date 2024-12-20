@@ -15,8 +15,11 @@ import AgGridTable from "@/app/ag-grid";
 import { SolutionsRow } from "@/app/const/GridTable/RowData";
 import Activity from "./Activity";
 import Header from "@/app/components/common/Header";
+import SelectDatePicker from "@/app/components/common/DatePicker/DatePicker";
 import { SidebarContext } from "@/app/(pages)/layout";
 import CustomFilterSelect from "@/app/components/common/CustomFilterSelect";
+import PieChartComponent from "@/app/components/common/Piechart";
+import Legend from "./legend";
 
 const Dashboard = () => {
   const context = useContext(SidebarContext);
@@ -75,11 +78,10 @@ const Dashboard = () => {
           <Box mb={3}>
             <StatsContainer heading="Billings" stats={billingData} />
           </Box>
-          <Box sx={{ display: "flex", alignItems: "center", gap: "20px" }}>
-            <Stack>
+          <Box sx={{ display: "flex", alignItems: "start", gap: "20px" }}>
+            <Stack sx={{ width: "50%" }} gap={3}>
               <Box
                 sx={{
-                  width: "50%",
                   borderRadius: "12px",
                   background: "#fff",
                   border: "1px solid #E4E7EC",
@@ -103,8 +105,41 @@ const Dashboard = () => {
                 </Typography>
                 <AgGridTable rowData={SolutionsRow} columnDefs={solutionCol} />
               </Box>
+              <Box
+                sx={{
+                  borderRadius: "12px",
+                  background: "#fff",
+                  border: "1px solid #E4E7EC",
+                  "& .ag-root-wrapper.ag-layout-normal": {
+                    borderBottomLeftRadius: "12px",
+                    borderBottomRightRadius: "12px",
+                    outline: "none",
+                    border: "none",
+                  },
+                }}
+              >
+                <Typography
+                  variant="body1"
+                  sx={{
+                    padding: "12px 24px",
+                    color: "#101928",
+                    fontSize: "18px",
+                  }}
+                >
+                  Solutions & Licenses{" "}
+                </Typography>
+                <Divider
+                  sx={{
+                    borderColor: "rgba(240, 242, 245, 1)",
+                    marginBottom: "24px",
+                  }}
+                />
+                <Box ml={3}>
+                  <Legend />
+                </Box>
+                <PieChartComponent />
+              </Box>
             </Stack>
-
             <Activity />
           </Box>
         </Box>

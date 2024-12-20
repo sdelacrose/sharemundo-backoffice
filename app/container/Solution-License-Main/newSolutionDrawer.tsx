@@ -36,9 +36,9 @@ const NewSolutionDrawer: React.FC<CreateNewDrawerProps> = ({
       >
         <Box
           sx={{
-            minHeight: "690px",
+            minHeight: "620px",
             position: "relative",
-            mt: "160px",
+            mt: "80px",
           }}
         >
           <Stack gap={4}>
@@ -94,8 +94,8 @@ const NewSolutionDrawer: React.FC<CreateNewDrawerProps> = ({
           <Box
             sx={{
               position: "absolute",
-              right: "4%",
-              top: "-24%",
+              right: "-1%",
+              top: "-12%",
               cursor: "pointer",
             }}
             onClick={handleClose}

@@ -111,31 +111,23 @@ export const billingData = [
 ];
 export const activities = [
   {
-    user: "David",
-    action: "left a comment on",
-    target: "Site Redesign",
-    date: "Thurs 21, 2023",
-    category: "Marketing Design",
+    user: "Company Name",
+    action: "bought a license",
+    date: "Wed 12/12/2025",
   },
   {
-    user: "David",
-    action: "left a comment on",
-    target: "Site Redesign",
-    date: "Thurs 21, 2023",
-    category: "Marketing Design",
+    user: "Company Name",
+    action: "bought a license",
+    date: "Wed 12/12/2025",
   },
   {
-    user: "David",
-    action: "left a comment on",
-    target: "Site Redesign",
-    date: "Thurs 21, 2023",
-    category: "Marketing Design",
+    user: "Company Name",
+    action: "bought a license",
+    date: "Wed 12/12/2025",
   },
   {
-    user: "David",
-    action: "left a comment on",
-    target: "Site Redesign",
-    date: "Thurs 21, 2023",
-    category: "Marketing Design",
+    user: "Company Name",
+    action: "bought a license",
+    date: "Wed 12/12/2025",
   },
 ];

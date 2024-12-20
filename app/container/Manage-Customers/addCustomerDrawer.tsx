@@ -23,7 +23,7 @@ const AddCustomerDrawer: React.FC<CreateNewDrawerProps> = ({
   handleClose,
 }) => {
   const [selectedrole, setSelectedRole] = useState("");
-  const [password,] = useState("password");
+  const [password] = useState("password");
 
   const handleSelectChange = (event: SelectChangeEvent) => {
     setSelectedRole(event.target.value as string);
@@ -60,7 +60,7 @@ const AddCustomerDrawer: React.FC<CreateNewDrawerProps> = ({
               sx={{
                 borderColor: "rgba(240, 242, 245, 1)",
                 marginBottom: "17px",
-                marginRight:"-96px"
+                marginRight: "-96px",
               }}
             />
             <Typography variant="caption" fontSize={14} color="#667185" ml={4}>
@@ -76,12 +76,11 @@ const AddCustomerDrawer: React.FC<CreateNewDrawerProps> = ({
             </Box>
             <Box ml={4}>
               <CustomSelect
-                label="Preferred Language*"
+                label="Role"
                 value={selectedrole}
                 onChange={handleSelectChange}
                 options={Role}
-                required
-                placeholder="role"
+                placeholder="company"
               />
             </Box>
             <Box ml={4}>
@@ -94,7 +93,7 @@ const AddCustomerDrawer: React.FC<CreateNewDrawerProps> = ({
                 ml={4}
               >
                 Passwords must be between 8 and 256 characters and use a
-                combination of at least three of the following: uppercase
+                combination of at least <br /> three of the following: uppercase
                 letters, lowercase letters, numbers, and symbols.
               </Typography>
             </Box>
@@ -129,7 +128,6 @@ const AddCustomerDrawer: React.FC<CreateNewDrawerProps> = ({
               Cancel
             </CustomButton>
           </Box>
-         
         </Box>
       </Drawer>
     </>

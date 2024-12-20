@@ -89,8 +89,8 @@ const CustomSearchField: React.FC<CustomTextFieldProps> = ({
               fontFamily: "Mulish, sans-serif",
               padding: "8px 12px",
               height: height || "47px",
-              boxShadow:
-                "0px 4px 8px -2px rgba(0, 0, 0, 0.08), 0px 2px 4px -2px rgba(0, 0, 0, 0.04)",
+              // boxShadow:
+              //   "0px 4px 8px -2px rgba(0, 0, 0, 0.08), 0px 2px 4px -2px rgba(0, 0, 0, 0.04)",
               "& fieldset": {
                 borderColor: "1px solid #D0D5DD",
               },

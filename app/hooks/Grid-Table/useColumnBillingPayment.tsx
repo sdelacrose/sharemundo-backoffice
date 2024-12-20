@@ -51,7 +51,7 @@ const useColumnBillingPayment = (columns: Column[]) => {
         case "date":
           return {
             field: "date",
-            headerName: "date",
+            headerName: "Date",
             width: 120,
             flex: 2,
           };

@@ -50,7 +50,6 @@ const BlockDrawer: React.FC<CreateNewDrawerProps> = ({ open, handleClose }) => {
                 display: "flex",
                 gap: "16px",
                 alignItems: "center",
-                marginTop: "16px",
               }}
             >
               <CustomButton
@@ -73,8 +72,8 @@ const BlockDrawer: React.FC<CreateNewDrawerProps> = ({ open, handleClose }) => {
           <Box
             sx={{
               position: "absolute",
-              right: "4%",
-              top: "1%",
+              right: "-1%",
+              top: "-1%",
               cursor: "pointer",
             }}
             onClick={handleClose}

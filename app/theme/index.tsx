@@ -197,6 +197,7 @@ const theme = createTheme({
           borderRadius: "8px ",
           letterSpacing: "0.4px",
           color: "#344054",
+          boxShadow: "none",
           "&:hover": {
             border: `1.5px solid ${colors.secondary}`,
             background: colors.outlineHover,
