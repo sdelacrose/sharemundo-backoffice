@@ -20,8 +20,10 @@ const Actions: React.FC<ActionsProps> = ({
         return "#FF3B30";
       case "resume":
         return "#34C759";
+      case "download":
+        return "#32ADE6";
       default:
-        return "#344054";
+        return "#0057b7";
     }
   };
 

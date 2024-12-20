@@ -19,6 +19,7 @@ import { SolutionMainRow } from "@/app/const/GridTable/RowData";
 import ResumeDrawer from "./resumeDrawer";
 import EditDrawer from "./editDrawer";
 import StopDrawer from "./stopDrawer";
+import NewSolutionDrawer from "./newSolutionDrawer";
 
 const SolutionLicenseMain = () => {
   const [openStopDrawer, setStopDrawer] = useState(false);
@@ -40,11 +41,19 @@ const SolutionLicenseMain = () => {
   };
   const context = useContext(SidebarContext);
   const [activeTab, setActiveTab] = useState(0);
+  const [newSolution, setNewSolution] = useState(false);
+
   if (context === undefined) {
     return <div>Error: Sidebar context is undefined!</div>;
   }
   const handleTabChange = (newValue: number) => {
     setActiveTab(newValue);
+  };
+  const handleOpenNewSolution = () => {
+    setNewSolution(true);
+  };
+  const handleCloseNewSolution = () => {
+    setNewSolution(false);
   };
 
   const renderChart = () => {
@@ -114,7 +123,9 @@ const SolutionLicenseMain = () => {
               onChange={handleSearchChange}
               height="36px"
             />{" "}
-            <CustomButton variant="contained">Add Solution</CustomButton>
+            <CustomButton variant="contained" onClick={handleOpenNewSolution}>
+              Add Solution
+            </CustomButton>
           </Box>
           <Box
             sx={{
@@ -141,6 +152,12 @@ const SolutionLicenseMain = () => {
             )}
             {drawerType === "stop" && (
               <StopDrawer open={!!drawerType} handleClose={handleCloseDrawer} />
+            )}
+            {newSolution && (
+              <NewSolutionDrawer
+                open={newSolution}
+                handleClose={handleCloseNewSolution}
+              />
             )}
           </Box>
         </Box>

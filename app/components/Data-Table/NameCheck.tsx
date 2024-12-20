@@ -1,16 +1,17 @@
 import React from "react";
-import { Box, Typography} from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import Image from "next/image";
 // import Actions from './Actions';
 import { CustomCellRendererProps } from "ag-grid-react";
 import productImage from "../../assets/images/header.png";
+import CustomCheckbox from "../common/CustomCheckBox";
 interface ActiveUserNameProps extends CustomCellRendererProps {
   shouldRenderActions?: boolean;
   shouldRenderImage?: boolean;
 }
 
 const NameCheck: React.FC<ActiveUserNameProps> = (params) => {
-  const {  shouldRenderImage } = params;
+  const { shouldRenderImage } = params;
 
   const name =
     params.data?.product_name ||
@@ -53,6 +54,9 @@ const NameCheck: React.FC<ActiveUserNameProps> = (params) => {
           marginTop: shouldRenderImage ? "8px" : "10px",
         }}
       >
+        <Box mr={-2}> 
+          <CustomCheckbox />
+        </Box>
         <Image src={productImage} alt="Product Image" />
         <Typography variant="body2" sx={{ marginTop: "9px", fontSize: "14px" }}>
           {name}

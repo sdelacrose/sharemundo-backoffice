@@ -1,10 +1,8 @@
 import { HomeBlackIcon } from "@/app/assets/icons";
 export const billingBreadcrumb = [{ title: "Home", icon: HomeBlackIcon }];
 export const tabs = [
-  { label: "Profile" },
-  { label: "Connections" },
-  { label: "Billing" },
-  { label: "Licenses" },
+  { label: "Past 12 Month" },
+  { label: "Next 12 Months Forecast" },
 ];
 export const filterItems = [
   { label: "1 Month" },

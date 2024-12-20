@@ -29,6 +29,11 @@ import ProductIcon from "./Product.svg";
 import Logo from "./Logo.svg";
 import Cross from "./Cross.svg";
 import ExportExcel from "./ExportExcel.svg";
+import Dashboard from "./Dashboard.svg";
+import Billings from "./Billings.svg";
+import ManageCustomers from "./ManageCustomers.svg";
+import ManageUsers from "./ManageUsers.svg";
+import SolutionLicenses from "./SolutionLicenses.svg";
 export {
   Card,
   Adduser,
@@ -61,4 +66,9 @@ export {
   Logo,
   Cross,
   ExportExcel,
+  Dashboard,
+  Billings,
+  SolutionLicenses,
+  ManageCustomers,
+  ManageUsers,
 };
