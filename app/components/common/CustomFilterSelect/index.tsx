@@ -1,7 +1,7 @@
-import { Filter } from '@/app/assets/icons';
-import React, { useState } from 'react';
-import { Box, MenuItem, Typography, Select, InputBase } from '@mui/material';
-import { CheckCircle } from '@mui/icons-material';
+import { Filter } from "@/app/assets/icons";
+import React, { useState } from "react";
+import { Box, MenuItem, Typography, Select, InputBase } from "@mui/material";
+import { CheckCircle } from "@mui/icons-material";
 
 interface SelectItem {
   label: string;
@@ -42,42 +42,42 @@ const CustomFilterSelect: React.FC<CustomFilterSelectProps> = ({
   return (
     <Box
       sx={{
-        display: 'inline-flex',
-        alignItems: 'center',
-        borderRadius: '8px',
-        border: '1px solid #ddd',
-        padding: '3px 6px',
-        marginTop: '4px',
-        boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
-        cursor: 'pointer',
+        display: "inline-flex",
+        alignItems: "center",
+        borderRadius: "8px",
+        border: "1px solid #ddd",
+        padding: "3px 6px",
+        marginTop: "4px",
+        // boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+        cursor: "pointer",
       }}
     >
-      <Filter sx={{ marginRight: '8px' }} />
+      <Filter sx={{ marginRight: "8px" }} />
 
       <Select
-        value={selectedItem || ''}
+        value={selectedItem || ""}
         open={open}
         onOpen={handleSelectOpen}
         onClose={handleSelectClose}
         displayEmpty
         input={<InputBase />}
         sx={{
-          '& .MuiSelect-icon': { display: 'none' },
-          minWidth: '40px',
-          padding: '3px 6px',
-          borderRadius: '8px',
+          "& .MuiSelect-icon": { display: "none" },
+          minWidth: "40px",
+          padding: "3px 6px",
+          borderRadius: "8px",
         }}
         MenuProps={{
           PaperProps: {
             style: {
-              minWidth: '270px',
-              marginTop: '6px',
+              minWidth: "270px",
+              marginTop: "6px",
             },
           },
         }}
         renderValue={(selected) => (
           <Typography variant="body2" mt={0.3}>
-            {selected || 'Filter'}
+            {selected || "Filter"}
           </Typography>
         )}
       >
@@ -89,24 +89,24 @@ const CustomFilterSelect: React.FC<CustomFilterSelectProps> = ({
             onMouseLeave={() => handleHover(null)}
             onClick={() => handleItemClick(item.label)}
             sx={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              padding: '8px 16px',
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              padding: "8px 16px",
               backgroundColor:
                 selectedItem === item.label || hoveredItem === item.label
-                  ? '#F9FAFB'
-                  : 'inherit',
-              '&:hover': { backgroundColor: '#F9FAFB' },
+                  ? "#F9FAFB"
+                  : "inherit",
+              "&:hover": { backgroundColor: "#F9FAFB" },
             }}
           >
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              {item.icon && <Box sx={{ color: '#0D47A1' }}>{item.icon}</Box>}
+            <Box sx={{ display: "flex", alignItems: "center", gap: "8px" }}>
+              {item.icon && <Box sx={{ color: "#0D47A1" }}>{item.icon}</Box>}
               <Typography variant="body2">{item.label}</Typography>
             </Box>
 
             {(selectedItem === item.label || hoveredItem === item.label) && (
-              <CheckCircle sx={{ color: 'rgba(0, 193, 212, 1)' }} />
+              <CheckCircle sx={{ color: "rgba(0, 193, 212, 1)" }} />
             )}
           </MenuItem>
         ))}

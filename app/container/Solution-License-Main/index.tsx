@@ -22,7 +22,6 @@ import StopDrawer from "./stopDrawer";
 import NewSolutionDrawer from "./newSolutionDrawer";
 
 const SolutionLicenseMain = () => {
-  const [openStopDrawer, setStopDrawer] = useState(false);
   const [drawerType, setDrawerType] = useState<string | null>(null);
   const handleOpenDrawer = (actionType: string) => {
     setDrawerType(actionType);
