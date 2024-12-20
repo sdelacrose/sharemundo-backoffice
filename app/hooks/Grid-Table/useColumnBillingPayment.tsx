@@ -1,5 +1,4 @@
 import Actions from "@/app/components/Data-Table/Actions";
-import BlueText from "@/app/components/Data-Table/BlueText";
 import { HeaderCheck } from "@/app/components/Data-Table/HeaderCheck";
 import NameCheck from "@/app/components/Data-Table/NameCheck";
 import { useMemo } from "react";

@@ -16,17 +16,17 @@ import useColumnUserManagement from "@/app/hooks/Grid-Table/useColumnUserManagem
 
 const UserManagement = () => {
   const context = useContext(SidebarContext);
+  const [, setSelectedFilter] = useState<string | null>(null);
+  const UserManagementCol = useColumnUserManagement(userManagementColumnDefs);
   if (context === undefined) {
     return <div>Error: Sidebar context is undefined!</div>;
   }
 
-  const UserManagementCol = useColumnUserManagement(userManagementColumnDefs);
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const query = event.target.value;
     console.log(query);
   };
-  const [, setSelectedFilter] = useState<string | null>(null);
 
   const handleSelect = (label: string | null) => {
     console.log("Selected filter:", label);

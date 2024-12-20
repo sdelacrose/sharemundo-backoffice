@@ -11,7 +11,6 @@ import CustomTabs from "@/app/components/common/CustomTab";
 import BarChartComponent from "@/app/components/common/Barchart";
 import SharpLineChart from "@/app/components/common/SharpLineChart";
 import {
-  
   BillingCustomerColumnDefs,
   BillingPaymentColumnDefs,
 } from "@/app/const/GridTable/ColDef";
@@ -26,6 +25,10 @@ import useColumnBillingCustomers from "@/app/hooks/Grid-Table/usecolumnBillingCu
 const Billings = () => {
   const context = useContext(SidebarContext);
   const [activeTab, setActiveTab] = useState(0);
+  const BillingPaymentCol = useColumnBillingPayment(BillingPaymentColumnDefs);
+  const BillingCustomerCol = useColumnBillingCustomers(
+    BillingCustomerColumnDefs
+  );
   if (context === undefined) {
     return <div>Error: Sidebar context is undefined!</div>;
   }
@@ -42,11 +45,6 @@ const Billings = () => {
         return <div>chart here</div>;
     }
   };
-
-  const BillingPaymentCol = useColumnBillingPayment(BillingPaymentColumnDefs);
-  const BillingCustomerCol = useColumnBillingCustomers(
-    BillingCustomerColumnDefs
-  );
 
   return (
     <>
@@ -135,8 +133,6 @@ const Billings = () => {
               columnDefs={BillingCustomerCol}
             />
           </Box>
-
-         
         </Box>
       </Box>
     </>

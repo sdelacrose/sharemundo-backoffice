@@ -1,14 +1,10 @@
 import React from "react";
-import UserIcon from "@/app/assets/icons/User.svg";
-import BillingIcon from "@/app/assets/icons/Billing.svg";
-import SettingIcon from "@/app/assets/icons/Setting.svg";
-import HomeIcon from "@/app/assets/icons/Home.svg";
+
 import {
   Billings,
   Dashboard,
   ManageCustomers,
   ManageUsers,
-  ProductIcon,
   SolutionLicenses,
 } from "@/app/assets/icons";
 export interface DropdownItem {
