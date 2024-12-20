@@ -5,9 +5,7 @@ const StatsCard = ({
   icon,
   title,
   value,
-  percentage,
-  isPositive,
-  checkIcon,
+ 
 }: any) => {
   return (
     <>
@@ -30,21 +28,6 @@ const StatsCard = ({
             <Typography variant="body1" fontSize={18}>
               {value}
             </Typography>
-            {/* <Box
-            bgcolor={isPositive ? "#E7F6EC" : "#FBEAE9"}
-            display={"flex"}
-              alignItems={"center"}
-              borderRadius={"10px"}
-              padding={"0px 4px"}
-            >
-                {checkIcon}
-              <Typography
-                variant="caption"
-                color={isPositive ? "#036B26" : "#9E0A05"}
-              >
-                {isPositive ? `+${percentage}%` : `${percentage}%`}
-              </Typography>
-            </Box> */}
           </Box>
         </Stack>
       </Box>

@@ -44,7 +44,7 @@ const PieChartComponent = () => {
           cy="50%"
           outerRadius={120}
           fill="#8884d8"
-          label={({ name, value }) => `${value}`}
+          label={({  value }) => `${value}`}
         >
           {data.map((entry, index) => (
             <Cell key={`cell-${index}`} fill={entry.color} />

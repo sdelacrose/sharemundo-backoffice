@@ -31,9 +31,6 @@ const StatsContainer = ({ heading, stats }: any) => {
               icon={stat.icon}
               title={stat.title}
               value={stat.value}
-              percentage={stat.percentage}
-              isPositive={stat.isPositive}
-              checkIcon={stat.checkIcon}
             />
           ))}
         </Box>
