@@ -3,28 +3,27 @@ import { useMemo } from "react";
 interface Column {
   field: string;
   headerName?: string;
-  cellRenderer?: React.ComponentType<any>;
+  flex?: number;
   width?: number;
 }
 
 const useColumnSolutions = (columns: Column[]) => {
   return useMemo(() => {
-    return columns.map((col: any) => {
+    return columns.map((col) => {
       switch (col.field) {
-        case "name":
+        case "product_name":
           return {
-            field: "name",
+            ...col,
             headerName: "Name",
-            flex: 2.2,
-            width: 580,
+            flex: 2,
+            width: 300,
           };
-        case "available_licenses":
+        case "license_count":
           return {
-            field: "available_licenses",
-            headerName: "Available Licenses",
-            width: 120,
+            ...col,
+            headerName: "Total Purchased Licenses",
+            width: 150,
           };
-
         default:
           return col;
       }

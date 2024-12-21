@@ -1,6 +1,6 @@
 export const solutionColumnDefs = [
-  { field: "name", headerName: "Name" },
-  { field: "available_licenses", headerName: "Available Licenses" },
+  { field: "product_name", headerName: "Name" },
+  { field: "license_count", headerName: "Total Purchased Licenses" },
 ];
 export const UserColumnDefs = [
   { field: "name", headerName: "Disaply Name" },

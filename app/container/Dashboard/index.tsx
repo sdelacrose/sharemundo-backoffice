@@ -2,17 +2,13 @@
 import { Box, Divider, Stack, Typography } from "@mui/material";
 import React, { useContext, useEffect, useState } from "react";
 import {
-  billingData,
-  CustomersData,
   filterItems,
   homeBreadcrumb,
-  statsData,
 } from "./data";
 import StatsContainer from "./StatsContainer";
 import useColumnSolutions from "@/app/hooks/Grid-Table/useColumnSolutions";
 import { solutionColumnDefs } from "@/app/const/GridTable/ColDef";
 import AgGridTable from "@/app/ag-grid";
-import { SolutionsRow } from "@/app/const/GridTable/RowData";
 import Activity from "./Activity";
 import Header from "@/app/components/common/Header";
 import { SidebarContext } from "@/app/(pages)/layout";
@@ -68,10 +64,9 @@ const Dashboard = () => {
   }
 
  let userStats = dashboardData?.user_stats;
- let licenseStats = dashboardData?.license_stats;
  let billingStats = dashboardData?.revenue_stats;
 
- console.log(billingStats)
+ const solutionRowData = dashboardData?.license_stats || [];
 
   return (
       <Box
@@ -141,7 +136,7 @@ const Dashboard = () => {
                 >
                   Solutions
                 </Typography>
-                <AgGridTable rowData={SolutionsRow} columnDefs={solutionCol} />
+                <AgGridTable rowData={solutionRowData} columnDefs={solutionCol} />
               </Box>
               <Box
                 sx={{
