@@ -15,7 +15,6 @@ import AgGridTable from "@/app/ag-grid";
 import { SolutionsRow } from "@/app/const/GridTable/RowData";
 import Activity from "./Activity";
 import Header from "@/app/components/common/Header";
-import SelectDatePicker from "@/app/components/common/DatePicker/DatePicker";
 import { SidebarContext } from "@/app/(pages)/layout";
 import CustomFilterSelect from "@/app/components/common/CustomFilterSelect";
 import PieChartComponent from "@/app/components/common/Piechart";
