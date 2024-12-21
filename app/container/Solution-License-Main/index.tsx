@@ -86,7 +86,7 @@ const SolutionLicenseMain = () => {
           <Typography variant="h2" paddingBottom={"8px"}>
             Solution and Licenses
           </Typography>
-          <Typography variant="body2" color="#0057b7" mt={1} fontSize={16}>
+          <Typography variant="body2" color="#475367" mt={1} fontSize={16}>
             Sharemundo Back Office
           </Typography>
           <Divider

@@ -40,11 +40,11 @@ const ManageCustomers = () => {
     setBlockDrawer(false);
   };
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-   const query= event.target.value;
-   console.log(query)
+    const query = event.target.value;
+    console.log(query);
   };
   const [, setSelectedFilter] = useState<string | null>(null);
-  
+
   const handleSelect = (label: string | null) => {
     console.log("Selected filter:", label);
     setSelectedFilter(label);
@@ -121,7 +121,23 @@ const ManageCustomers = () => {
             <CustomFilterSelect items={filterItems} onSelect={handleSelect} />
           </Box>
         </Box>
-        <AgGridTable rowData={manageCustomersRow} columnDefs={manageUserCol} />
+        <Box
+          sx={{
+            borderRadius: "10px",
+            border: "1px solid #E4E7EC",
+            backgroundColor: "#FFF",
+            boxShadow: "0px 4px 4px -2px rgba(0, 0, 0, 0.02)",
+            overflow: "hidden",
+            marginTop: "24px",
+            marginRight: "32px",
+            marginBottom: "48px",
+          }}
+        >
+          <AgGridTable
+            rowData={manageCustomersRow}
+            columnDefs={manageUserCol}
+          />
+        </Box>
         {addDrawer && (
           <AddCustomerDrawer open={addDrawer} handleClose={handleCloseDrawer} />
         )}

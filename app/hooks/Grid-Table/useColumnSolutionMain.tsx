@@ -40,7 +40,7 @@ const useColumnSolutionMain = (
         case "status":
           return {
             field: "status",
-            headerName: "Statsu",
+            headerName: "Status",
             width: 120,
             flex: 1,
             cellRenderer: StatusCheck,

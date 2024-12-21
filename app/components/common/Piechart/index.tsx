@@ -1,57 +1,59 @@
 import React from "react";
-import {
-  PieChart,
-  Pie,
-  Cell,
-  Tooltip,
-  ResponsiveContainer,
-  LabelList,
-} from "recharts";
+import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
 
 const data = [
-  { name: "Category 1", value: 767, color: "#00C1D4" },
-  { name: "Category 2", value: 234557, color: "#F3A218" },
-  { name: "Category 3", value: 10988, color: "#004FA7" },
+  { name: "Group A", value: 400 },
+  { name: "Group B", value: 300 },
+  { name: "Group C", value: 300 },
 ];
 
-const CustomTooltip = ({ active, payload }: any) => {
-  if (active && payload && payload.length) {
-    return (
-      <div
-        style={{
-          background: "#fff",
-          padding: "10px",
-          border: "1px solid #ddd",
-          borderRadius: "5px",
-        }}
-      >
-        <p>{`${payload[0].name}: ${payload[0].value}`}</p>
-      </div>
-    );
-  }
-  return null;
+const COLORS = ["#00C1D4", "#004FA7", "#F3A218"];
+
+const RADIAN = Math.PI / 180;
+
+const renderCustomizedLabel = ({
+  cx,
+  cy,
+  midAngle,
+  innerRadius,
+  outerRadius,
+  percent,
+}: any) => {
+  const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
+  const x = cx + radius * Math.cos(-midAngle * RADIAN);
+  const y = cy + radius * Math.sin(-midAngle * RADIAN);
+
+  return (
+    <text
+      x={x}
+      y={y}
+      fill="white"
+      textAnchor={x > cx ? "start" : "end"}
+      dominantBaseline="central"
+    >
+      {`${(percent * 100).toFixed(0)}%`}
+    </text>
+  );
 };
 
 const PieChartComponent = () => {
   return (
-    <ResponsiveContainer width="100%" height={400}>
+    <ResponsiveContainer width="100%" height={500}>
       <PieChart>
         <Pie
           data={data}
-          dataKey="value"
-          nameKey="name"
           cx="50%"
           cy="50%"
-          outerRadius={120}
+          labelLine={false}
+          label={renderCustomizedLabel}
+          outerRadius={220} 
           fill="#8884d8"
-          label={({  value }) => `${value}`}
+          dataKey="value"
         >
           {data.map((entry, index) => (
-            <Cell key={`cell-${index}`} fill={entry.color} />
+            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
           ))}
-          <LabelList dataKey="value" position="inside" fill="#fff" />
         </Pie>
-        <Tooltip content={<CustomTooltip />} />
       </PieChart>
     </ResponsiveContainer>
   );

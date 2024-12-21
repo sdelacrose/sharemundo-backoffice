@@ -26,9 +26,7 @@ const Activity = () => {
           key={index}
           user={activity.user}
           action={activity.action}
-          target={activity.target}
           date={activity.date}
-          category={activity.category}
         />
       ))}
     </Box>

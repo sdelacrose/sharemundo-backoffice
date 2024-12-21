@@ -1,12 +1,7 @@
 import { Box, Stack, Typography } from "@mui/material";
 import React from "react";
 
-const StatsCard = ({
-  icon,
-  title,
-  value,
- 
-}: any) => {
+const StatsCard = ({ icon, title, value }: any) => {
   return (
     <>
       <Box
@@ -15,12 +10,24 @@ const StatsCard = ({
           border: "1px solid #E4E7EC",
           background: "#fff",
           padding: "16px",
-          maxWidth: "481px",
+          // maxWidth: "481px",
           width: "100%",
         }}
       >
         <Stack>
-          {icon}
+          <Box
+            border={"1px solid #F0F2F5"}
+            borderRadius={"6px"}
+            padding={"4px"}
+            bgcolor={"#fff"}
+            display={"flex"}
+            justifyContent={"center"}
+            alignItems={"center"}
+            maxWidth={"28px"}
+          >
+            {icon}
+          </Box>
+
           <Typography variant="caption" mt={5.2} fontSize={14} color="#667185">
             {title}
           </Typography>

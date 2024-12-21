@@ -62,6 +62,9 @@ const CustomFilterSelect: React.FC<CustomFilterSelectProps> = ({
         displayEmpty
         input={<InputBase />}
         sx={{
+          "& .MuiSelect-select-MuiInputBase-input": {
+            marginRight: "4px",
+          },
           "& .MuiSelect-icon": { display: "none" },
           minWidth: "40px",
           padding: "3px 6px",
@@ -76,7 +79,7 @@ const CustomFilterSelect: React.FC<CustomFilterSelectProps> = ({
           },
         }}
         renderValue={(selected) => (
-          <Typography variant="body2" mt={0.3}>
+          <Typography variant="body2" mt={0.3} sx={{ marginRight: "-26px" }}>
             {selected || "Filter"}
           </Typography>
         )}
