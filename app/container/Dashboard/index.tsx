@@ -1,6 +1,6 @@
 "use client";
 import { Box, Divider, Stack, Typography } from "@mui/material";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   billingData,
   CustomersData,
@@ -19,22 +19,61 @@ import { SidebarContext } from "@/app/(pages)/layout";
 import CustomFilterSelect from "@/app/components/common/CustomFilterSelect";
 import PieChartComponent from "@/app/components/common/Piechart";
 import Legend from "./legend";
+import { apiCall } from "@/app/utils/APIUtils";
+import CustomersStatsContainer from "./CustomersStatsContainer";
+import UsersStatsContainer from "./UsersStatsContainer";
+import BillingStatsContainer from "./BillingStatsContainer";
+
 
 const Dashboard = () => {
   const context = useContext(SidebarContext);
+  const [dashboardData, setDashboardData] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   const solutionCol = useColumnSolutions(solutionColumnDefs);
   const [, setSelectedFilter] = useState<string | null>(null);
 
+  useEffect(() => {
+    const fetchDashboardData = async () => {
+      try {
+        const data = await apiCall("/admin-dashboard/", "GET");
+        setDashboardData(data);
+        setLoading(false);
+      } catch (err) {
+        console.error("Error fetching dashboard data:", err);
+        // setError("Failed to load dashboard data.");
+        setLoading(false);
+      }
+    };
+
+    fetchDashboardData();
+  }, []);
+
   if (context === undefined) {
     return <div>Error: Sidebar context is undefined!</div>;
   }
+
   const handleSelect = (label: string | null) => {
     console.log("Selected filter:", label);
     setSelectedFilter(label);
   };
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>{error}</div>;
+  }
+
+ let userStats = dashboardData?.user_stats;
+ let licenseStats = dashboardData?.license_stats;
+ let billingStats = dashboardData?.revenue_stats;
+
+ console.log(billingStats)
+
   return (
-    <>
       <Box
         sx={{
           flex: 1,
@@ -68,14 +107,14 @@ const Dashboard = () => {
             }}
           />
           <Box mb={3}>
-            <StatsContainer heading="Customers" stats={CustomersData} />
+            <CustomersStatsContainer heading="Customers" stats={userStats} />
           </Box>
           <Box mb={3}>
-            <StatsContainer heading="Users" stats={statsData} />
+            <UsersStatsContainer heading="Users" stats={userStats} />
           </Box>
 
           <Box mb={3}>
-            <StatsContainer heading="Billings" stats={billingData} />
+            <BillingStatsContainer heading="Billings" stats={billingStats} />
           </Box>
           <Box sx={{ display: "flex", alignItems: "start", gap: "20px" }}>
             <Stack sx={{ width: "50%" }} gap={3}>
@@ -143,7 +182,6 @@ const Dashboard = () => {
           </Box>
         </Box>
       </Box>
-    </>
   );
 };
 

@@ -1,7 +1,14 @@
+"use client";
 import { Box, Stack, Typography } from "@mui/material";
 import React from "react";
 
-const StatsCard = ({ icon, title, value }: any) => {
+interface StatsCardProps {
+  icon?: React.ReactNode;
+  title: string;
+  value: number | string;
+}
+
+const StatsCard = ({ icon, title, value }: StatsCardProps) => {
   return (
     <>
       <Box

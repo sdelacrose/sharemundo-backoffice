@@ -13,7 +13,8 @@ export const apiCall = async (
   { successMessage, errorMessage }: ApiCallOptions = {},
 ) => {
   try {
-    let authToken = await getAuthToken();
+    // let authToken = await getAuthToken();
+    let authToken = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Im55WFRJbGxyWVRuTlRSZHgtOUg1WiJ9.eyJpc3MiOiJodHRwczovL3NoYXJlbXVuZG8uZXUuYXV0aDAuY29tLyIsInN1YiI6ImF1dGgwfDY3NjZiYWRlNzJiNDU4MmY5N2NkNzBjZCIsImF1ZCI6WyJodHRwczovL3NoYXJlbXVuZG8uZXUuYXV0aDAuY29tL2FwaS92Mi8iLCJodHRwczovL3NoYXJlbXVuZG8uZXUuYXV0aDAuY29tL3VzZXJpbmZvIl0sImlhdCI6MTczNDc4NTk3OCwiZXhwIjoxNzM0ODcyMzc4LCJzY29wZSI6Im9wZW5pZCBwcm9maWxlIGVtYWlsIiwiYXpwIjoiak9NYWxZRUhiUHg0RjlIR0lLOFdTcXVIV1FNU0lwbmkifQ.o66TQU-FdwD0ef-47aZOQ__zGJn5YaoR7YcTsSdhwrs4zwC6ZA4aSA-elrxHfSYKmwu-dA8u8pvE6S7fCpfU9sMgUO-4uUcjUsNlfGUJezyRnYEIc-SYANNnynncII1DxZNe0BPBiGzaSAY-QncGGvt8YsfCRsZ4YekQSqIKGZN3nDxxtHpWE-Xaw9pdT9RQNLLfeHTrXIbcSM17EcYQuwBjgaHhJNul3Zg1QZtjld3RjAQt1UHV_F0qjaPQzafkFx6M5LhfwBEdOGWzwJGYRuT9DpGSqd4WXU7TJciSfrXvjSebJhRY19upW3OuDiOW6BSkKpw1xUT82wLqGSdzNg'
     if (token) {
       authToken = token;
     }
