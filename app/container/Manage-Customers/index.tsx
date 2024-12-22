@@ -7,7 +7,7 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { manageCustomersColumnDefs } from "@/app/const/GridTable/ColDef";
 import AgGridTable from "@/app/ag-grid";
 import { manageCustomersRow } from "@/app/const/GridTable/RowData";
@@ -21,6 +21,8 @@ import useColumnManageUserDefs from "@/app/hooks/Grid-Table/useColumnManageUser"
 import AddCustomerDrawer from "./addCustomerDrawer";
 import BlockDrawer from "./addBlockDrawer";
 import SharpLineChart from "@/app/components/common/SharpLineChart";
+import { apiCall } from "@/app/utils/APIUtils";
+
 const ManageCustomers = () => {
   const context = useContext(SidebarContext);
   const [addDrawer, setAddDrawer] = useState(false);
@@ -32,6 +34,27 @@ const ManageCustomers = () => {
     setAddDrawer(false);
   };
   const [openBlockDrawer, setBlockDrawer] = useState(false);
+  const [chartData, setChartData] = useState<{ name: string; value: number }[]>(
+    []
+  );
+
+  useEffect(() => {
+    const fetchCustomerStats = async () => {
+      try {
+        const stats = await apiCall("/admin-dashboard/customers/stats");
+        const formattedData = Object.entries(stats).map(([key, value]) => ({
+          name: key,
+          value: value as number,
+        }));
+        setChartData(formattedData);
+      } catch (error) {
+        console.error("Failed to fetch customer stats:", error);
+      }
+    };
+
+    fetchCustomerStats();
+  }, []);
+
   const handleBlockDrawer = () => {
     setBlockDrawer(true);
   };
@@ -43,16 +66,18 @@ const ManageCustomers = () => {
     const query = event.target.value;
     console.log(query);
   };
-  const [, setSelectedFilter] = useState<string | null>(null);
 
+  const [, setSelectedFilter] = useState<string | null>(null);
   const handleSelect = (label: string | null) => {
     console.log("Selected filter:", label);
     setSelectedFilter(label);
   };
+
   const manageUserCol = useColumnManageUserDefs(manageCustomersColumnDefs);
   if (context === undefined) {
     return <div>Error: Sidebar context is undefined!</div>;
   }
+
   return (
     <>
       <Box
@@ -94,7 +119,7 @@ const ManageCustomers = () => {
           <Typography variant="h5" mb={2}>
             Number of customers per month
           </Typography>
-          <SharpLineChart />
+          <SharpLineChart data={chartData} />
         </Stack>
         <Box
           display={"flex"}
@@ -104,10 +129,9 @@ const ManageCustomers = () => {
         >
           <ButtonGroup variant="outlined" aria-label="Basic button group">
             <Button startIcon={<Adduser />} onClick={handleAddDrawer}>
-              Add Users{" "}
+              Add Users
             </Button>
             <Button startIcon={<BlockUser />} onClick={handleBlockDrawer}>
-              {" "}
               Block User
             </Button>
           </ButtonGroup>
@@ -117,7 +141,7 @@ const ManageCustomers = () => {
               placeholder="Search here..."
               onChange={handleSearchChange}
               width="340px"
-            />{" "}
+            />
             <CustomFilterSelect items={filterItems} onSelect={handleSelect} />
           </Box>
         </Box>

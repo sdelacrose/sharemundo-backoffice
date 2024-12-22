@@ -9,22 +9,11 @@ import {
   CartesianGrid,
 } from "recharts";
 
-const data = [
-  { name: "1", value: 400 },
-  { name: "2", value: 200 },
-  { name: "3", value: 800 },
-  { name: "4", value: 100 },
-  { name: "5", value: 600 },
-  { name: "6", value: 500 },
-  { name: "7", value: 700 },
-  { name: "8", value: 400 },
-  { name: "9", value: 600 },
-  { name: "10", value: 300 },
-  { name: "11", value: 500 },
-  { name: "12", value: 200 },
-];
+interface SharpLineChartProps {
+  data: { name: string; value: number }[];
+}
 
-const SharpLineChart: React.FC = () => {
+const SharpLineChart: React.FC<SharpLineChartProps> = ({ data }) => {
   return (
     <div style={{ width: "100%", height: 400, margin: "20px auto" }}>
       <ResponsiveContainer width="100%" height="100%">
