@@ -1,12 +1,6 @@
 import React from "react";
 import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
 
-const data = [
-  { name: "Group A", value: 400 },
-  { name: "Group B", value: 300 },
-  { name: "Group C", value: 300 },
-];
-
 const COLORS = ["#00C1D4", "#004FA7", "#F3A218"];
 
 const RADIAN = Math.PI / 180;
@@ -18,6 +12,8 @@ const renderCustomizedLabel = ({
   innerRadius,
   outerRadius,
   percent,
+  name,
+  value,
 }: any) => {
   const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
   const x = cx + radius * Math.cos(-midAngle * RADIAN);
@@ -36,7 +32,19 @@ const renderCustomizedLabel = ({
   );
 };
 
-const PieChartComponent = () => {
+const PieChartComponent = ({ totalUsers, totalCustomers, licenseCount }: any) => {
+  // Prepare data for the pie chart
+  const total = totalUsers + totalCustomers + licenseCount;
+
+  console.log(totalUsers , totalCustomers , licenseCount)
+
+  // Normalize values to prevent percentages > 100
+  const data = [
+    { name: "Total Users", value: totalUsers },
+    { name: "Total Customers", value: totalCustomers },
+    { name: "License Count", value: licenseCount },
+  ].map((item) => ({ ...item, value: (item.value / total) * 100 }));
+
   return (
     <ResponsiveContainer width="100%" height={500}>
       <PieChart>
@@ -45,8 +53,8 @@ const PieChartComponent = () => {
           cx="50%"
           cy="50%"
           labelLine={false}
-          label={renderCustomizedLabel}
-          outerRadius={220} 
+          label={(props) => renderCustomizedLabel({ ...props, ...data[props.index] })}
+          outerRadius={220}
           fill="#8884d8"
           dataKey="value"
         >

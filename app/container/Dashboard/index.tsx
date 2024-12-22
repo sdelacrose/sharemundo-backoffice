@@ -170,7 +170,14 @@ const Dashboard = () => {
                 <Box ml={3}>
                   <Legend />
                 </Box>
-                <PieChartComponent />
+                <PieChartComponent
+            totalUsers={dashboardData?.user_stats?.total_users || 0}
+            totalCustomers={dashboardData?.user_stats?.total_customers || 0}
+            licenseCount={dashboardData?.license_stats?.reduce(
+              (acc: number, curr: any) => acc + curr.license_count,
+              0
+            ) || 0}
+          />
               </Box>
             </Stack>
             <Activity />
