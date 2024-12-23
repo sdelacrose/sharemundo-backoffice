@@ -11,9 +11,8 @@ export const Role = [
   { value: "2", label: "Company" },
 ];
 
-export const filterByRoleItmes = [
-  { label: "All" },
-  { label: "Freelancer" },
-  { label: "Company" },
+export const filterByRoleItems = [
+  { label: "All", value: "all" },
+  { label: "Freelancer", value: "freelancer" },
+  { label: "Company", value: "company" },
 ];
-

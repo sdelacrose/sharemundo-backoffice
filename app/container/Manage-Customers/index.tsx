@@ -12,7 +12,7 @@ import { manageCustomersColumnDefs } from "@/app/const/GridTable/ColDef";
 import AgGridTable from "@/app/ag-grid";
 import { manageCustomersRow } from "@/app/const/GridTable/RowData";
 import Header from "@/app/components/common/Header";
-import { customersBreadcrumb, filterByRoleItmes } from "./manageData";
+import { customersBreadcrumb, filterByRoleItems } from "./manageData";
 import { SidebarContext } from "@/app/(pages)/layout";
 import { Adduser, BlockUser, Search } from "@/app/assets/icons";
 import CustomSearchField from "@/app/components/common/CustomSearch";
@@ -22,6 +22,8 @@ import AddCustomerDrawer from "./addCustomerDrawer";
 import BlockDrawer from "./addBlockDrawer";
 import SharpLineChart from "@/app/components/common/SharpLineChart";
 import { apiCall } from "@/app/utils/APIUtils";
+import _debounce from "lodash/debounce";
+import AgGridServerSideTable from "@/app/ag-grid/AgGridServerSideTable";
 
 const ManageCustomers = () => {
   const context = useContext(SidebarContext);
@@ -63,17 +65,15 @@ const ManageCustomers = () => {
       try {
         const data = await apiCall("/admin-dashboard/customers");
         setAllCustomers(data);
-        setRowData(data?.results)
+        setRowData(data?.results);
       } catch (err) {
         console.error("Failed to fetch customers:", err);
       }
     };
-  
+
     fetchAllCustomers();
   }, []);
-  
 
-  console.log("customers",allCustomers)
 
   const handleBlockDrawer = () => {
     setBlockDrawer(true);
@@ -82,23 +82,38 @@ const ManageCustomers = () => {
   const handleCloseBlockDrawer = () => {
     setBlockDrawer(false);
   };
-  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const query = event.target.value;
-    console.log(query);
-  };
 
-  const [, setSelectedFilter] = useState<string | null>(null);
-  const handleSelect = (label: string | null) => {
-    console.log("Selected filter:", label);
-    setSelectedFilter(label);
-  };
+  const handleSearchChange = _debounce(async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const query = event.target.value;
+  
+    try {
+      const data = await apiCall(`/admin-dashboard/customers?search=${query}`);
+      setRowData(data?.results);
+    } catch (err) {
+      console.error("Failed to search customers:", err);
+    }
+  }, 500);
+
+const handleSelect = async (label: string | null) => {
+  try {
+    let apiUrl = "/admin-dashboard/customers";
+    if (label === "Freelancer") {
+      apiUrl += "?search=freelancer";
+    } else if (label === "Company") {
+      apiUrl += "?search=Company";
+    }
+    const data = await apiCall(apiUrl);
+    setRowData(data?.results);
+  } catch (err) {
+    console.error("Failed to fetch filtered customers:", err);
+  }
+};
+
 
   const manageUserCol = useColumnManageUserDefs(manageCustomersColumnDefs);
   if (context === undefined) {
     return <div>Error: Sidebar context is undefined!</div>;
   }
-
-  console.log("customers", allCustomers?.customers)
 
   return (
     <>
@@ -150,8 +165,20 @@ const ManageCustomers = () => {
           mb={3}
         >
           <ButtonGroup variant="outlined" aria-label="Basic button group">
-            <Button startIcon={<Adduser />} onClick={handleAddDrawer}>
-              Add Users
+            <Button
+              startIcon={<Adduser />}
+              onClick={handleAddDrawer}
+              disabled={true}
+              sx={{
+                color: "inherit",
+                backgroundColor: "transparent",
+                "&.Mui-disabled": {
+                  color: "inherit",
+                  backgroundColor: "transparent",
+                },
+              }}
+            >
+              Add Customers
             </Button>
             <Button startIcon={<BlockUser />} onClick={handleBlockDrawer}>
               Block User
@@ -164,7 +191,10 @@ const ManageCustomers = () => {
               onChange={handleSearchChange}
               width="340px"
             />
-            <CustomFilterSelect items={filterByRoleItmes} onSelect={handleSelect} />
+            <CustomFilterSelect
+              items={filterByRoleItems}
+              onSelect={handleSelect}
+            />
           </Box>
         </Box>
         <Box
@@ -179,7 +209,7 @@ const ManageCustomers = () => {
             marginBottom: "48px",
           }}
         >
-          <AgGridTable
+          <AgGridServerSideTable
             rowData={rowData}
             columnDefs={manageUserCol}
             rowSelection={true}
