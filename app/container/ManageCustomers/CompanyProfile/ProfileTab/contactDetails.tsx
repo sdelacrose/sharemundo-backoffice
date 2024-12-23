@@ -20,15 +20,10 @@ const ContactDetails = ({ profileDetail }: { profileDetail: any }) => {
             marginBottom: "24px",
           }}
         />
-        <Stack gap={3} mr={15}>
-          <Box display={"flex"} justifyContent={"space-between"}>
-            <Box
-              display={"flex"}
-              flexDirection={"column"}
-              justifyContent={"space-between"}
-              alignItems={"flex-start"}
-              gap={"24px"}
-            >
+        <Stack gap={3}>
+          <Box display="flex" gap={4}>
+            {/* Left Column */}
+            <Box flex={1} display="flex" flexDirection="column" gap={3}>
               <Stack>
                 <Typography variant="caption" color="#667185">
                   Address
@@ -62,12 +57,8 @@ const ContactDetails = ({ profileDetail }: { profileDetail: any }) => {
                 </Typography>
               </Stack>
             </Box>
-            <Box
-              display={"flex"}
-              flexDirection={"column"}
-              alignItems={"flex-start"}
-              gap={"24px"}
-            >
+            {/* Right Column */}
+            <Box flex={1} display="flex" flexDirection="column" gap={3}>
               <Stack>
                 <Typography variant="caption" color="#667185">
                   Town
@@ -76,7 +67,6 @@ const ContactDetails = ({ profileDetail }: { profileDetail: any }) => {
                   {companyProfile.company_town || "N/A"}
                 </Typography>
               </Stack>
-
               <Stack>
                 <Typography variant="caption" color="#667185">
                   Post Code
@@ -108,14 +98,10 @@ const ContactDetails = ({ profileDetail }: { profileDetail: any }) => {
             marginBottom: "24px",
           }}
         />
-        <Stack gap={3} mr={15}>
-          <Box display={"flex"} justifyContent={"space-between"}>
-            <Box
-              display={"flex"}
-              flexDirection={"column"}
-              alignItems={"flex-start"}
-              gap={"24px"}
-            >
+        <Stack gap={3}>
+          <Box display="flex" gap={4}>
+            {/* Left Column */}
+            <Box flex={1} display="flex" flexDirection="column" gap={3}>
               <Stack>
                 <Typography variant="caption" color="#667185">
                   Total Users
@@ -137,23 +123,16 @@ const ContactDetails = ({ profileDetail }: { profileDetail: any }) => {
                   Pending Freelance Invites
                 </Typography>
                 <Typography variant="subtitle1" color="#101928">
-                  {/* Replace with the actual number of pending invites */}
                   N/A
                 </Typography>
               </Stack>
             </Box>
-            <Box
-              display={"flex"}
-              flexDirection={"column"}
-              alignItems={"flex-start"}
-              gap={"24px"}
-            >
+            <Box flex={1} display="flex" flexDirection="column" gap={3}>
               <Stack>
                 <Typography variant="caption" color="#667185">
                   Freelancers
                 </Typography>
                 <Typography variant="subtitle1" color="#101928">
-                  {/* Replace with the actual number of freelancers */}
                   N/A
                 </Typography>
               </Stack>

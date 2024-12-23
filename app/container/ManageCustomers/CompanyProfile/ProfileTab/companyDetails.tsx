@@ -21,14 +21,8 @@ const CompanyDetails = ({ profileDetail }: { profileDetail: any }) => {
           }}
         />
         <Stack gap={3} mr={15}>
-          <Box display={"flex"} justifyContent={"space-between"}>
-            <Box
-              display={"flex"}
-              flexDirection={"column"}
-              justifyContent={"space-between"}
-              alignItems={"flex-start"}
-              gap={"24px"}
-            >
+          <Box display="flex" gap={4}>
+            <Box flex={3} display="flex" flexDirection="column" gap={"24px"}>
               <Stack>
                 <Typography variant="caption" color="#667185">
                   Company Name
@@ -54,13 +48,7 @@ const CompanyDetails = ({ profileDetail }: { profileDetail: any }) => {
                 </Typography>
               </Stack>
             </Box>
-            <Box
-              display={"flex"}
-              flexDirection={"column"}
-              justifyContent={"space-between"}
-              alignItems={"flex-start"}
-              gap={"24px"}
-            >
+            <Box flex={2} display="flex" flexDirection="column" gap={"24px"}>
               <Stack>
                 <Typography variant="caption" color="#667185">
                   Sharemundo Link ID
@@ -77,7 +65,6 @@ const CompanyDetails = ({ profileDetail }: { profileDetail: any }) => {
                   {companyProfile.company_tax_reference || "N/A"}
                 </Typography>
               </Stack>
-
               <Stack>
                 <Typography variant="caption" color="#667185">
                   Email
@@ -102,14 +89,8 @@ const CompanyDetails = ({ profileDetail }: { profileDetail: any }) => {
           }}
         />
         <Stack gap={3} mr={15}>
-          <Box display={"flex"} justifyContent={"space-between"}>
-            <Box
-              display={"flex"}
-              flexDirection={"column"}
-              justifyContent={"space-between"}
-              alignItems={"flex-start"}
-              gap={"24px"}
-            >
+          <Box display="flex" gap={4}>
+            <Box flex={3} display="flex" flexDirection="column" gap={"24px"}>
               <Stack>
                 <Typography variant="caption" color="#667185">
                   Bank Name
@@ -127,13 +108,7 @@ const CompanyDetails = ({ profileDetail }: { profileDetail: any }) => {
                 </Typography>
               </Stack>
             </Box>
-            <Box
-              display={"flex"}
-              flexDirection={"column"}
-              justifyContent={"space-between"}
-              alignItems={"flex-start"}
-              gap={"24px"}
-            >
+            <Box flex={2} display="flex" flexDirection="column" gap={"24px"}>
               <Stack>
                 <Typography variant="caption" color="#667185">
                   Bank Address

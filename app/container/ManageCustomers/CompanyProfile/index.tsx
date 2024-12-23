@@ -10,22 +10,28 @@ import UserConnectionTab from "./userConnectionTab";
 import LicenseTab from "./licenseTab";
 import ProfileTab from "./ProfileTab";
 
-const CompanyProfile = ({customerDetail}) => {
-
-  console.log("customerDetail",customerDetail)
-
+const CompanyProfile = ({ customerDetail }: { customerDetail: any }) => {
   const context = useContext(SidebarContext);
   const [activeTab, setActiveTab] = useState(0);
+
+  if (!customerDetail) {
+    return <div>Loading customer details...</div>;
+  }
+
+  const companyProfile = customerDetail.company_profile;
+
   if (context === undefined) {
     return <div>Error: Sidebar context is undefined!</div>;
   }
+
   const handleTabChange = (newValue: number) => {
     setActiveTab(newValue);
   };
+
   const renderTabContent = () => {
     switch (activeTab) {
       case 0:
-        return <ProfileTab profileData={customerDetail}/>;
+        return <ProfileTab profileData={customerDetail} />;
       case 1:
         return <UserConnectionTab />;
       case 2:
@@ -36,6 +42,7 @@ const CompanyProfile = ({customerDetail}) => {
         return <div>Invalid Tab</div>;
     }
   };
+
   return (
     <>
       <Box
@@ -52,11 +59,18 @@ const CompanyProfile = ({customerDetail}) => {
         </Box>
         <Box sx={{ margin: "24px 24px 24px 0" }}>
           <Typography variant="h2" paddingBottom={"8px"}>
-            XYZ Solar Limited, Berlin,GR{" "}
+            {companyProfile?.company_name || "Company Name Not Available"},{" "}
+            {companyProfile?.company_town}, {companyProfile?.company_country}
           </Typography>
+
           <Typography variant="body2" color="#0057b7" mt={1} fontSize={16}>
-            Company
+            {customerDetail?.user_type === "company_user"
+              ? "Company"
+              : customerDetail?.user_type === "freelancer"
+              ? "Freelancer"
+              : "Role Not Available"}
           </Typography>
+
           <Divider
             sx={{
               borderColor: "rgba(240, 242, 245, 1)",
