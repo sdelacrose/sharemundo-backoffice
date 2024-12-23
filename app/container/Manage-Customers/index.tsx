@@ -9,8 +9,6 @@ import {
 } from "@mui/material";
 import React, { useContext, useState, useEffect } from "react";
 import { manageCustomersColumnDefs } from "@/app/const/GridTable/ColDef";
-import AgGridTable from "@/app/ag-grid";
-import { manageCustomersRow } from "@/app/const/GridTable/RowData";
 import Header from "@/app/components/common/Header";
 import { customersBreadcrumb, filterByRoleItems } from "./manageData";
 import { SidebarContext } from "@/app/(pages)/layout";
@@ -30,6 +28,14 @@ const ManageCustomers = () => {
   const [addDrawer, setAddDrawer] = useState(false);
   const [allCustomers, setAllCustomers] = useState<any>([]);
   const [rowData, setRowData] = useState<any>([]);
+  const [nextPageUrl, setNextPageUrl] = useState<string | null>(null);
+  const [previousPageUrl, setPreviousPageUrl] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
+  const [openBlockDrawer, setBlockDrawer] = useState(false);
+  const [chartData, setChartData] = useState<{ name: string; value: number }[]>(
+    []
+  );
 
   const handleAddDrawer = () => {
     setAddDrawer(true);
@@ -38,10 +44,6 @@ const ManageCustomers = () => {
   const handleCloseDrawer = () => {
     setAddDrawer(false);
   };
-  const [openBlockDrawer, setBlockDrawer] = useState(false);
-  const [chartData, setChartData] = useState<{ name: string; value: number }[]>(
-    []
-  );
 
   useEffect(() => {
     const fetchCustomerStats = async () => {
@@ -60,20 +62,76 @@ const ManageCustomers = () => {
     fetchCustomerStats();
   }, []);
 
+  const fetchCustomers = async (url: string) => {
+    try {
+      // Trim the URL to start from "/admin-dashboard"
+      const trimmedUrl = url.includes("/admin-dashboard")
+        ? url.substring(url.indexOf("/admin-dashboard"))
+        : url;
+  
+      const data = await apiCall(trimmedUrl); // Make API call with the trimmed path
+      setRowData(data?.results || []);
+      setNextPageUrl(data?.next ? data.next : null);
+      setPreviousPageUrl(data?.previous ? data.previous : null);
+      setTotalPages(Math.ceil(data?.count / 10)); // Assuming 10 items per page
+    } catch (err) {
+      console.error("Failed to fetch customers:", err);
+    }
+  };
+  
+  const handleNextPage = () => {
+    if (nextPageUrl) {
+      fetchCustomers(nextPageUrl); // Call the trimmed nextPageUrl
+      setCurrentPage((prev) => prev + 1);
+    }
+  };
+  
+  const handlePreviousPage = () => {
+    if (previousPageUrl) {
+      fetchCustomers(previousPageUrl); // Call the trimmed previousPageUrl
+      setCurrentPage((prev) => prev - 1);
+    }
+  };
+  
   useEffect(() => {
-    const fetchAllCustomers = async () => {
-      try {
-        const data = await apiCall("/admin-dashboard/customers");
-        setAllCustomers(data);
-        setRowData(data?.results);
-      } catch (err) {
-        console.error("Failed to fetch customers:", err);
-      }
-    };
-
-    fetchAllCustomers();
+    fetchCustomers("/admin-dashboard/customers");
   }, []);
 
+  const handleSearchChange = _debounce(
+    async (event: React.ChangeEvent<HTMLInputElement>) => {
+      const query = event.target.value;
+      try {
+        const data = await apiCall(
+          `/admin-dashboard/customers?search=${query}`
+        );
+        setRowData(data?.results);
+        setNextPageUrl(data?.next || null);
+        setPreviousPageUrl(data?.previous || null);
+        setTotalPages(Math.ceil(data?.count / 10));
+      } catch (err) {
+        console.error("Failed to search customers:", err);
+      }
+    },
+    500
+  );
+
+  const handleSelect = async (label: string | null) => {
+    try {
+      let apiUrl = "/admin-dashboard/customers";
+      if (label === "Freelancer") {
+        apiUrl += "?search=freelancer";
+      } else if (label === "Company") {
+        apiUrl += "?search=Company";
+      }
+      const data = await apiCall(apiUrl);
+      setRowData(data?.results);
+      setNextPageUrl(data?.next || null);
+      setPreviousPageUrl(data?.previous || null);
+      setTotalPages(Math.ceil(data?.count / 10));
+    } catch (err) {
+      console.error("Failed to fetch filtered customers:", err);
+    }
+  };
 
   const handleBlockDrawer = () => {
     setBlockDrawer(true);
@@ -82,33 +140,6 @@ const ManageCustomers = () => {
   const handleCloseBlockDrawer = () => {
     setBlockDrawer(false);
   };
-
-  const handleSearchChange = _debounce(async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const query = event.target.value;
-  
-    try {
-      const data = await apiCall(`/admin-dashboard/customers?search=${query}`);
-      setRowData(data?.results);
-    } catch (err) {
-      console.error("Failed to search customers:", err);
-    }
-  }, 500);
-
-const handleSelect = async (label: string | null) => {
-  try {
-    let apiUrl = "/admin-dashboard/customers";
-    if (label === "Freelancer") {
-      apiUrl += "?search=freelancer";
-    } else if (label === "Company") {
-      apiUrl += "?search=Company";
-    }
-    const data = await apiCall(apiUrl);
-    setRowData(data?.results);
-  } catch (err) {
-    console.error("Failed to fetch filtered customers:", err);
-  }
-};
-
 
   const manageUserCol = useColumnManageUserDefs(manageCustomersColumnDefs);
   if (context === undefined) {
@@ -213,6 +244,12 @@ const handleSelect = async (label: string | null) => {
             rowData={rowData}
             columnDefs={manageUserCol}
             rowSelection={true}
+            currentPage={currentPage}
+            totalPages={totalPages}
+            nextPageUrl={nextPageUrl}
+            previousPageUrl={previousPageUrl}
+            onNextPage={handleNextPage}
+            onPreviousPage={handlePreviousPage}
             height={580}
           />
         </Box>
