@@ -1,13 +1,48 @@
 import { Cross } from "@/app/assets/icons";
 import CustomButton from "@/app/components/common/CustomButton";
+import { apiCall } from "@/app/utils/APIUtils";
 import { Box, Drawer, Stack, Typography } from "@mui/material";
 import React from "react";
 interface CreateNewDrawerProps {
   open: boolean;
   handleClose: () => void;
+  id?: any;
+  onUpdateStatus?: any;
 }
 
-const StopDrawer: React.FC<CreateNewDrawerProps> = ({ open, handleClose }) => {
+const StopDrawer: React.FC<CreateNewDrawerProps> = ({
+  open,
+  handleClose,
+  id,
+  onUpdateStatus,
+}) => {
+  // const handleStop = async () => {
+  //   try {
+  //     const response = await apiCall(
+  //       `/admin-dashboard/products/${id}/stop`,
+  //       "POST",
+  //       null,
+  //       null,
+  //       {
+  //         successMessage: "Solution resumed successfully!",
+  //         errorMessage: "Failed to resume the solution. Please try again.",
+  //       }
+  //     );
+  //     console.log("Resume API Response:", response);
+  //     handleClose();
+  //   } catch (error) {
+  //     console.error("Error resuming solution:", error);
+  //   }
+  // };
+  const handleStop = async () => {
+    if (!id || !onUpdateStatus) return;
+    try {
+      await onUpdateStatus(id, "stop");
+      handleClose();
+    } catch (error) {
+      console.error("Error stopping solution:", error);
+    }
+  };
   return (
     <>
       <Drawer
@@ -65,6 +100,7 @@ const StopDrawer: React.FC<CreateNewDrawerProps> = ({ open, handleClose }) => {
                 variant="contained"
                 fontSize="16px"
                 padding="16px 24px"
+                onClick={handleStop}
               >
                 Stop
               </CustomButton>

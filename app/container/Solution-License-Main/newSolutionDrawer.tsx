@@ -1,17 +1,65 @@
+
 import { Cross } from "@/app/assets/icons";
 import CustomButton from "@/app/components/common/CustomButton";
 import CustomTextField from "@/app/components/common/CustomTextfield";
+import { apiCall } from "@/app/utils/APIUtils";
 import { Box, Drawer, Stack, Typography } from "@mui/material";
 import React from "react";
+import { useForm, Controller } from "react-hook-form";
+
 interface CreateNewDrawerProps {
   open: boolean;
   handleClose: () => void;
+  onSolutionCreated: (newSolution: any) => void;
 }
 
 const NewSolutionDrawer: React.FC<CreateNewDrawerProps> = ({
   open,
   handleClose,
+  onSolutionCreated,
 }) => {
+  const {
+    control,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+    reset,
+  } = useForm({
+    defaultValues: {
+      solutionName: "",
+      link: "",
+      details: "",
+      price: "",
+    },
+  });
+
+  const onSubmit = async (data: any) => {
+    const payload = {
+      name: data.solutionName,
+      link: data.link,
+      details: data.details,
+      price: parseFloat(data.price),
+    };
+
+    try {
+      const response = await apiCall(
+        "/admin-dashboard/products",
+        "POST",
+        payload,
+        null,
+        {
+          successMessage: "Solution created successfully!",
+          errorMessage: "Failed to create the solution. Please try again.",
+        }
+      );
+
+      onSolutionCreated(response);
+      handleClose();
+      reset();
+    } catch (error) {
+      console.error("Error creating solution:", error);
+    }
+  };
+
   return (
     <>
       <Drawer
@@ -41,56 +89,119 @@ const NewSolutionDrawer: React.FC<CreateNewDrawerProps> = ({
             mt: "80px",
           }}
         >
-          <Stack gap={4}>
-            <Typography variant="h3" letterSpacing={"0.4px"}>
-              Create New Solution?
-            </Typography>
-            <Typography variant="caption" fontSize={14} color="#667185"  mt={-1}>
-              New Solution
-            </Typography>
-            <Stack gap={2.4}>
-              <CustomTextField
-                label="Solution Name"
-                placeholder="solution"
-                fullWidth
-              />
-              <CustomTextField
-                label="Link"
-                placeholder="solution.com"
-                fullWidth
-              />
-              <CustomTextField
-                label="Other Details"
-                placeholder="details"
-                fullWidth
-              />
-              <CustomTextField label="Price" placeholder="$54.45" fullWidth />{" "}
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <Stack gap={4}>
+              <Typography variant="h3" letterSpacing={"0.4px"}>
+                Create New Solution
+              </Typography>
+              <Typography
+                variant="caption"
+                fontSize={14}
+                color="#667185"
+                mt={-1}
+              >
+                New Solution Details
+              </Typography>
+              <Stack gap={2.4}>
+                <Controller
+                  name="solutionName"
+                  control={control}
+                  rules={{ required: "Solution Name is required" }}
+                  render={({ field }) => (
+                    <CustomTextField
+                      label="Solution Name"
+                      placeholder="Solution Name"
+                      fullWidth
+                      error={!!errors.solutionName}
+                      helperText={errors.solutionName?.message}
+                      {...field}
+                    />
+                  )}
+                />
+                <Controller
+                  name="link"
+                  control={control}
+                  rules={{
+                    required: "Link is required",
+                    pattern: {
+                      value:
+                        /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/,
+                      message: "Invalid link format",
+                    },
+                  }}
+                  render={({ field }) => (
+                    <CustomTextField
+                      label="Link"
+                      placeholder="solution.com"
+                      fullWidth
+                      error={!!errors.link}
+                      helperText={errors.link?.message}
+                      {...field}
+                    />
+                  )}
+                />
+                <Controller
+                  name="details"
+                  control={control}
+                  render={({ field }) => (
+                    <CustomTextField
+                      label="Details"
+                      placeholder="Solution details"
+                      fullWidth
+                      multiline
+                      // rows={3}
+                      {...field}
+                    />
+                  )}
+                />
+                <Controller
+                  name="price"
+                  control={control}
+                  rules={{
+                    required: "Price is required",
+                    validate: (value) =>
+                      !isNaN(parseFloat(value)) || "Price must be a number",
+                  }}
+                  render={({ field }) => (
+                    <CustomTextField
+                      label="Price"
+                      placeholder="$54.45"
+                      fullWidth
+                      error={!!errors.price}
+                      helperText={errors.price?.message}
+                      {...field}
+                    />
+                  )}
+                />
+              </Stack>
+              <Box
+                sx={{
+                  display: "flex",
+                  gap: "16px",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                }}
+              >
+                <CustomButton
+                  variant="contained"
+                  fontSize="16px"
+                  padding="16px 24px"
+                  type="submit"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? "Saving..." : "Save"}
+                </CustomButton>
+                <CustomButton
+                  variant="outlined"
+                  fontSize="16px"
+                  onClick={handleClose}
+                  padding="16px 24px"
+                >
+                  Cancel
+                </CustomButton>
+              </Box>
             </Stack>
-            <Box
-              sx={{
-                display: "flex",
-                gap: "16px",
-                alignItems: "center",
-                justifyContent: "space-between",
-              }}
-            >
-              <CustomButton
-                variant="contained"
-                fontSize="16px"
-                padding="16px 24px"
-              >
-                Save
-              </CustomButton>
-              <CustomButton
-                variant="outlined"
-                fontSize="16px"
-                onClick={handleClose}
-                padding="16px 24px"
-              >
-                Cancel
-              </CustomButton>
-            </Box>
-          </Stack>
+          </form>
           <Box
             sx={{
               position: "absolute",

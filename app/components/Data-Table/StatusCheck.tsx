@@ -6,7 +6,8 @@ const StatusCheck = (props: CustomCellRendererProps) => {
   let background = "#FBEAE9";
   let color = "#9E0A05";
   let text = "Failed";
-  const normalizedStatus = props.value;
+  const normalizedStatus = props.value?.toLowerCase();
+  console.log("statuys", normalizedStatus);
 
   if (normalizedStatus === "active") {
     background = "#E7F6EC";

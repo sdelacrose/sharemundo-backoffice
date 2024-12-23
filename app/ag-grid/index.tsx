@@ -12,7 +12,7 @@ const AgGridTable: React.FC<AgGridTableProps> = ({
   width,
   // rowHeight = 60,
   // paginationPageSize = 10,
-  // onRowClicked,
+  onRowClicked,
   // disablePagination = false,
   // rowSelection = false,
   // handleRowSelection = () => {},
@@ -77,7 +77,7 @@ const AgGridTable: React.FC<AgGridTableProps> = ({
           // }
           // domLayout="normal"
           // rowHeight={rowHeight}
-          // onRowClicked={onRowClicked}
+          onRowClicked={onRowClicked}
           // suppressPaginationPanel={true}
           // onGridReady={onGridReady}
           // rowSelection={rowSelection ? rowSelectionMemo : undefined}

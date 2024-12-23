@@ -3,7 +3,7 @@
 import { SidebarContext } from "@/app/(pages)/layout";
 import Header from "@/app/components/common/Header";
 import { Box, Divider, Stack, Typography } from "@mui/material";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Search } from "@/app/assets/icons";
 import SharpLineChart from "@/app/components/common/SharpLineChart";
 import { userManagementColumnDefs } from "@/app/const/GridTable/ColDef";
@@ -13,15 +13,47 @@ import { filterItems, userBreadcrumb } from "./userData";
 import CustomSearchField from "@/app/components/common/CustomSearch";
 import CustomFilterSelect from "@/app/components/common/CustomFilterSelect";
 import useColumnUserManagement from "@/app/hooks/Grid-Table/useColumnUserManagement";
+import { apiCall } from "@/app/utils/APIUtils";
 
 const UserManagement = () => {
   const context = useContext(SidebarContext);
   const [, setSelectedFilter] = useState<string | null>(null);
   const UserManagementCol = useColumnUserManagement(userManagementColumnDefs);
+
+  const [userData, setUserData] = useState<any>(null);
+  const [loading, setLoading] = useState<any>(false);
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const data = await apiCall("/admin-dashboard/users", "GET");
+        console.log("Fetched data:", data);
+
+        const users = data?.results?.users || [];
+        const extractedUsers = users.map(
+          ({ username, sharemundo_links_id, user_type }) => ({
+            username,
+            sharemundo_links_id,
+            user_type,
+          })
+        );
+
+        console.log("Extracted Users:", extractedUsers);
+
+        setUserData(extractedUsers);
+        setLoading(false);
+      } catch (err) {
+        console.error("Error fetching dashboard data:", err);
+        setLoading(false);
+      }
+    };
+
+    fetchUserData();
+  }, []);
+
   if (context === undefined) {
     return <div>Error: Sidebar context is undefined!</div>;
   }
-
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const query = event.target.value;
@@ -102,7 +134,7 @@ const UserManagement = () => {
             }}
           >
             <AgGridTable
-              rowData={userManagementRow}
+              rowData={userData}
               columnDefs={UserManagementCol}
             />
           </Box>

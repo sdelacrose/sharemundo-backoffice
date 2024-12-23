@@ -18,8 +18,8 @@
   /* font-family: "Mulish", sans-serif; */
 }
 
-.ag-checkbox-input-wrapper{
-font-size: 16px;
+.ag-checkbox-input-wrapper {
+  font-size: 16px;
 }
 
 .ag-header-cell-text {
@@ -52,7 +52,7 @@ font-size: 16px;
 }
 
 .ag-header {
-  min-height: 42px !important;
+  min-height: 48px !important;
   padding: 0 0 0 0;
   border-top: 1px solid rgba(17, 17, 17, 0.1);
   border-bottom: 1px solid rgba(17, 17, 17, 0.1);

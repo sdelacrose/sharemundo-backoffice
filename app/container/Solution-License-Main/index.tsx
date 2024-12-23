@@ -3,7 +3,7 @@
 import { SidebarContext } from "@/app/(pages)/layout";
 import Header from "@/app/components/common/Header";
 import { Box, Divider, Stack, Typography } from "@mui/material";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import CustomTabs from "@/app/components/common/CustomTab";
 import { solutionsBreadcrumb, tabs } from "./data";
 import BarChartComponent from "@/app/components/common/Barchart";
@@ -15,24 +15,60 @@ import CustomButton from "@/app/components/common/CustomButton";
 import useColumnSolutionMain from "@/app/hooks/Grid-Table/useColumnSolutionMain";
 import { SolutionMainColumnDefs } from "@/app/const/GridTable/ColDef";
 import AgGridTable from "@/app/ag-grid";
-import { SolutionMainRow } from "@/app/const/GridTable/RowData";
 import ResumeDrawer from "./resumeDrawer";
 import EditDrawer from "./editDrawer";
 import StopDrawer from "./stopDrawer";
 import NewSolutionDrawer from "./newSolutionDrawer";
+import { apiCall } from "@/app/utils/APIUtils";
 
 const SolutionLicenseMain = () => {
   const [drawerType, setDrawerType] = useState<string | null>(null);
-  const handleOpenDrawer = (actionType: string) => {
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [solutionData, setSolutionData] = useState<any>(null);
+  const [loading, setLoading] = useState<any>(false);
+
+  useEffect(() => {
+    const fetchSolutionData = async () => {
+      try {
+        const data = await apiCall("/admin-dashboard/products", "GET");
+        const solutions = data?.results?.solutions || [];
+        const extractedData = solutions.map(
+          ({ name, price, status, license_count, id }) => ({
+            name,
+            price,
+            status,
+            license_count,
+            id,
+          })
+        );
+
+        console.log("solutionss :", extractedData);
+
+        setSolutionData(extractedData);
+        setLoading(false);
+        
+      } catch (err) {
+        console.error("Error fetching dashboard data:", err);
+        setLoading(false);
+      }
+    };
+
+    fetchSolutionData();
+  }, []);
+
+  const handleOpenDrawer = (actionType: string, id: string) => {
+    console.log("Opening drawer with action:", actionType, "ID:", id);
     setDrawerType(actionType);
+    setSelectedId(id);
   };
 
   const handleCloseDrawer = () => {
     setDrawerType(null);
+    setSelectedId(null);
   };
   const SolutionMainCol = useColumnSolutionMain(
     SolutionMainColumnDefs,
-    handleOpenDrawer
+    (action: string, id: string) => handleOpenDrawer(action, id)
   );
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const query = event.target.value;
@@ -66,6 +102,40 @@ const SolutionLicenseMain = () => {
       default:
         return <div>chart here</div>;
     }
+  };
+  const handleStatusUpdate = async (id: string, action: string) => {
+    const endpoint =
+      action === "resume"
+        ? `/admin-dashboard/products/${id}/resume`
+        : `/admin-dashboard/products/${id}/stop`;
+
+    try {
+      await apiCall(endpoint, "POST");
+      setSolutionData((prevData: any) =>
+        prevData.map((item: any) =>
+          item.id === id
+            ? {
+                ...item,
+                status: action === "resume" ? "Active" : "Stopped",
+              }
+            : item
+        )
+      );
+    } catch (error) {
+      console.error(`Error updating status for ${id}:`, error);
+    }
+  };
+  
+  const handleUpdateData = (updatedItem: any) => {
+    setSolutionData((prevData: any) =>
+      prevData.map((item: any) =>
+        item.id === updatedItem.id ? { ...item, ...updatedItem } : item
+      )
+    );
+  };
+
+  const handleSolutionCreated = (newSolution: any) => {
+    setSolutionData((prevData) => [...prevData, newSolution]);
   };
 
   return (
@@ -121,7 +191,7 @@ const SolutionLicenseMain = () => {
               placeholder="Search Company..."
               onChange={handleSearchChange}
               height="36px"
-            />{" "}
+            />
             <CustomButton variant="contained" onClick={handleOpenNewSolution}>
               Add Solution
             </CustomButton>
@@ -136,26 +206,49 @@ const SolutionLicenseMain = () => {
               marginTop: "24px",
             }}
           >
-            <AgGridTable
-              rowData={SolutionMainRow}
-              columnDefs={SolutionMainCol}
-            />
-            {drawerType === "resume" && (
-              <ResumeDrawer
-                open={!!drawerType}
-                handleClose={handleCloseDrawer}
-              />
-            )}
-            {drawerType === "edit" && (
-              <EditDrawer open={!!drawerType} handleClose={handleCloseDrawer} />
-            )}
-            {drawerType === "stop" && (
-              <StopDrawer open={!!drawerType} handleClose={handleCloseDrawer} />
-            )}
+            <AgGridTable rowData={solutionData} columnDefs={SolutionMainCol} />
+
+            <Box>
+              {drawerType === "resume" && selectedId && (
+                <ResumeDrawer
+                  open={drawerType === "resume"}
+                  handleClose={handleCloseDrawer}
+                  id={selectedId}
+                  onUpdateStatus={handleStatusUpdate}
+                />
+              )}
+              {drawerType === "edit" && selectedId && (
+                <EditDrawer
+                  open={drawerType === "edit"}
+                  handleClose={handleCloseDrawer}
+                  id={selectedId}
+                  initialData={solutionData.find(
+                    (item) => item.id === selectedId
+                  )}
+                  onUpdateData={(updatedItem) => {
+                    setSolutionData((prevData) =>
+                      prevData.map((item) =>
+                        item.id === updatedItem.id ? updatedItem : item
+                      )
+                    );
+                  }}
+                />
+              )}
+              {drawerType === "stop" && selectedId && (
+                <StopDrawer
+                  open={drawerType === "stop"}
+                  handleClose={handleCloseDrawer}
+                  id={selectedId}
+                  onUpdateStatus={handleStatusUpdate}
+                />
+              )}
+            </Box>
+
             {newSolution && (
               <NewSolutionDrawer
                 open={newSolution}
                 handleClose={handleCloseNewSolution}
+                onSolutionCreated={handleSolutionCreated}
               />
             )}
           </Box>

@@ -12,11 +12,13 @@ const useColumnUserManagement = (columns: Column[]) => {
   return useMemo(() => {
     return columns.map((col: any) => {
       switch (col.field) {
-        case "name":
+        case "username":
           return {
-            field: "name",
+            field: "username",
             headerName: "Name",
             flex: 1.4,
+            valueFormatter: (params: any) =>
+              params.value ? params.value : "N/A",
           };
         case "sharemundo_links_id":
           return {
@@ -24,12 +26,16 @@ const useColumnUserManagement = (columns: Column[]) => {
             headerName: "Sharemundo Links ID",
             width: 120,
             flex: 1.7,
+            valueFormatter: (params: any) =>
+              params.value ? params.value : "N/A",
           };
-        case "type":
+        case "user_type":
           return {
-            field: "type",
+            field: "user_type",
             headerName: "Type",
             width: 120,
+            valueFormatter: (params: any) =>
+              params.value ? params.value : "N/A",
           };
         case "creation_date":
           return {
@@ -37,6 +43,8 @@ const useColumnUserManagement = (columns: Column[]) => {
             headerName: "Creation Date",
             width: 120,
             flex: 1.5,
+            valueFormatter: (params: any) =>
+              params.value ? params.value : "N/A",
           };
 
         case "actions":
@@ -55,6 +63,8 @@ const useColumnUserManagement = (columns: Column[]) => {
               flex: 1,
             },
             cellStyle: { display: "flex" },
+            valueFormatter: (params: any) =>
+              params.value ? params.value : "N/A",
           };
         default:
           return col;

@@ -92,9 +92,9 @@ export const InternaluserLicenseColumnDefs = [
   { field: "actions", headerName: "Actions" },
 ];
 export const SolutionMainColumnDefs = [
-  { field: "solution_name", headerName: "Solution Name" },
-  { field: "total_bought_license", headerName: "Total Bought License" },
-  { field: "price_per_month", headerName: "Price Per Month" },
+  { field: "name", headerName: "Solution Name" },
+  { field: "license_count", headerName: "Total Bought License" },
+  { field: "price", headerName: "Price Per Month" },
   { field: "status", headerName: "Status" },
   { field: "actions", headerName: "Actions" },
 ];
@@ -117,9 +117,9 @@ export const BillingCustomerColumnDefs = [
   { field: "actions", headerName: "Actions" },
 ];
 export const userManagementColumnDefs = [
-  { field: "name", headerName: "Name" },
+  { field: "username", headerName: "Name" },
   { field: "sharemundo_links_id", headerName: "Sharemundo Links ID" },
-  { field: "type", headerName: "Type" },
+  { field: "user_type", headerName: "Type" },
   { field: "creation_date", headerName: "Creation Date" },
   { field: "actions", headerName: "Actions" },
 ];

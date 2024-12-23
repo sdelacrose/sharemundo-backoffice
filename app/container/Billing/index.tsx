@@ -3,7 +3,7 @@
 import { SidebarContext } from "@/app/(pages)/layout";
 import Header from "@/app/components/common/Header";
 import { Box, Divider, Stack, Typography } from "@mui/material";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { billingBreadcrumb, tabs } from "./billingData";
 import CustomButton from "@/app/components/common/CustomButton";
 import { ExportExcel } from "@/app/assets/icons";
@@ -21,14 +21,40 @@ import {
 } from "@/app/const/GridTable/RowData";
 import useColumnBillingPayment from "@/app/hooks/Grid-Table/useColumnBillingPayment";
 import useColumnBillingCustomers from "@/app/hooks/Grid-Table/usecolumnBillingCustomers";
+import { apiCall } from "@/app/utils/APIUtils";
 
 const Billings = () => {
+  const [billingData, setBillingData] = useState<any>(null);
+  const [loading, setLoading] = useState<any>(false);
+
   const context = useContext(SidebarContext);
   const [activeTab, setActiveTab] = useState(0);
   const BillingPaymentCol = useColumnBillingPayment(BillingPaymentColumnDefs);
   const BillingCustomerCol = useColumnBillingCustomers(
     BillingCustomerColumnDefs
   );
+
+  useEffect(() => {
+    const fetchBillingdData = async () => {
+      try {
+        const data = await apiCall(
+          "/admin-dashboard/customers/326/billing",
+          "GET"
+        );
+        console.log("Fetched data:", data);
+
+        setBillingData(data);
+        setLoading(false);
+      } catch (err) {
+        console.error("Error fetching dashboard data:", err);
+        setLoading(false);
+      }
+    };
+
+    fetchBillingdData();
+  }, []);
+
+
   if (context === undefined) {
     return <div>Error: Sidebar context is undefined!</div>;
   }
