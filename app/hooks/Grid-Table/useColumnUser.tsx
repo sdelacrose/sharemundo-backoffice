@@ -1,5 +1,3 @@
-import { HeaderCheck } from "@/app/components/Data-Table/HeaderCheck";
-import NameCheck from "@/app/components/Data-Table/NameCheck";
 import StatusCheck from "@/app/components/Data-Table/StatusCheck";
 
 import { useMemo } from "react";
@@ -19,8 +17,6 @@ const useColumnUser = (columns: Column[]) => {
           return {
             field: "name",
             headerName: "Display Name",
-            cellRenderer: NameCheck,
-            headerComponent: HeaderCheck,
             width: 580,
           };
         case "email":

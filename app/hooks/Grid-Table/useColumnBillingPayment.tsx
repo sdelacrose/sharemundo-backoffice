@@ -1,6 +1,5 @@
 import Actions from "@/app/components/Data-Table/Actions";
 import { HeaderCheck } from "@/app/components/Data-Table/HeaderCheck";
-import NameCheck from "@/app/components/Data-Table/NameCheck";
 import { useMemo } from "react";
 
 interface Column {
@@ -18,8 +17,6 @@ const useColumnBillingPayment = (columns: Column[]) => {
           return {
             field: "customer_name",
             headerName: "Customer Name",
-            headerComponent: HeaderCheck,
-            cellRenderer: NameCheck,
             flex: 1.6,
           };
         case "sharemundo_links_id":

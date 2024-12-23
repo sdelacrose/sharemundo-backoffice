@@ -26,6 +26,8 @@ import { apiCall } from "@/app/utils/APIUtils";
 const ManageCustomers = () => {
   const context = useContext(SidebarContext);
   const [addDrawer, setAddDrawer] = useState(false);
+  const [allCustomers, setAllCustomers] = useState();
+
   const handleAddDrawer = () => {
     setAddDrawer(true);
   };
@@ -54,6 +56,21 @@ const ManageCustomers = () => {
 
     fetchCustomerStats();
   }, []);
+
+  useEffect(() => {
+    const fetchAllCustomerStats = async () => {
+      try {
+        const customers = await apiCall("/admin-dashboard/customers");
+        setAllCustomers(customers);
+      } catch (error) {
+        console.error("Failed to fetch customers:", error);
+      }
+    };
+    fetchAllCustomerStats();
+  }, []);
+  
+
+  console.log("customers",allCustomers)
 
   const handleBlockDrawer = () => {
     setBlockDrawer(true);
@@ -160,6 +177,7 @@ const ManageCustomers = () => {
           <AgGridTable
             rowData={manageCustomersRow}
             columnDefs={manageUserCol}
+            rowSelection={true}
           />
         </Box>
         {addDrawer && (

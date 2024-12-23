@@ -18,11 +18,11 @@ export const UserConnectionColumnDefs = [
   { field: "actions", headerName: "Actions" },
 ];
 export const manageCustomersColumnDefs = [
-  { field: "name", headerName: "Display Name" },
-  { field: "sharemundo_link", headerName: "Sharemundo Link" },
+  { field: "first_name", headerName: "Name" },
+  { field: "sharemundo_links_id", headerName: "Sharemundo Link" },
   { field: "role", headerName: "Role" },
-  { field: "no_of_admin", headerName: "No of Admins" },
-  { field: "no_of_internal_user", headerName: "No of Internal Users" },
+  { field: "number_of_admins", headerName: "No of Admins" },
+  { field: "number_of_internal_users", headerName: "No of Internal Users" },
   { field: "total_bought_license", headerName: "Total bought License" },
   { field: "action", headerName: "Action" },
 ];

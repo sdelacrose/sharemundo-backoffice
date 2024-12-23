@@ -1,65 +1,59 @@
+"use client"
 import { useMemo } from "react";
 import { Button } from "@mui/material";
 import LastColumnHeader from "@/app/components/common/LastColumnHeader";
-import NameCheck from "@/app/components/Data-Table/NameCheck";
-import { HeaderCheck } from "@/app/components/Data-Table/HeaderCheck";
+
 interface Column {
   field: string;
   headerName?: string;
   cellRenderer?: React.ComponentType<any>;
-  width?: number;
+  headerComponent?: React.ComponentType<any>;
+  flex?: number;
 }
 
-const useColumnManageUserDefs = (
-  columns: Column[]
-  // onViewClicked: (rowData: any) => void,
-) => {
+const useColumnManageUserDefs = (columns: Column[]) => {
   return useMemo(() => {
-    return columns.map((col: any) => {
+    return columns.map((col) => {
       switch (col.field) {
-        case "name":
+        case "first_name":
           return {
-            field: "name",
-            cellRenderer: NameCheck,
-            headerComponent: HeaderCheck,
-            headerName: "Display Name",
+            ...col,
+            headerName: "Name",
             flex: 1.4,
           };
-        case "sharemundo_link":
+        case "sharemundo_links_id":
           return {
-            field: "sharemundo_link",
+            ...col,
             headerName: "Sharemundo Link",
             flex: 1.4,
           };
         case "role":
           return {
-            field: "role",
+            ...col,
+            headerName: "Role",
           };
-        case "no_of_admin":
+        case "number_of_admins":
           return {
-            field: "no_of_admin",
-            headerName: "No of Admin",
+            ...col,
+            headerName: "No of Admins",
           };
-        case "no_of_internal_user":
+        case "number_of_internal_users":
           return {
-            field: "no_of_internal_user",
-            headerName: "No of Internal User",
+            ...col,
+            headerName: "No of Internal Users",
           };
         case "total_bought_license":
           return {
-            field: "total_bought_license",
+            ...col,
             headerName: "Total Bought License",
           };
         case "action":
           return {
-            field: "action",
+            ...col,
             headerName: "Actions",
             headerComponent: LastColumnHeader,
             cellRenderer: () => (
-              <Button
-                // onClick={() => onViewClicked(params.data)}
-                style={{ color: "#0057b7" }}
-              >
+              <Button style={{ color: "#0057b7" }}>
                 View Details
               </Button>
             ),
