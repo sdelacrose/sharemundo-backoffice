@@ -23,7 +23,7 @@ import { apiCall } from "@/app/utils/APIUtils";
 import _debounce from "lodash/debounce";
 import AgGridServerSideTable from "@/app/ag-grid/AgGridServerSideTable";
 
-const ManageCustomers = () => {
+const ManageCustomers = ({customerDetail}:any) => {
   const context = useContext(SidebarContext);
   const [addDrawer, setAddDrawer] = useState(false);
   const [rowData, setRowData] = useState<any>([]);
@@ -64,16 +64,15 @@ const ManageCustomers = () => {
 
   const fetchCustomers = async (url: string) => {
     try {
-      // Trim the URL to start from "/admin-dashboard"
       const trimmedUrl = url.includes("/admin-dashboard")
         ? url.substring(url.indexOf("/admin-dashboard"))
         : url;
   
-      const data = await apiCall(trimmedUrl); // Make API call with the trimmed path
+      const data = await apiCall(trimmedUrl);
       setRowData(data?.results || []);
       setNextPageUrl(data?.next ? data.next : null);
       setPreviousPageUrl(data?.previous ? data.previous : null);
-      setTotalPages(Math.ceil(data?.count / 10)); // Assuming 10 items per page
+      setTotalPages(Math.ceil(data?.count / 10));
     } catch (err) {
       console.error("Failed to fetch customers:", err);
     }
@@ -81,14 +80,14 @@ const ManageCustomers = () => {
   
   const handleNextPage = () => {
     if (nextPageUrl) {
-      fetchCustomers(nextPageUrl); // Call the trimmed nextPageUrl
+      fetchCustomers(nextPageUrl);
       setCurrentPage((prev) => prev + 1);
     }
   };
   
   const handlePreviousPage = () => {
     if (previousPageUrl) {
-      fetchCustomers(previousPageUrl); // Call the trimmed previousPageUrl
+      fetchCustomers(previousPageUrl);
       setCurrentPage((prev) => prev - 1);
     }
   };

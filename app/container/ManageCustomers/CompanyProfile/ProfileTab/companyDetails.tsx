@@ -1,12 +1,17 @@
 import { Box, Divider, Stack, Typography } from "@mui/material";
 import React from "react";
 
-const CompanyDetails = () => {
+const CompanyDetails = ({ profileDetail }: { profileDetail: any }) => {
+  if (!profileDetail || !profileDetail.company_profile) {
+    return <div>Loading company details...</div>;
+  }
+
+  const companyProfile = profileDetail.company_profile;
+
   return (
     <>
       <Box width={"50%"}>
-        {/* Company Details------------------------------------------------------------------ */}
-
+        {/* Company Details */}
         <Typography variant="h5">Company Details</Typography>
         <Divider
           sx={{
@@ -16,78 +21,76 @@ const CompanyDetails = () => {
           }}
         />
         <Stack gap={3} mr={15}>
-          <Box
-            display={"flex"}
-            justifyContent={"space-between"}
-            alignItems={"center"}
-          >
-            <Stack>
-              <Typography variant="caption" color="#667185">
-                Company Name
-              </Typography>
-              <Typography variant="subtitle1" color="#101928">
-                XYZ Solar Limited
-              </Typography>
-            </Stack>
-            <Stack>
-              <Typography variant="caption" color="#667185">
-                Sharemundo Link ID
-              </Typography>
-              <Typography variant="subtitle1" color="#101928">
-                8y39214ubu012huoo090
-              </Typography>
-            </Stack>
-          </Box>
-          {/* ------------------------------------------- */}
-          <Box
-            display={"flex"}
-            justifyContent={"space-between"}
-            alignItems={"center"}
-          >
-            <Stack>
-              <Typography variant="caption" color="#667185">
-                Reg Number
-              </Typography>
-              <Typography variant="subtitle1" color="#101928">
-                8y39214ubu012huoo090
-              </Typography>
-            </Stack>
-            <Stack>
-              <Typography variant="caption" color="#667185">
-                Tax Ref Number
-              </Typography>
-              <Typography variant="subtitle1" color="#101928">
-                8y39214ubu012huoo090
-              </Typography>
-            </Stack>
-          </Box>
-          {/* -------------------------------------------- */}
-          <Box
-            display={"flex"}
-            justifyContent={"space-between"}
-            alignItems={"center"}
-          >
-            <Stack>
-              <Typography variant="caption" color="#667185">
-                Website
-              </Typography>
-              <Typography variant="subtitle1" color="#101928">
-                www.company.name
-              </Typography>
-            </Stack>
-            <Stack>
-              <Typography variant="caption" color="#667185">
-                Tax Ref Number
-              </Typography>
-              <Typography variant="subtitle1" color="#101928">
-                8y39214ubu012huoo090
-              </Typography>
-            </Stack>
+          <Box display={"flex"} justifyContent={"space-between"}>
+            <Box
+              display={"flex"}
+              flexDirection={"column"}
+              justifyContent={"space-between"}
+              alignItems={"flex-start"}
+              gap={"24px"}
+            >
+              <Stack>
+                <Typography variant="caption" color="#667185">
+                  Company Name
+                </Typography>
+                <Typography variant="subtitle1" color="#101928">
+                  {companyProfile.company_name || "N/A"}
+                </Typography>
+              </Stack>
+              <Stack>
+                <Typography variant="caption" color="#667185">
+                  Reg Number
+                </Typography>
+                <Typography variant="subtitle1" color="#101928">
+                  {companyProfile.company_registration_no || "N/A"}
+                </Typography>
+              </Stack>
+              <Stack>
+                <Typography variant="caption" color="#667185">
+                  Website
+                </Typography>
+                <Typography variant="subtitle1" color="#101928">
+                  {companyProfile.company_web_address || "N/A"}
+                </Typography>
+              </Stack>
+            </Box>
+            <Box
+              display={"flex"}
+              flexDirection={"column"}
+              justifyContent={"space-between"}
+              alignItems={"flex-start"}
+              gap={"24px"}
+            >
+              <Stack>
+                <Typography variant="caption" color="#667185">
+                  Sharemundo Link ID
+                </Typography>
+                <Typography variant="subtitle1" color="#101928">
+                  {companyProfile.sharemundo_links_id || "N/A"}
+                </Typography>
+              </Stack>
+              <Stack>
+                <Typography variant="caption" color="#667185">
+                  Tax Ref Number
+                </Typography>
+                <Typography variant="subtitle1" color="#101928">
+                  {companyProfile.company_tax_reference || "N/A"}
+                </Typography>
+              </Stack>
+
+              <Stack>
+                <Typography variant="caption" color="#667185">
+                  Email
+                </Typography>
+                <Typography variant="subtitle1" color="#101928">
+                  {companyProfile.company_email_address || "N/A"}
+                </Typography>
+              </Stack>
+            </Box>
           </Box>
         </Stack>
 
-        {/* Bank Details------------------------------------------------------------------------------------- */}
-
+        {/* Bank Details */}
         <Typography variant="h5" mt={4}>
           Bank Details
         </Typography>
@@ -99,52 +102,56 @@ const CompanyDetails = () => {
           }}
         />
         <Stack gap={3} mr={15}>
-          <Box
-            display={"flex"}
-            justifyContent={"space-between"}
-            alignItems={"center"}
-          >
-            <Stack>
-              <Typography variant="caption" color="#667185">
-                Bank Name
-              </Typography>
-              <Typography variant="subtitle1" color="#101928">
-                XYZ Bank
-              </Typography>
-            </Stack>
-            <Stack>
-              <Typography variant="caption" color="#667185">
-                Bank Address
-              </Typography>
-              <Typography variant="subtitle1" color="#101928">
-                8y39214ubu012huoo090
-              </Typography>
-            </Stack>
+          <Box display={"flex"} justifyContent={"space-between"}>
+            <Box
+              display={"flex"}
+              flexDirection={"column"}
+              justifyContent={"space-between"}
+              alignItems={"flex-start"}
+              gap={"24px"}
+            >
+              <Stack>
+                <Typography variant="caption" color="#667185">
+                  Bank Name
+                </Typography>
+                <Typography variant="subtitle1" color="#101928">
+                  {companyProfile.company_bank_name || "N/A"}
+                </Typography>
+              </Stack>
+              <Stack>
+                <Typography variant="caption" color="#667185">
+                  BIC
+                </Typography>
+                <Typography variant="subtitle1" color="#101928">
+                  {companyProfile.company_bic || "N/A"}
+                </Typography>
+              </Stack>
+            </Box>
+            <Box
+              display={"flex"}
+              flexDirection={"column"}
+              justifyContent={"space-between"}
+              alignItems={"flex-start"}
+              gap={"24px"}
+            >
+              <Stack>
+                <Typography variant="caption" color="#667185">
+                  Bank Address
+                </Typography>
+                <Typography variant="subtitle1" color="#101928">
+                  {companyProfile.company_bank_address || "N/A"}
+                </Typography>
+              </Stack>
+              <Stack>
+                <Typography variant="caption" color="#667185">
+                  IBAN
+                </Typography>
+                <Typography variant="subtitle1" color="#101928">
+                  {companyProfile.company_iban || "N/A"}
+                </Typography>
+              </Stack>
+            </Box>
           </Box>
-          {/* ------------------------------------------- */}
-          <Box
-            display={"flex"}
-            justifyContent={"space-between"}
-            alignItems={"center"}
-          >
-            <Stack>
-              <Typography variant="caption" color="#667185">
-                IBAN
-              </Typography>
-              <Typography variant="subtitle1" color="#101928">
-                8y39214ubu012huoo090
-              </Typography>
-            </Stack>
-            <Stack>
-              <Typography variant="caption" color="#667185">
-                BIC
-              </Typography>
-              <Typography variant="subtitle1" color="#101928">
-                8y39214ubu012huoo090
-              </Typography>
-            </Stack>
-          </Box>
-          {/* -------------------------------------------- */}
         </Stack>
       </Box>
     </>

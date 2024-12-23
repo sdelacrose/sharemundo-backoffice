@@ -10,7 +10,10 @@ import UserConnectionTab from "./userConnectionTab";
 import LicenseTab from "./licenseTab";
 import ProfileTab from "./ProfileTab";
 
-const CompanyProfile = () => {
+const CompanyProfile = ({customerDetail}) => {
+
+  console.log("customerDetail",customerDetail)
+
   const context = useContext(SidebarContext);
   const [activeTab, setActiveTab] = useState(0);
   if (context === undefined) {
@@ -22,7 +25,7 @@ const CompanyProfile = () => {
   const renderTabContent = () => {
     switch (activeTab) {
       case 0:
-        return <ProfileTab />;
+        return <ProfileTab profileData={customerDetail}/>;
       case 1:
         return <UserConnectionTab />;
       case 2:
