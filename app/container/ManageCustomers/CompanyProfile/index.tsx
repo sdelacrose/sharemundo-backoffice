@@ -10,7 +10,7 @@ import UserConnectionTab from "./userConnectionTab";
 import LicenseTab from "./licenseTab";
 import ProfileTab from "./ProfileTab";
 
-const SolutionLicenseCompany = () => {
+const CompanyProfile = () => {
   const context = useContext(SidebarContext);
   const [activeTab, setActiveTab] = useState(0);
   if (context === undefined) {
@@ -72,4 +72,4 @@ const SolutionLicenseCompany = () => {
   );
 };
 
-export default SolutionLicenseCompany;
+export default CompanyProfile;

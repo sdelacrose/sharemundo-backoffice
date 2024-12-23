@@ -26,7 +26,6 @@ import AgGridServerSideTable from "@/app/ag-grid/AgGridServerSideTable";
 const ManageCustomers = () => {
   const context = useContext(SidebarContext);
   const [addDrawer, setAddDrawer] = useState(false);
-  const [allCustomers, setAllCustomers] = useState<any>([]);
   const [rowData, setRowData] = useState<any>([]);
   const [nextPageUrl, setNextPageUrl] = useState<string | null>(null);
   const [previousPageUrl, setPreviousPageUrl] = useState<string | null>(null);
@@ -36,6 +35,7 @@ const ManageCustomers = () => {
   const [chartData, setChartData] = useState<{ name: string; value: number }[]>(
     []
   );
+  const manageUserCol = useColumnManageUserDefs(manageCustomersColumnDefs);
 
   const handleAddDrawer = () => {
     setAddDrawer(true);
@@ -141,7 +141,6 @@ const ManageCustomers = () => {
     setBlockDrawer(false);
   };
 
-  const manageUserCol = useColumnManageUserDefs(manageCustomersColumnDefs);
   if (context === undefined) {
     return <div>Error: Sidebar context is undefined!</div>;
   }

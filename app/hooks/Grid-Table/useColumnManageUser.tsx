@@ -2,6 +2,7 @@
 import { useMemo } from "react";
 import { Button } from "@mui/material";
 import LastColumnHeader from "@/app/components/common/LastColumnHeader";
+import { useRouter } from "next/navigation";
 
 interface Column {
   field: string;
@@ -12,6 +13,7 @@ interface Column {
 }
 
 const useColumnManageUserDefs = (columns: Column[]) => {
+  const router = useRouter()
   return useMemo(() => {
     return columns.map((col) => {
       switch (col.field) {
@@ -59,8 +61,10 @@ const useColumnManageUserDefs = (columns: Column[]) => {
             ...col,
             headerName: "Actions",
             headerComponent: LastColumnHeader,
-            cellRenderer: () => (
-              <Button style={{ color: "#0057b7" }}>
+            cellRenderer: (params) => (
+              <Button style={{ color: "#0057b7" }}
+              onClick={() => router.push(`/manage-customers/${params.data.id}`)}
+              >
                 View Details
               </Button>
             ),
