@@ -10,3 +10,10 @@ export const Role = [
   { value: "1", label: "Freelancer" },
   { value: "2", label: "Company" },
 ];
+
+export const filterByRoleItmes = [
+  { label: "All" },
+  { label: "Freelancer" },
+  { label: "Company" },
+];
+

@@ -12,7 +12,7 @@ import { manageCustomersColumnDefs } from "@/app/const/GridTable/ColDef";
 import AgGridTable from "@/app/ag-grid";
 import { manageCustomersRow } from "@/app/const/GridTable/RowData";
 import Header from "@/app/components/common/Header";
-import { customersBreadcrumb, filterItems } from "./manageData";
+import { customersBreadcrumb, filterByRoleItmes } from "./manageData";
 import { SidebarContext } from "@/app/(pages)/layout";
 import { Adduser, BlockUser, Search } from "@/app/assets/icons";
 import CustomSearchField from "@/app/components/common/CustomSearch";
@@ -26,7 +26,8 @@ import { apiCall } from "@/app/utils/APIUtils";
 const ManageCustomers = () => {
   const context = useContext(SidebarContext);
   const [addDrawer, setAddDrawer] = useState(false);
-  const [allCustomers, setAllCustomers] = useState();
+  const [allCustomers, setAllCustomers] = useState<any>([]);
+  const [rowData, setRowData] = useState<any>([]);
 
   const handleAddDrawer = () => {
     setAddDrawer(true);
@@ -58,15 +59,17 @@ const ManageCustomers = () => {
   }, []);
 
   useEffect(() => {
-    const fetchAllCustomerStats = async () => {
+    const fetchAllCustomers = async () => {
       try {
-        const customers = await apiCall("/admin-dashboard/customers");
-        setAllCustomers(customers);
-      } catch (error) {
-        console.error("Failed to fetch customers:", error);
+        const data = await apiCall("/admin-dashboard/customers");
+        setAllCustomers(data);
+        setRowData(data?.results)
+      } catch (err) {
+        console.error("Failed to fetch customers:", err);
       }
     };
-    fetchAllCustomerStats();
+  
+    fetchAllCustomers();
   }, []);
   
 
@@ -94,6 +97,8 @@ const ManageCustomers = () => {
   if (context === undefined) {
     return <div>Error: Sidebar context is undefined!</div>;
   }
+
+  console.log("customers", allCustomers?.customers)
 
   return (
     <>
@@ -159,7 +164,7 @@ const ManageCustomers = () => {
               onChange={handleSearchChange}
               width="340px"
             />
-            <CustomFilterSelect items={filterItems} onSelect={handleSelect} />
+            <CustomFilterSelect items={filterByRoleItmes} onSelect={handleSelect} />
           </Box>
         </Box>
         <Box
@@ -175,9 +180,10 @@ const ManageCustomers = () => {
           }}
         >
           <AgGridTable
-            rowData={manageCustomersRow}
+            rowData={rowData}
             columnDefs={manageUserCol}
             rowSelection={true}
+            height={580}
           />
         </Box>
         {addDrawer && (

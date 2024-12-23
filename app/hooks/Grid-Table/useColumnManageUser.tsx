@@ -15,11 +15,18 @@ const useColumnManageUserDefs = (columns: Column[]) => {
   return useMemo(() => {
     return columns.map((col) => {
       switch (col.field) {
-        case "first_name":
+        case "name":
           return {
             ...col,
             headerName: "Name",
             flex: 1.4,
+            cellRenderer: (params) => {
+              const { first_name, last_name } = params.data;
+              const formattedName = `${first_name.charAt(0).toUpperCase() + first_name.slice(1).toLowerCase()} ${
+                last_name.charAt(0).toUpperCase() + last_name.slice(1).toLowerCase()
+              }`;
+              return <span>{formattedName}</span>;
+            },
           };
         case "sharemundo_links_id":
           return {
