@@ -18,11 +18,30 @@ export const UserConnectionColumnDefs = [
   { field: "actions", headerName: "Actions" },
 ];
 export const manageCustomersColumnDefs = [
-  { field: "name", headerName: "Display Name" },
-  { field: "sharemundo_link", headerName: "Sharemundo Link" },
-  { field: "role", headerName: "Role" },
-  { field: "no_of_admin", headerName: "No of Admins" },
-  { field: "no_of_internal_user", headerName: "No of Internal Users" },
+  { field: "name", headerName: "Name" },
+  { field: "sharemundo_links_id", headerName: "Sharemundo Link" },
+  {
+    field: "role",
+    headerName: "Role",
+    valueFormatter: (params: any) => {
+      const role = params.value;
+      return role.charAt(0).toUpperCase() + role.slice(1).toLowerCase();
+    },
+  },
+  {
+    field: "number_of_admins",
+    headerName: "No of Admins",
+    valueFormatter: (params: any) => {
+      return params.data.role === "freelancer" ? "N/A" : params.value;
+    },
+  },
+  {
+    field: "number_of_internal_users",
+    headerName: "No of Internal Users",
+    valueFormatter: (params: any) => {
+      return params.data.role === "freelancer" ? "N/A" : params.value;
+    },
+  },
   { field: "total_bought_license", headerName: "Total bought License" },
   { field: "action", headerName: "Action" },
 ];

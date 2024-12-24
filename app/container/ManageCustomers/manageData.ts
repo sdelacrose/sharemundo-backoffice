@@ -10,3 +10,9 @@ export const Role = [
   { value: "1", label: "Freelancer" },
   { value: "2", label: "Company" },
 ];
+
+export const filterByRoleItems = [
+  { label: "All", value: "all" },
+  { label: "Freelancer", value: "freelancer" },
+  { label: "Company", value: "company" },
+];

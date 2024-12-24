@@ -3,12 +3,12 @@ import React from "react";
 import CompanyDetails from "./companyDetails";
 import ContactDetails from "./contactDetails";
 
-const ProfileTab = () => {
+const ProfileTab = ({profileData}) => {
   return (
     <>
       <Box display={"flex"} alignItems={"start"} gap={2.5} mr={4}>
-        <CompanyDetails />
-        <ContactDetails />
+        <CompanyDetails profileDetail={profileData}/>
+        <ContactDetails profileDetail={profileData}/>
       </Box>
     </>
   );

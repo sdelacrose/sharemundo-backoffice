@@ -12,7 +12,6 @@ import AgGridTable from "@/app/ag-grid";
 import Activity from "./Activity";
 import Header from "@/app/components/common/Header";
 import { SidebarContext } from "@/app/(pages)/layout";
-import CustomFilterSelect from "@/app/components/common/CustomFilterSelect";
 import PieChartComponent from "@/app/components/common/Piechart";
 import Legend from "./legend";
 import { apiCall } from "@/app/utils/APIUtils";
@@ -89,7 +88,6 @@ const Dashboard = () => {
             alignItems={"center"}
           >
             <Typography variant="h2">Hello, Admin!</Typography>
-            <CustomFilterSelect items={filterItems} onSelect={handleSelect} />
           </Box>
           <Typography variant="body2" color="#475367" mt={1.5}>
             Sharemundo Back Office

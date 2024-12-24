@@ -1,6 +1,5 @@
 import ActionsBilling from "@/app/components/Data-Table/ActionsBilling";
 import { HeaderCheck } from "@/app/components/Data-Table/HeaderCheck";
-import NameCheck from "@/app/components/Data-Table/NameCheck";
 import { useMemo } from "react";
 
 interface Column {
@@ -21,8 +20,6 @@ const useColumnBillingPayment = (
           return {
             field: "first_name",
             headerName: "Customer Name",
-            headerComponent: HeaderCheck,
-            cellRenderer: NameCheck,
             flex: 1.6,
             valueFormatter: (params: any) =>
               params.value ? params.value : "N/A",
