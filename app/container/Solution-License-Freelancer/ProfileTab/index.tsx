@@ -6,10 +6,7 @@ import FreelancerDetails from "./freelancerDetails";
 const ProfileTab = () => {
   return (
     <>
-      <Box display={"flex"} alignItems={"start"} gap={2.5} mr={4}>
-        <FreelancerDetails />
-        <ContactDetails />
-      </Box>
+     
     </>
   );
 };

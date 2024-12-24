@@ -11,7 +11,7 @@ import LicenseTab from "./licenseTab";
 import ProfileTab from "./ProfileTab";
 import { apiCall } from "@/app/utils/APIUtils";
 
-const CompanyProfile = ({ customerDetail,id }: any ) => {
+const CompanyProfile = ({ customerDetail, id }: any) => {
   const context = useContext(SidebarContext);
   const [activeTab, setActiveTab] = useState(0);
 
@@ -35,8 +35,6 @@ const CompanyProfile = ({ customerDetail,id }: any ) => {
   const [totalPages, setTotalPages] = useState(0);
   const [rowData, setRowData] = useState([]);
 
-
-  // Column definitions
   const columnDefs = useMemo(
     () => [
       { field: "product_name", headerName: "Product Name", width: 200 },
@@ -56,8 +54,6 @@ const CompanyProfile = ({ customerDetail,id }: any ) => {
     []
   );
 
-
-  // Fetch licenses
   const fetchLicenses = async (url: string) => {
     try {
       const trimmedUrl = url.includes("/admin-dashboard")
@@ -77,13 +73,12 @@ const CompanyProfile = ({ customerDetail,id }: any ) => {
       setRowData(licenses);
       setNextPageUrl(licenseDetail.next || null);
       setPreviousPageUrl(licenseDetail.previous || null);
-      setTotalPages(Math.ceil(licenseDetail.count / 10)); // Assuming 10 items per page
+      setTotalPages(Math.ceil(licenseDetail.count / 10));
     } catch (error) {
       console.error("Failed to fetch licenses:", error);
     }
   };
 
-  // Pagination handlers
   const handleNextPage = () => {
     if (nextPageUrl) {
       fetchLicenses(nextPageUrl);
@@ -98,7 +93,6 @@ const CompanyProfile = ({ customerDetail,id }: any ) => {
     }
   };
 
-  // Initial fetch
   useEffect(() => {
     fetchLicenses(`/admin-dashboard/customers/${id}/licenses`);
   }, [id]);
@@ -112,14 +106,18 @@ const CompanyProfile = ({ customerDetail,id }: any ) => {
       case 2:
         return <BillingTab />;
       case 3:
-        return <LicenseTab  rowData={rowData}
-        columnDefs={columnDefs}
-        currentPage={currentPage}
-        totalPages={totalPages}
-        nextPageUrl={nextPageUrl}
-        previousPageUrl={previousPageUrl}
-        onNextPage={handleNextPage}
-        onPreviousPage={handlePreviousPage}/>;
+        return (
+          <LicenseTab
+            rowData={rowData}
+            columnDefs={columnDefs}
+            currentPage={currentPage}
+            totalPages={totalPages}
+            nextPageUrl={nextPageUrl}
+            previousPageUrl={previousPageUrl}
+            onNextPage={handleNextPage}
+            onPreviousPage={handlePreviousPage}
+          />
+        );
       default:
         return <div>Invalid Tab</div>;
     }
@@ -141,8 +139,13 @@ const CompanyProfile = ({ customerDetail,id }: any ) => {
         </Box>
         <Box sx={{ margin: "24px 24px 24px 0" }}>
           <Typography variant="h2" paddingBottom={"8px"}>
-            {companyProfile?.company_name || "Company Name Not Available"},{" "}
-            {companyProfile?.company_town}, {companyProfile?.company_country}
+            {customerDetail?.user_type === "company_user"
+              ? `${companyProfile?.company_name || "Company Name Not Available"}, ${
+                  companyProfile?.company_town || "Town Not Available"
+                }, ${companyProfile?.company_country || "Country Not Available"}`
+              : `${customerDetail?.first_name || "First Name Not Available"} ${
+                  customerDetail?.last_name || "Last Name Not Available"
+                }`}
           </Typography>
 
           <Typography variant="body2" color="#0057b7" mt={1} fontSize={16}>
