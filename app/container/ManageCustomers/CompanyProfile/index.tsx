@@ -1,6 +1,6 @@
 "use client";
 import { Box, Divider, Typography } from "@mui/material";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useMemo, useState } from "react";
 import Header from "@/app/components/common/Header";
 import { SidebarContext } from "@/app/(pages)/layout";
 import { solutionsBreadcrumb, tabs } from "./solutionData";
@@ -9,8 +9,9 @@ import BillingTab from "./billingTab";
 import UserConnectionTab from "./userConnectionTab";
 import LicenseTab from "./licenseTab";
 import ProfileTab from "./ProfileTab";
+import { apiCall } from "@/app/utils/APIUtils";
 
-const CompanyProfile = ({ customerDetail }: { customerDetail: any }) => {
+const CompanyProfile = ({ customerDetail,id }: any ) => {
   const context = useContext(SidebarContext);
   const [activeTab, setActiveTab] = useState(0);
 
@@ -28,6 +29,80 @@ const CompanyProfile = ({ customerDetail }: { customerDetail: any }) => {
     setActiveTab(newValue);
   };
 
+  const [nextPageUrl, setNextPageUrl] = useState<string | null>(null);
+  const [previousPageUrl, setPreviousPageUrl] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
+  const [rowData, setRowData] = useState([]);
+
+
+  // Column definitions
+  const columnDefs = useMemo(
+    () => [
+      { field: "product_name", headerName: "Product Name", width: 200 },
+      { field: "total_license", headerName: "Total License", width: 150 },
+      { field: "available_licenses", headerName: "Available Licenses", width: 150 },
+      { field: "assigned_licenses", headerName: "Assigned Licenses", width: 150 },
+      { field: "renewal_date", headerName: "Renewal Date", width: 150 },
+      {
+        field: "actions",
+        headerName: "Actions",
+        width: 120,
+        cellRenderer: () => (
+          <span style={{ color: "#0057B7", cursor: "pointer" }}>View Details</span>
+        ),
+      },
+    ],
+    []
+  );
+
+
+  // Fetch licenses
+  const fetchLicenses = async (url: string) => {
+    try {
+      const trimmedUrl = url.includes("/admin-dashboard")
+        ? url.substring(url.indexOf("/admin-dashboard"))
+        : url;
+
+      const licenseDetail = await apiCall(trimmedUrl);
+
+      const licenses = licenseDetail.results.licenses.map((license: any) => ({
+        product_name: license.product.name,
+        total_license: license.product.license_count,
+        available_licenses: license.product.license_count,
+        assigned_licenses: license.is_active ? 1 : 0,
+        renewal_date: new Date(license.package.expires_at).toLocaleDateString(),
+      }));
+
+      setRowData(licenses);
+      setNextPageUrl(licenseDetail.next || null);
+      setPreviousPageUrl(licenseDetail.previous || null);
+      setTotalPages(Math.ceil(licenseDetail.count / 10)); // Assuming 10 items per page
+    } catch (error) {
+      console.error("Failed to fetch licenses:", error);
+    }
+  };
+
+  // Pagination handlers
+  const handleNextPage = () => {
+    if (nextPageUrl) {
+      fetchLicenses(nextPageUrl);
+      setCurrentPage((prev) => prev + 1);
+    }
+  };
+
+  const handlePreviousPage = () => {
+    if (previousPageUrl) {
+      fetchLicenses(previousPageUrl);
+      setCurrentPage((prev) => prev - 1);
+    }
+  };
+
+  // Initial fetch
+  useEffect(() => {
+    fetchLicenses(`/admin-dashboard/customers/${id}/licenses`);
+  }, [id]);
+
   const renderTabContent = () => {
     switch (activeTab) {
       case 0:
@@ -37,7 +112,14 @@ const CompanyProfile = ({ customerDetail }: { customerDetail: any }) => {
       case 2:
         return <BillingTab />;
       case 3:
-        return <LicenseTab />;
+        return <LicenseTab  rowData={rowData}
+        columnDefs={columnDefs}
+        currentPage={currentPage}
+        totalPages={totalPages}
+        nextPageUrl={nextPageUrl}
+        previousPageUrl={previousPageUrl}
+        onNextPage={handleNextPage}
+        onPreviousPage={handlePreviousPage}/>;
       default:
         return <div>Invalid Tab</div>;
     }

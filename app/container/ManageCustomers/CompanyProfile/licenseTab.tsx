@@ -1,13 +1,18 @@
-import AgGridTable from "@/app/ag-grid";
-import { LicenseColumnDefs } from "@/app/const/GridTable/ColDef";
-import { LicenseCompanyRow } from "@/app/const/GridTable/RowData";
-import useColumnCompanyLicense from "@/app/hooks/Grid-Table/useColumnCompanyLicense";
+import React, { useEffect, useState, useMemo } from "react";
 import { Box } from "@mui/material";
-import React from "react";
+import AgGridServerSideTable from "@/app/ag-grid/AgGridServerSideTable";
+import { apiCall } from "@/app/utils/APIUtils";
 
-const LicenseTab = () => {
-  const LicenseCol = useColumnCompanyLicense(LicenseColumnDefs);
-
+const LicenseTab = ({
+  rowData,
+  columnDefs,
+  currentPage,
+  totalPages,
+  nextPageUrl,
+  previousPageUrl,
+  onNextPage,
+  onPreviousPage,
+}: any) => {
   return (
     <Box
       sx={{
@@ -20,7 +25,16 @@ const LicenseTab = () => {
         marginRight: "32px",
       }}
     >
-      <AgGridTable rowData={LicenseCompanyRow} columnDefs={LicenseCol} />
+      <AgGridServerSideTable
+        rowData={rowData}
+        columnDefs={columnDefs}
+        currentPage={currentPage}
+        totalPages={totalPages}
+        nextPageUrl={nextPageUrl}
+        previousPageUrl={previousPageUrl}
+        onNextPage={onNextPage}
+        onPreviousPage={onPreviousPage}
+      />
     </Box>
   );
 };
