@@ -29,31 +29,76 @@ const Billings = () => {
 
   const context = useContext(SidebarContext);
   const [activeTab, setActiveTab] = useState(0);
-  const BillingPaymentCol = useColumnBillingPayment(BillingPaymentColumnDefs);
+
+  const handleAction = (actionType: string, rowData: any) => {
+    console.log("View action before:", rowData);
+
+    if (actionType === "download" && rowData.invoice_pdf) {
+      console.log("View action after:", rowData);
+
+      const link = document.createElement("a");
+      link.href = rowData.invoice_pdf;
+      link.download = `${rowData.invoice_id}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } else if (actionType === "view") {
+      console.log("View action for:", rowData);
+    }
+  };
+  const handleDownloadPDFs = () => {
+    if (!billingData || billingData.length === 0) {
+      console.error("No billing data available to download.");
+      return;
+    }
+
+    billingData.forEach((invoice: any) => {
+      if (invoice.invoice_pdf) {
+        const link = document.createElement("a");
+        link.href = invoice.invoice_pdf;
+        link.download = `${invoice.invoice_id}.pdf`;
+        link.target = "_blank";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }
+    });
+  };
+  const BillingPaymentCol = useColumnBillingPayment(
+    BillingPaymentColumnDefs,
+    handleAction
+  );
   const BillingCustomerCol = useColumnBillingCustomers(
     BillingCustomerColumnDefs
   );
 
   useEffect(() => {
-    const fetchBillingdData = async () => {
+    const fetchBillingData = async () => {
       try {
-        const data = await apiCall(
-          "/admin-dashboard/customers/326/billing",
-          "GET"
-        );
-        console.log("Fetched data:", data);
+        const data = await apiCall("/admin-dashboard/invoices/failed", "GET");
+        const billingsData = data || []; 
 
-        setBillingData(data);
+        const extractedData = billingsData.map((user: any) => {
+          const invoice = user.invoices?.[0] || {}; 
+          return {
+            first_name: user.first_name || "N/A",
+            sharemundo_links_id: user.sharemundo_links_id || "N/A",
+            user_type: user.user_type || "N/A",
+            status: invoice.status || "N/A",
+            amount: invoice.amount_due || "0.00",
+            invoice_date: invoice.invoice_date || "N/A",
+          };
+        });
+        console.log("Extracted Billing Data:", extractedData);
+        setBillingData(extractedData);
         setLoading(false);
       } catch (err) {
-        console.error("Error fetching dashboard data:", err);
+        console.error("Error fetching billing data:", err);
         setLoading(false);
       }
     };
-
-    fetchBillingdData();
+    fetchBillingData();
   }, []);
-
 
   if (context === undefined) {
     return <div>Error: Sidebar context is undefined!</div>;
@@ -64,9 +109,9 @@ const Billings = () => {
   const renderChart = () => {
     switch (activeTab) {
       case 0:
-        return <SharpLineChart />;
+      // return <SharpLineChart />;
       case 1:
-        return <BarChartComponent />;
+      // return <BarChartComponent />;
       default:
         return <div>chart here</div>;
     }
@@ -95,7 +140,11 @@ const Billings = () => {
             <Typography variant="h2" paddingBottom={"8px"}>
               Billing
             </Typography>
-            <CustomButton variant="contained" endIcon={<ExportExcel />}>
+            <CustomButton
+              variant="contained"
+              endIcon={<ExportExcel />}
+              onClick={handleDownloadPDFs}
+            >
               Export to excel
             </CustomButton>
           </Box>
@@ -121,7 +170,6 @@ const Billings = () => {
                 Revenue Overview
               </Typography>
               <CustomTabs tabs={tabs} onTabChange={handleTabChange} />
-              {renderChart()}
             </Stack>
           </Box>
           <Box
@@ -134,10 +182,7 @@ const Billings = () => {
               marginTop: "24px",
             }}
           >
-            <AgGridTable
-              rowData={BillingPaymentRow}
-              columnDefs={BillingPaymentCol}
-            />
+            <AgGridTable rowData={billingData} columnDefs={BillingPaymentCol} />
           </Box>
           <Box>
             <Typography variant="h5" fontWeight={500} mt={3}>

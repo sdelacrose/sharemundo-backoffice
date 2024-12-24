@@ -1,3 +1,4 @@
+import { statsData } from "@/app/container/Dashboard/data";
 import React from "react";
 import {
   BarChart,
@@ -23,8 +24,11 @@ const data = [
   { name: "Nov", value: 500 },
   { name: "Dec", value: 300 },
 ];
+interface BarChartComponentProps {
+  data: { name: string; value: number }[];
+}
 
-const BarChartComponent: React.FC = () => {
+const BarChartComponent: React.FC<BarChartComponentProps> = ({ data }) => {
   return (
     <div style={{ width: "100%", height: 400, margin: "20px auto" }}>
       <ResponsiveContainer width="100%" height="100%">

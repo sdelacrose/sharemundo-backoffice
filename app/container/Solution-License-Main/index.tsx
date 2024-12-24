@@ -26,6 +26,8 @@ const SolutionLicenseMain = () => {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [solutionData, setSolutionData] = useState<any>(null);
   const [loading, setLoading] = useState<any>(false);
+  const [chartData, setChartData] = useState<any>(null);
+  const [activeTab, setActiveTab] = useState(0);
 
   useEffect(() => {
     const fetchSolutionData = async () => {
@@ -42,11 +44,8 @@ const SolutionLicenseMain = () => {
           })
         );
 
-        console.log("solutionss :", extractedData);
-
         setSolutionData(extractedData);
         setLoading(false);
-        
       } catch (err) {
         console.error("Error fetching dashboard data:", err);
         setLoading(false);
@@ -55,9 +54,33 @@ const SolutionLicenseMain = () => {
 
     fetchSolutionData();
   }, []);
+  const endpoints = {
+    0: "/admin-dashboard/customers/stats",
+    1: "/admin-dashboard/users/stats",
+    2: "/admin-dashboard/licenses/stats",
+  };
 
+  useEffect(() => {
+    const fetchData = async (endpoint: string) => {
+      try {
+        setLoading(true);
+        const data = await apiCall(endpoint, "GET");
+        const transformedData = Object.entries(data).map(([key, value]) => ({
+          name: key,
+          value: value as number,
+        }));
+        console.log("Chart data-------", transformedData);
+        setChartData(transformedData);
+        setLoading(false);
+      } catch (err) {
+        console.error(`Error fetching data from ${endpoint}:`, err);
+        setLoading(false);
+      }
+    };
+
+    fetchData(endpoints[activeTab]);
+  }, [activeTab]);
   const handleOpenDrawer = (actionType: string, id: string) => {
-    console.log("Opening drawer with action:", actionType, "ID:", id);
     setDrawerType(actionType);
     setSelectedId(id);
   };
@@ -75,7 +98,6 @@ const SolutionLicenseMain = () => {
     console.log(query);
   };
   const context = useContext(SidebarContext);
-  const [activeTab, setActiveTab] = useState(0);
   const [newSolution, setNewSolution] = useState(false);
 
   if (context === undefined) {
@@ -94,11 +116,11 @@ const SolutionLicenseMain = () => {
   const renderChart = () => {
     switch (activeTab) {
       case 0:
-        return <BarChartComponent />;
+        return <BarChartComponent data={chartData} />;
       case 1:
-        return <SmoothLineChart />;
+        return <SmoothLineChart data={chartData} />;
       case 2:
-        return <SharpLineChart />;
+        return <SharpLineChart data={chartData} />;
       default:
         return <div>chart here</div>;
     }
@@ -125,7 +147,7 @@ const SolutionLicenseMain = () => {
       console.error(`Error updating status for ${id}:`, error);
     }
   };
-  
+
   const handleUpdateData = (updatedItem: any) => {
     setSolutionData((prevData: any) =>
       prevData.map((item: any) =>

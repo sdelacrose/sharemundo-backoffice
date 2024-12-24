@@ -24,7 +24,11 @@ const data = [
   { name: "12", value: 900 },
 ];
 
-const SmoothLineChart: React.FC = () => {
+interface SmoothLineChartProps {
+  data: { name: string; value: number }[];
+}
+
+const SmoothLineChart: React.FC<SmoothLineChartProps> = ({ data }) => {
   return (
     <div style={{ width: "100%", height: 400, margin: "20px auto" }}>
       <ResponsiveContainer width="100%" height="100%">

@@ -1,4 +1,4 @@
-import Actions from "@/app/components/Data-Table/Actions";
+import ActionsBilling from "@/app/components/Data-Table/ActionsBilling";
 import { HeaderCheck } from "@/app/components/Data-Table/HeaderCheck";
 import NameCheck from "@/app/components/Data-Table/NameCheck";
 import { useMemo } from "react";
@@ -10,17 +10,22 @@ interface Column {
   width?: number;
 }
 
-const useColumnBillingPayment = (columns: Column[]) => {
+const useColumnBillingPayment = (
+  columns: Column[],
+  handleAction: (actionType: string, rowData: any) => void
+) => {
   return useMemo(() => {
     return columns.map((col: any) => {
       switch (col.field) {
-        case "customer_name":
+        case "first_name":
           return {
-            field: "customer_name",
+            field: "first_name",
             headerName: "Customer Name",
             headerComponent: HeaderCheck,
             cellRenderer: NameCheck,
             flex: 1.6,
+            valueFormatter: (params: any) =>
+              params.value ? params.value : "N/A",
           };
         case "sharemundo_links_id":
           return {
@@ -28,18 +33,24 @@ const useColumnBillingPayment = (columns: Column[]) => {
             headerName: "Sharemundo Links ID",
             width: 120,
             flex: 1.7,
+            valueFormatter: (params: any) =>
+              params.value ? params.value : "N/A",
           };
-        case "type":
+        case "user_type":
           return {
-            field: "type",
+            field: "user_type",
             headerName: "Type",
             width: 120,
+            valueFormatter: (params: any) =>
+              params.value ? params.value : "N/A",
           };
-        case "issue":
+        case "status":
           return {
-            field: "issue",
+            field: "status",
             headerName: "Issue",
             width: 120,
+            valueFormatter: (params: any) =>
+              params.value ? params.value : "N/A",
           };
         case "amount":
           return {
@@ -47,23 +58,32 @@ const useColumnBillingPayment = (columns: Column[]) => {
             headerName: "Amount",
             width: 120,
             flex: 1,
+            valueFormatter: (params: any) =>
+              params.value ? params.value : "N/A",
           };
-        case "date":
+        case "invoice_date":
           return {
-            field: "date",
+            field: "invoice_date",
             headerName: "Date",
             width: 120,
             flex: 2,
+            valueFormatter: (params: any) =>
+              params.value ? params.value : "N/A",
           };
         case "actions":
           return {
             field: "actions",
             headerName: "Actions",
             width: 120,
-            cellRenderer: Actions,
+            cellRenderer: ActionsBilling,
             cellRendererParams: {
-              viewText: "View",
-              removeText: "Download",
+              actions: [
+                { label: "View", actionType: "view" },
+                { label: "Download", actionType: "download", color: "#32ADE6" },
+              ],
+              handleAction: (actionType: string) =>
+                handleAction(actionType, col.rowData),
+              // handleAction,
             },
             headerStyle: {
               justifyContent: "end",
@@ -71,6 +91,8 @@ const useColumnBillingPayment = (columns: Column[]) => {
               flex: 1,
             },
             cellStyle: { display: "flex" },
+            valueFormatter: (params: any) =>
+              params.value ? params.value : "N/A",
           };
         default:
           return col;

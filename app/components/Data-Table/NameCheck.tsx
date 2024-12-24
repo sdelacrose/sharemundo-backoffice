@@ -58,7 +58,7 @@ const NameCheck: React.FC<ActiveUserNameProps> = (params) => {
           <CustomCheckbox />
         </Box>
         <Image src={productImage} alt="Product Image" />
-        <Typography variant="body2" sx={{ marginTop: "9px", fontSize: "14px" }}>
+        <Typography variant="body2" sx={{  fontSize: "14px" }}>
           {name}
         </Typography>
       </Box>

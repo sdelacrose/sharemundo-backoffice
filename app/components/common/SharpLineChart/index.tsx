@@ -24,7 +24,11 @@ const data = [
   { name: "12", value: 200 },
 ];
 
-const SharpLineChart: React.FC = () => {
+interface SharpChartComponentProps {
+  data: { name: string; value: number }[];
+}
+
+const SharpLineChart: React.FC<SharpChartComponentProps> = ({ data }) => {
   return (
     <div style={{ width: "100%", height: 400, margin: "20px auto" }}>
       <ResponsiveContainer width="100%" height="100%">

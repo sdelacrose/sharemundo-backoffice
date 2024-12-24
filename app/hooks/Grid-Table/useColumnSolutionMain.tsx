@@ -1,4 +1,5 @@
-import Actions from "@/app/components/Data-Table/Actions";
+import ActionSolutions from "@/app/components/Data-Table/ActionSolutions";
+import Actions from "@/app/components/Data-Table/ActionSolutions";
 import StatusCheck from "@/app/components/Data-Table/StatusCheck";
 import { useMemo } from "react";
 interface Column {
@@ -53,33 +54,12 @@ const useColumnSolutionMain = (
             valueFormatter: (params: any) =>
               params.value ? params.value : "N/A",
           };
-        // case "actions":
-        //   return {
-        //     field: "actions",
-        //     headerName: "Actions",
-        //     width: 180,
-        //     cellRenderer: Actions,
-
-        //     cellRendererParams: {
-        //       viewText: "Edit",
-        //       removeText: "resume",
-        //       handleOpenDrawer,
-        //     },
-        //     valueFormatter: (params: any) =>
-        //       params.value ? params.value : "N/A",
-        //     headerStyle: {
-        //       justifyContent: "end",
-        //       display: "flex",
-        //       flex: 1,
-        //     },
-        //     cellStyle: { display: "flex" },
-        //   };
         case "actions":
           return {
             field: "actions",
             headerName: "Actions",
             width: 180,
-            cellRenderer: Actions,
+            cellRenderer: ActionSolutions,
             cellRendererParams: (params: any) => {
               const { status, id } = params.data;
               const buttons = [
