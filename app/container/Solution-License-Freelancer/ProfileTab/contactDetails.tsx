@@ -1,12 +1,15 @@
 import { Box, Divider, Stack, Typography } from "@mui/material";
 import React from "react";
 
-const ContactDetails = () => {
+const FreelanceContactDetails = ({ freelanceContactDetail }) => {
+  const activeSolutions = freelanceContactDetail?.licenses?.filter(
+    (license) => license.status
+  ).length;
+
   return (
     <>
       <Box width={"50%"}>
-        {/* Contact Details------------------------------------------------------------------ */}
-
+        {/* Contact Details Section */}
         <Typography variant="h5">Contact Details</Typography>
         <Divider
           sx={{
@@ -16,93 +19,75 @@ const ContactDetails = () => {
           }}
         />
         <Stack gap={3} mr={15}>
-          <Box
-            display={"flex"}
-            justifyContent={"space-between"}
-            alignItems={"center"}
-          >
-            <Stack>
-              <Typography variant="caption" color="#667185">
-                Address
-              </Typography>
-              <Typography variant="subtitle1" color="#101928">
-                sdasd@FoliumAI936.sharemundo.com
-              </Typography>
-            </Stack>
-            <Stack>
-              <Typography variant="caption" color="#667185">
-                Town
-              </Typography>
-              <Typography variant="subtitle1" color="#101928">
-                8y39214ubu012huoo090
-              </Typography>
-            </Stack>
+          <Box display="flex" gap={4}>
+            <Box flex={3} display="flex" flexDirection="column" gap={"24px"}>
+              <Stack>
+                <Typography variant="caption" color="#667185">
+                  Address
+                </Typography>
+                <Typography variant="subtitle1" color="#101928">
+                  {freelanceContactDetail?.street_address || "N/A"}
+                </Typography>
+              </Stack>
+              <Stack>
+                <Typography variant="caption" color="#667185">
+                  Town
+                </Typography>
+                <Typography variant="subtitle1" color="#101928">
+                  {freelanceContactDetail?.city || "N/A"}
+                </Typography>
+              </Stack>
+              <Stack>
+                <Typography variant="caption" color="#667185">
+                  Country
+                </Typography>
+                <Typography variant="subtitle1" color="#101928">
+                  {freelanceContactDetail?.country || "N/A"}
+                </Typography>
+              </Stack>
+            </Box>
+            <Box flex={2} display="flex" flexDirection="column" gap={"24px"}>
+              <Stack>
+                <Typography variant="caption" color="#667185">
+                  Post Code
+                </Typography>
+                <Typography variant="subtitle1" color="#101928">
+                  {freelanceContactDetail?.post_code || "N/A"}
+                </Typography>
+              </Stack>
+              <Stack>
+                <Typography variant="caption" color="#667185">
+                  Email
+                </Typography>
+                <Typography variant="subtitle1" color="#101928">
+                  {freelanceContactDetail?.email || "N/A"}
+                </Typography>
+              </Stack>
+              <Stack>
+                <Typography variant="caption" color="#667185">
+                  Mobile Number
+                </Typography>
+                <Typography variant="subtitle1" color="#101928">
+                  {freelanceContactDetail?.mobile_phone || "N/A"}
+                </Typography>
+              </Stack>
+            </Box>
           </Box>
-          {/* ------------------------------------------- */}
-          <Box
-            display={"flex"}
-            justifyContent={"space-between"}
-            alignItems={"center"}
-          >
-            <Stack>
-              <Typography variant="caption" color="#667185">
-                Country
-              </Typography>
-              <Typography variant="subtitle1" color="#101928">
-                Germany
-              </Typography>
-            </Stack>
-            <Stack>
-              <Typography variant="caption" color="#667185">
-                Post Code
-              </Typography>
-              <Typography variant="subtitle1" color="#101928">
-                8090
-              </Typography>
-            </Stack>
-          </Box>
-          {/* -------------------------------------------- */}
-          <Box
-            display={"flex"}
-            justifyContent={"space-between"}
-            alignItems={"center"}
-          >
-            <Stack>
-              <Typography variant="caption" color="#667185">
-                Email
-              </Typography>
-              <Typography variant="subtitle1" color="#101928">
-                www.company.name
-              </Typography>
-            </Stack>
-            <Stack>
-              <Typography variant="caption" color="#667185">
-                Mobile Number
-              </Typography>
-              <Typography variant="subtitle1" color="#101928">
-                987623456789
-              </Typography>
-            </Stack>
-          </Box>
-          {/* ------------- */}
-          <Box
-            display={"flex"}
-            justifyContent={"space-between"}
-            alignItems={"center"}
-          >
-            <Stack>
-              <Typography variant="caption" color="#667185">
-                Telephone Number
-              </Typography>
-              <Typography variant="subtitle1" color="#101928">
-                +1234356576
-              </Typography>
-            </Stack>
+          <Box display="flex" gap={4}>
+            <Box flex={3} display="flex" flexDirection="column" gap={"24px"}>
+              <Stack>
+                <Typography variant="caption" color="#667185">
+                  Telephone Number
+                </Typography>
+                <Typography variant="subtitle1" color="#101928">
+                  {freelanceContactDetail?.telephone_number || "N/A"}
+                </Typography>
+              </Stack>
+            </Box>
           </Box>
         </Stack>
 
-        {/* Other Details------------------------------------------------------------------------------------- */}
-
+        {/* Other Details Section */}
         <Typography variant="h5" mt={4}>
           Other Details
         </Typography>
@@ -114,48 +99,40 @@ const ContactDetails = () => {
           }}
         />
         <Stack gap={3} mr={15}>
-          <Box
-            display={"flex"}
-            justifyContent={"space-between"}
-            alignItems={"center"}
-          >
-            <Stack>
-              <Typography variant="caption" color="#667185">
-                Active Solutions
-              </Typography>
-              <Typography variant="subtitle1" color="#101928">
-                2
-              </Typography>
-            </Stack>
-            <Stack>
-              <Typography variant="caption" color="#667185">
-                Companies{" "}
-              </Typography>
-              <Typography variant="subtitle1" color="#101928">
-                3
-              </Typography>
-            </Stack>
+          <Box display="flex" gap={4}>
+            <Box flex={3} display="flex" flexDirection="column" gap={"24px"}>
+              <Stack>
+                <Typography variant="caption" color="#667185">
+                  Active Solutions
+                </Typography>
+                <Typography variant="subtitle1" color="#101928">
+                  {activeSolutions || 0}
+                </Typography>
+              </Stack>
+              <Stack>
+                <Typography variant="caption" color="#667185">
+                  Companies
+                </Typography>
+                <Typography variant="subtitle1" color="#101928">
+                  {freelanceContactDetail?.companies || "N/A"}
+                </Typography>
+              </Stack>
+            </Box>
+            <Box flex={2} display="flex" flexDirection="column" gap={"24px"}>
+              <Stack>
+                <Typography variant="caption" color="#667185">
+                  Pending Company Invites
+                </Typography>
+                <Typography variant="subtitle1" color="#101928">
+                  {freelanceContactDetail?.pending_company_invites || 0}
+                </Typography>
+              </Stack>
+            </Box>
           </Box>
-          {/* ------------------------------------------- */}
-          <Box
-            display={"flex"}
-            justifyContent={"space-between"}
-            alignItems={"center"}
-          >
-            <Stack>
-              <Typography variant="caption" color="#667185">
-                Pending companies Invites
-              </Typography>
-              <Typography variant="subtitle1" color="#101928">
-                2
-              </Typography>
-            </Stack>
-          </Box>
-          {/* -------------------------------------------- */}
         </Stack>
       </Box>
     </>
   );
 };
 
-export default ContactDetails;
+export default FreelanceContactDetails;
