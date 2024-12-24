@@ -15,6 +15,7 @@ interface CreateEditDrawerProps {
     name: string;
     price: string;
     link: string;
+    description: string;
   };
 }
 
@@ -35,6 +36,7 @@ const EditDrawer: React.FC<CreateEditDrawerProps> = ({
       solutionName: initialData?.name || "",
       price: initialData?.price || "",
       link: initialData?.link || "",
+      description: initialData?.description || "",
     },
   });
 
@@ -45,6 +47,7 @@ const EditDrawer: React.FC<CreateEditDrawerProps> = ({
       name: data.solutionName,
       price: parseFloat(data.price),
       link: data.link,
+      description: data.description,
     };
 
     try {
@@ -132,6 +135,23 @@ const EditDrawer: React.FC<CreateEditDrawerProps> = ({
                       fullWidth
                       error={!!errors.price}
                       helperText={errors.price?.message}
+                      {...field}
+                    />
+                  )}
+                />
+                <Controller
+                  name="description"
+                  control={control}
+                  rules={{
+                    required: "Description is required",
+                  }}
+                  render={({ field }) => (
+                    <CustomTextField
+                      label="Details"
+                      placeholder="details"
+                      fullWidth
+                      error={!!errors.description}
+                      helperText={errors.description?.message}
                       {...field}
                     />
                   )}

@@ -1,4 +1,3 @@
-import { statsData } from "@/app/container/Dashboard/data";
 import React from "react";
 import {
   BarChart,
@@ -10,20 +9,7 @@ import {
   CartesianGrid,
 } from "recharts";
 
-const data = [
-  { name: "Jan", value: 400 },
-  { name: "Feb", value: 300 },
-  { name: "Mar", value: 500 },
-  { name: "Apr", value: 200 },
-  { name: "May", value: 400 },
-  { name: "Jun", value: 300 },
-  { name: "Jul", value: 700 },
-  { name: "Aug", value: 1000 },
-  { name: "Sep", value: 600 },
-  { name: "Oct", value: 400 },
-  { name: "Nov", value: 500 },
-  { name: "Dec", value: 300 },
-];
+
 interface BarChartComponentProps {
   data: { name: string; value: number }[];
 }
@@ -40,7 +26,7 @@ const BarChartComponent: React.FC<BarChartComponentProps> = ({ data }) => {
           <XAxis dataKey="name" />
           <YAxis />
           <Tooltip />
-          <Bar dataKey="value" fill="#007bff" barSize={50} />
+          <Bar dataKey="value" fill="#0057b7" barSize={50} />
         </BarChart>
       </ResponsiveContainer>
     </div>

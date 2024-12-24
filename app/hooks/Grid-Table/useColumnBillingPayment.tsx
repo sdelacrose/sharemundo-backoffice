@@ -1,5 +1,5 @@
 import ActionsBilling from "@/app/components/Data-Table/ActionsBilling";
-import { HeaderCheck } from "@/app/components/Data-Table/HeaderCheck";
+import { DateFormat } from "@/app/utils/FormatDate";
 import { useMemo } from "react";
 
 interface Column {
@@ -20,16 +20,19 @@ const useColumnBillingPayment = (
           return {
             field: "first_name",
             headerName: "Customer Name",
-            flex: 1.6,
+            flex: 1.4,
             valueFormatter: (params: any) =>
-              params.value ? params.value : "N/A",
+              params.value
+                ? params.value.charAt(0).toUpperCase() +
+                  params.value.slice(1).toLowerCase()
+                : "N/A",
           };
         case "sharemundo_links_id":
           return {
             field: "sharemundo_links_id",
             headerName: "Sharemundo Links ID",
             width: 120,
-            flex: 1.7,
+            flex: 1.8,
             valueFormatter: (params: any) =>
               params.value ? params.value : "N/A",
           };
@@ -39,7 +42,10 @@ const useColumnBillingPayment = (
             headerName: "Type",
             width: 120,
             valueFormatter: (params: any) =>
-              params.value ? params.value : "N/A",
+              params.value
+                ? params.value.charAt(0).toUpperCase() +
+                  params.value.slice(1).toLowerCase()
+                : "N/A",
           };
         case "status":
           return {
@@ -47,7 +53,10 @@ const useColumnBillingPayment = (
             headerName: "Issue",
             width: 120,
             valueFormatter: (params: any) =>
-              params.value ? params.value : "N/A",
+              params.value
+                ? params.value.charAt(0).toUpperCase() +
+                  params.value.slice(1).toLowerCase()
+                : "N/A",
           };
         case "amount":
           return {
@@ -56,34 +65,39 @@ const useColumnBillingPayment = (
             width: 120,
             flex: 1,
             valueFormatter: (params: any) =>
-              params.value ? params.value : "N/A",
+              params.value ? `€${params.value}` : "N/A",
           };
         case "invoice_date":
           return {
             field: "invoice_date",
             headerName: "Date",
             width: 120,
-            flex: 2,
+            flex: 1,
             valueFormatter: (params: any) =>
-              params.value ? params.value : "N/A",
+              params.value ? DateFormat(params.value) : "N/A",
           };
         case "actions":
           return {
             field: "actions",
             headerName: "Actions",
             width: 120,
-            cellRenderer: ActionsBilling,
-            cellRendererParams: {
-              actions: [
-                { label: "View", actionType: "view" },
-                { label: "Download", actionType: "download", color: "#32ADE6" },
-              ],
-              handleAction: (actionType: string) =>
-                handleAction(actionType, col.rowData),
-              // handleAction,
-            },
+            cellRenderer: (params: any) => (
+              <ActionsBilling
+                actions={[
+                  { label: "View", actionType: "view" },
+                  {
+                    label: "Download",
+                    actionType: "download",
+                    color: "#32ADE6",
+                  },
+                ]}
+                handleAction={(actionType: string) =>
+                  handleAction(actionType, params.data)
+                }
+              />
+            ),
             headerStyle: {
-              justifyContent: "end",
+              justifyContent: "center",
               display: "flex",
               flex: 1,
             },

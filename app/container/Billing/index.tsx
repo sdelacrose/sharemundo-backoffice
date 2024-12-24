@@ -5,8 +5,6 @@ import Header from "@/app/components/common/Header";
 import { Box, Divider, Stack, Typography } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
 import { billingBreadcrumb, tabs } from "./billingData";
-import CustomButton from "@/app/components/common/CustomButton";
-import { ExportExcel } from "@/app/assets/icons";
 import CustomTabs from "@/app/components/common/CustomTab";
 import BarChartComponent from "@/app/components/common/Barchart";
 import SharpLineChart from "@/app/components/common/SharpLineChart";
@@ -14,56 +12,51 @@ import {
   BillingCustomerColumnDefs,
   BillingPaymentColumnDefs,
 } from "@/app/const/GridTable/ColDef";
-import AgGridTable from "@/app/ag-grid";
-import {
-  BillingCustomerRow,
-  BillingPaymentRow,
-} from "@/app/const/GridTable/RowData";
+
 import useColumnBillingPayment from "@/app/hooks/Grid-Table/useColumnBillingPayment";
 import useColumnBillingCustomers from "@/app/hooks/Grid-Table/usecolumnBillingCustomers";
 import { apiCall } from "@/app/utils/APIUtils";
+import { useRouter } from "next/navigation";
+import AgGridServerSideTable from "@/app/ag-grid/AgGridServerSideTable";
 
 const Billings = () => {
   const [billingData, setBillingData] = useState<any>(null);
-  const [loading, setLoading] = useState<any>(false);
-
+  const [, setLoading] = useState<any>(false);
   const context = useContext(SidebarContext);
   const [activeTab, setActiveTab] = useState(0);
-
-  const handleAction = (actionType: string, rowData: any) => {
-    console.log("View action before:", rowData);
-
-    if (actionType === "download" && rowData.invoice_pdf) {
-      console.log("View action after:", rowData);
-
-      const link = document.createElement("a");
-      link.href = rowData.invoice_pdf;
-      link.download = `${rowData.invoice_id}.pdf`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    } else if (actionType === "view") {
-      console.log("View action for:", rowData);
-    }
+  const [topUserData, setTopUserData] = useState<any>(null);
+  const [chartData, setChartData] = useState<any>(null);
+  const [nextPageUrl, setNextPageUrl] = useState<string | null>(null);
+  const [previousPageUrl, setPreviousPageUrl] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [totalPages, setTotalPages] = useState<number>(0);
+  const router = useRouter();
+  const endpoints = {
+    0: "/admin-dashboard/invoices/failed-stats",
+    1: "/admin-dashboard/invoices/revenue-stats",
   };
-  const handleDownloadPDFs = () => {
-    if (!billingData || billingData.length === 0) {
-      console.error("No billing data available to download.");
-      return;
-    }
-
-    billingData.forEach((invoice: any) => {
-      if (invoice.invoice_pdf) {
+  const handleAction = (actionType: string, rowData: any) => {
+    if (actionType === "download") {
+      if (rowData.invoice_pdf) {
         const link = document.createElement("a");
-        link.href = invoice.invoice_pdf;
-        link.download = `${invoice.invoice_id}.pdf`;
+        link.href = rowData.invoice_pdf;
+        link.download = `Invoice_${rowData.invoice_id || "unknown"}.pdf`;
         link.target = "_blank";
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
+      } else {
+        console.error("No invoice PDF available for this record.");
       }
-    });
+    } else if (actionType === "view") {
+      if (rowData.id) {
+        router.push(`/manage-customers/${rowData.id}`);
+      } else {
+        console.error("No ID available for navigation.");
+      }
+    }
   };
+
   const BillingPaymentCol = useColumnBillingPayment(
     BillingPaymentColumnDefs,
     handleAction
@@ -72,33 +65,99 @@ const Billings = () => {
     BillingCustomerColumnDefs
   );
 
-  useEffect(() => {
-    const fetchBillingData = async () => {
-      try {
-        const data = await apiCall("/admin-dashboard/invoices/failed", "GET");
-        const billingsData = data || []; 
+  const fetchBillingData = async (url: string) => {
+    try {
+      const data = await apiCall("/admin-dashboard/invoices/failed", "GET");
+      const billingsData = data || [];
 
-        const extractedData = billingsData.map((user: any) => {
-          const invoice = user.invoices?.[0] || {}; 
-          return {
-            first_name: user.first_name || "N/A",
-            sharemundo_links_id: user.sharemundo_links_id || "N/A",
-            user_type: user.user_type || "N/A",
-            status: invoice.status || "N/A",
-            amount: invoice.amount_due || "0.00",
-            invoice_date: invoice.invoice_date || "N/A",
-          };
-        });
-        console.log("Extracted Billing Data:", extractedData);
-        setBillingData(extractedData);
+      const extractedData = billingsData.map((user: any) => {
+        const invoice = user.invoices?.[0] || {};
+        return {
+          id: user.id,
+          first_name: user.first_name || "N/A",
+          sharemundo_links_id: user.sharemundo_links_id || "N/A",
+          user_type: user.user_type || "N/A",
+          status: invoice.status || "N/A",
+          amount: invoice.amount_due || "0.00",
+          invoice_date: invoice.invoice_date || "N/A",
+          invoice_pdf: invoice.invoice_pdf || "N/A",
+        };
+      });
+      setBillingData(extractedData);
+      setNextPageUrl(data?.next || null);
+      setPreviousPageUrl(data?.previous || null);
+      setTotalPages(Math.ceil((data?.count || 0) / 10));
+      setBillingData(extractedData);
+      setLoading(false);
+    } catch (err) {
+      console.error("Error fetching billing data:", err);
+      setLoading(false);
+    }
+  };
+  useEffect(() => {
+    fetchBillingData("/admin-dashboard/invoices/failed");
+  }, []);
+  useEffect(() => {
+    const fetchTopUserDataData = async () => {
+      try {
+        setLoading(true);
+
+        const data = await apiCall("/admin-dashboard/invoices/paid", "GET");
+
+        const extractedData = data.map((user: any) => ({
+          id: user.id || "N/a",
+          first_name: user.first_name || "N/A",
+          sharemundo_links_id: user.sharemundo_links_id || "N/A",
+          user_type: user.user_type || "N/A",
+          last_12_month_revenue: user.last_12_month_revenue || 0,
+          next_12_month_revenue: user.next_12_month_revenue || 0,
+          total_revenue: user.total_revenue || 0,
+        }));
+        setTopUserData(extractedData);
         setLoading(false);
       } catch (err) {
-        console.error("Error fetching billing data:", err);
+        console.error("Error fetching top user data:", err);
         setLoading(false);
       }
     };
-    fetchBillingData();
+
+    fetchTopUserDataData();
   }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const data = await apiCall(
+          "/admin-dashboard/invoices/revenue-stats",
+          "GET"
+        );
+        // console.log("Chart data-------", data);
+        const transformChartData = (data: any) => {
+          return Object.entries(data).map(([month, value]) => ({
+            name: month,
+            value: value || 0,
+          }));
+        };
+        const past12MonthsData = transformChartData(data.past_12_months);
+        const next12MonthsData = transformChartData(data.next_12_months);
+
+        setChartData({
+          past12Months: past12MonthsData,
+          next12Months: next12MonthsData,
+        });
+        console.log("Chart data-------", chartData.past12Months);
+        console.log("Chart data-------", chartData.past12Months);
+
+        setLoading(false);
+      } catch (err) {
+        console.error(`Error fetching data :`, err);
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [activeTab]);
 
   if (context === undefined) {
     return <div>Error: Sidebar context is undefined!</div>;
@@ -107,16 +166,31 @@ const Billings = () => {
     setActiveTab(newValue);
   };
   const renderChart = () => {
+    if (!chartData) {
+      return <div>Loading...</div>;
+    }
     switch (activeTab) {
       case 0:
-      // return <SharpLineChart />;
+        return <SharpLineChart data={chartData.next12Months} />;
       case 1:
-      // return <BarChartComponent />;
+        return <BarChartComponent data={chartData.past12Months} />;
       default:
-        return <div>chart here</div>;
+        return <div>Chart here</div>;
+    }
+  };
+  const handleNextPage = () => {
+    if (nextPageUrl) {
+      setCurrentPage((prev) => prev + 1);
+      fetchBillingData(nextPageUrl);
     }
   };
 
+  const handlePreviousPage = () => {
+    if (previousPageUrl) {
+      setCurrentPage((prev) => prev - 1);
+      fetchBillingData(previousPageUrl);
+    }
+  };
   return (
     <>
       <Box
@@ -140,13 +214,6 @@ const Billings = () => {
             <Typography variant="h2" paddingBottom={"8px"}>
               Billing
             </Typography>
-            <CustomButton
-              variant="contained"
-              endIcon={<ExportExcel />}
-              onClick={handleDownloadPDFs}
-            >
-              Export to excel
-            </CustomButton>
           </Box>
           <Typography variant="body2" color="#475367" mt={1} fontSize={16}>
             Sharemundo Back Office
@@ -170,6 +237,7 @@ const Billings = () => {
                 Revenue Overview
               </Typography>
               <CustomTabs tabs={tabs} onTabChange={handleTabChange} />
+              {renderChart()}
             </Stack>
           </Box>
           <Box
@@ -182,7 +250,17 @@ const Billings = () => {
               marginTop: "24px",
             }}
           >
-            <AgGridTable rowData={billingData} columnDefs={BillingPaymentCol} />
+            <AgGridServerSideTable
+              rowData={billingData}
+              columnDefs={BillingPaymentCol}
+              currentPage={currentPage}
+              totalPages={totalPages}
+              nextPageUrl={nextPageUrl}
+              previousPageUrl={previousPageUrl}
+              onNextPage={handleNextPage}
+              onPreviousPage={handlePreviousPage}
+              height={528}
+            />
           </Box>
           <Box>
             <Typography variant="h5" fontWeight={500} mt={3}>
@@ -199,9 +277,15 @@ const Billings = () => {
               marginTop: "24px",
             }}
           >
-            <AgGridTable
-              rowData={BillingCustomerRow}
+            <AgGridServerSideTable
+              rowData={topUserData}
               columnDefs={BillingCustomerCol}
+              currentPage={currentPage}
+              totalPages={totalPages}
+              nextPageUrl={nextPageUrl}
+              previousPageUrl={previousPageUrl}
+              onNextPage={handleNextPage}
+              onPreviousPage={handlePreviousPage}
             />
           </Box>
         </Box>

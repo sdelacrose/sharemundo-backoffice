@@ -1,4 +1,8 @@
+import LastColumnHeader from "@/app/components/common/LastColumnHeader";
 import Actions from "@/app/components/Data-Table/Actions";
+import { DateFormat } from "@/app/utils/FormatDate";
+import { Button } from "@mui/material";
+import { useRouter } from "next/navigation";
 import { useMemo } from "react";
 
 interface Column {
@@ -9,16 +13,20 @@ interface Column {
 }
 
 const useColumnUserManagement = (columns: Column[]) => {
+  const router = useRouter();
   return useMemo(() => {
     return columns.map((col: any) => {
       switch (col.field) {
-        case "username":
+        case "first_name":
           return {
-            field: "username",
+            field: "first_name",
             headerName: "Name",
             flex: 1.4,
             valueFormatter: (params: any) =>
-              params.value ? params.value : "N/A",
+              params.value
+                ? params.value.charAt(0).toUpperCase() +
+                  params.value.slice(1).toLowerCase()
+                : "N/A",
           };
         case "sharemundo_links_id":
           return {
@@ -35,36 +43,55 @@ const useColumnUserManagement = (columns: Column[]) => {
             headerName: "Type",
             width: 120,
             valueFormatter: (params: any) =>
-              params.value ? params.value : "N/A",
+              params.value
+                ? params.value.charAt(0).toUpperCase() +
+                  params.value.slice(1).toLowerCase()
+                : "N/A",
           };
-        case "creation_date":
+        case "created_at":
           return {
-            field: "creation_date",
+            field: "created_at",
             headerName: "Creation Date",
             width: 120,
             flex: 1.5,
             valueFormatter: (params: any) =>
-              params.value ? params.value : "N/A",
+              params.value ? DateFormat(params.value) : "N/A",
           };
 
+        // case "actions":
+        //   return {
+        //     field: "actions",
+        //     headerName: "Actions",
+        //     width: 120,
+        //     cellRenderer: Actions,
+        //     cellRendererParams: {
+        //       viewText: "View",
+        //       removeText: "",
+        //     },
+        //     headerStyle: {
+        //       justifyContent: "end",
+        //       display: "flex",
+        //       flex: 1,
+        //     },
+        //     cellStyle: { display: "flex" },
+        //     valueFormatter: (params: any) =>
+        //       params.value ? params.value : "N/A",
+        //   };
         case "actions":
           return {
-            field: "actions",
+            ...col,
             headerName: "Actions",
-            width: 120,
-            cellRenderer: Actions,
-            cellRendererParams: {
-              viewText: "View",
-              removeText: "",
-            },
-            headerStyle: {
-              justifyContent: "end",
-              display: "flex",
-              flex: 1,
-            },
-            cellStyle: { display: "flex" },
-            valueFormatter: (params: any) =>
-              params.value ? params.value : "N/A",
+            headerComponent: LastColumnHeader,
+            cellRenderer: (params) => (
+              <Button
+                style={{ color: "#0057b7" }}
+                onClick={() =>
+                  router.push(`/manage-customers/${params.data.id}`)
+                }
+              >
+                View Details
+              </Button>
+            ),
           };
         default:
           return col;

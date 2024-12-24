@@ -2,14 +2,14 @@ import { Box, Typography } from "@mui/material";
 import React from "react";
 
 interface ActionItem {
-  label: string; // The text to display for the action
-  actionType: string; // The type of action to identify in the handler
-  color?: string; // Optional custom color for the action text
+  label: string;
+  actionType: string;
+  color?: string;
 }
 
 interface ActionsProps {
-  actions: ActionItem[]; // Array of actions to render
-  handleAction: (actionType: string) => void; // Callback to handle action clicks
+  actions: ActionItem[];
+  handleAction: (actionType: string) => void;
 }
 
 const ActionsBilling: React.FC<ActionsProps> = ({ actions, handleAction }) => {

@@ -14,56 +14,138 @@ import CustomSearchField from "@/app/components/common/CustomSearch";
 import CustomFilterSelect from "@/app/components/common/CustomFilterSelect";
 import useColumnUserManagement from "@/app/hooks/Grid-Table/useColumnUserManagement";
 import { apiCall } from "@/app/utils/APIUtils";
+import AgGridServerSideTable from "@/app/ag-grid/AgGridServerSideTable";
 
 const UserManagement = () => {
   const context = useContext(SidebarContext);
   const [, setSelectedFilter] = useState<string | null>(null);
-  const UserManagementCol = useColumnUserManagement(userManagementColumnDefs);
-
+  const [chartData, setChartData] = useState<any>(null);
   const [userData, setUserData] = useState<any>(null);
   const [loading, setLoading] = useState<any>(false);
+  const [nextPageUrl, setNextPageUrl] = useState<string | null>(null);
+  const [previousPageUrl, setPreviousPageUrl] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [totalPages, setTotalPages] = useState<number>(0);
+  const UserManagementCol = useColumnUserManagement(userManagementColumnDefs);
+  const [originalUserData, setOriginalUserData] = useState<any>([]);
+
+  const fetchUserData = async (url: string) => {
+    try {
+      setLoading(true);
+      const trimmedUrl = url.includes("/admin-dashboard")
+        ? url.substring(url.indexOf("/admin-dashboard"))
+        : url;
+
+      const data = await apiCall(trimmedUrl, "GET");
+      const users = data?.results?.users || [];
+      const extractedUsers = users.map(
+        ({
+          first_name,
+          sharemundo_links_id,
+          user_type,
+          created_at,
+          id,
+        }: any) => ({
+          first_name,
+          sharemundo_links_id,
+          user_type,
+          created_at,
+          id,
+        })
+      );
+      setOriginalUserData(extractedUsers);
+      setUserData(extractedUsers);
+      setNextPageUrl(data?.next || null);
+      setPreviousPageUrl(data?.previous || null);
+      setTotalPages(Math.ceil((data?.count || 0) / 10));
+      setLoading(false);
+    } catch (err) {
+      console.error("Error fetching user data:", err);
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchUserData = async () => {
+    fetchUserData("/admin-dashboard/users");
+  }, []);
+
+  const handleNextPage = () => {
+    if (nextPageUrl) {
+      setCurrentPage((prev) => prev + 1);
+      fetchUserData(nextPageUrl);
+    }
+  };
+
+  const handlePreviousPage = () => {
+    if (previousPageUrl) {
+      setCurrentPage((prev) => prev - 1);
+      fetchUserData(previousPageUrl);
+    }
+  };
+
+  const handleSearchChange = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const query = event.target.value;
+    try {
+      const data = await apiCall(
+        `/admin-dashboard/users?search=${query}`,
+        "GET"
+      );
+      const users = data?.results?.users || [];
+
+      setUserData(data?.results?.users);
+      setNextPageUrl(data?.next || null);
+      setPreviousPageUrl(data?.previous || null);
+      setTotalPages(Math.ceil((data?.count || 0) / 10));
+    } catch (err) {
+      console.error("Error searching users:", err);
+    }
+  };
+  useEffect(() => {
+    const fetchData = async () => {
       try {
-        const data = await apiCall("/admin-dashboard/users", "GET");
-        console.log("Fetched data:", data);
-
-        const users = data?.results?.users || [];
-        const extractedUsers = users.map(
-          ({ username, sharemundo_links_id, user_type }) => ({
-            username,
-            sharemundo_links_id,
-            user_type,
-          })
-        );
-
-        console.log("Extracted Users:", extractedUsers);
-
-        setUserData(extractedUsers);
+        setLoading(true);
+        const data = await apiCall("/admin-dashboard/users/stats", "GET");
+        const transformedData = Object.entries(data).map(([key, value]) => ({
+          name: key,
+          value: value as number,
+        }));
+        console.log("Chart data-------", transformedData);
+        setChartData(transformedData);
         setLoading(false);
       } catch (err) {
-        console.error("Error fetching dashboard data:", err);
+        console.error(`Error fetching data `, err);
         setLoading(false);
       }
     };
 
-    fetchUserData();
+    fetchData();
   }, []);
-
   if (context === undefined) {
     return <div>Error: Sidebar context is undefined!</div>;
   }
 
-  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const query = event.target.value;
-    console.log(query);
+  const handleSelect = async (label: string | null) => {
+    try {
+      let apiUrl = "/admin-dashboard/users";
+
+      if (label === "Freelancer") {
+        apiUrl += "?user_type=freelancer";
+      } else if (label === "Company") {
+        apiUrl += "?user_type=company";
+      }
+      const data = await apiCall(apiUrl, "GET");
+      const users = data?.results?.users || [];
+      setUserData(users);
+      setNextPageUrl(data?.next || null);
+      setPreviousPageUrl(data?.previous || null);
+      setTotalPages(Math.ceil((data?.count || 0) / 10));
+    } catch (err) {
+      console.error("Failed to fetch filtered users:", err);
+    }
   };
 
-  const handleSelect = (label: string | null) => {
-    console.log("Selected filter:", label);
-    setSelectedFilter(label);
-  };
   return (
     <>
       <Box
@@ -103,11 +185,10 @@ const UserManagement = () => {
               <Typography variant="h5" color="#475367">
                 Number of Users per Month{" "}
               </Typography>
-              <SharpLineChart />
+              <SharpLineChart data={chartData} />
             </Stack>
           </Box>
           <Box
-            mr={4}
             display={"flex"}
             alignItems={"center"}
             gap={2}
@@ -133,9 +214,16 @@ const UserManagement = () => {
               marginTop: "24px",
             }}
           >
-            <AgGridTable
+            <AgGridServerSideTable
               rowData={userData}
               columnDefs={UserManagementCol}
+              currentPage={currentPage}
+              totalPages={totalPages}
+              nextPageUrl={nextPageUrl}
+              previousPageUrl={previousPageUrl}
+              onNextPage={handleNextPage}
+              onPreviousPage={handlePreviousPage}
+              height={580}
             />
           </Box>
         </Box>

@@ -28,7 +28,7 @@ const SharpLineChart: React.FC<SharpChartComponentProps> = ({ data }) => {
           <Line
             type="linear"
             dataKey="value"
-            stroke="#007bff"
+            stroke="#0057B7"
             strokeWidth={2}
             dot={false}
           />

@@ -20,6 +20,8 @@ import EditDrawer from "./editDrawer";
 import StopDrawer from "./stopDrawer";
 import NewSolutionDrawer from "./newSolutionDrawer";
 import { apiCall } from "@/app/utils/APIUtils";
+import AgGridServerSideTable from "@/app/ag-grid/AgGridServerSideTable";
+import _debounce from "lodash/debounce";
 
 const SolutionLicenseMain = () => {
   const [drawerType, setDrawerType] = useState<string | null>(null);
@@ -28,32 +30,79 @@ const SolutionLicenseMain = () => {
   const [loading, setLoading] = useState<any>(false);
   const [chartData, setChartData] = useState<any>(null);
   const [activeTab, setActiveTab] = useState(0);
+  const [nextPageUrl, setNextPageUrl] = useState<string | null>(null);
+  const [previousPageUrl, setPreviousPageUrl] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
+  const [totalCount, setTotalCount] = useState<number>(0);
+
+  const fetchSolutionData = async (url: string) => {
+    try {
+      setLoading(true);
+      const trimmedUrl = url.includes("/admin-dashboard")
+        ? url.substring(url.indexOf("/admin-dashboard"))
+        : url;
+
+      const data = await apiCall(trimmedUrl, "GET");
+      const solutions = data?.results?.solutions || [];
+      const extractedData = solutions.map(
+        ({ name, price, status, license_count, id }: any) => ({
+          name,
+          price,
+          status,
+          license_count,
+          id,
+        })
+      );
+      setSolutionData(extractedData);
+      setNextPageUrl(data?.next || null);
+      setPreviousPageUrl(data?.previous || null);
+      setTotalPages(Math.ceil((data?.count || 0) / 10));
+      setLoading(false);
+    } catch (err) {
+      console.error("Error fetching solution data:", err);
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchSolutionData = async () => {
+    fetchSolutionData("/admin-dashboard/products");
+  }, []);
+
+  const handleNextPage = () => {
+    if (nextPageUrl) {
+      fetchSolutionData(nextPageUrl);
+      setCurrentPage((prev) => prev + 1);
+    }
+  };
+
+  const handlePreviousPage = () => {
+    if (previousPageUrl) {
+      fetchSolutionData(previousPageUrl);
+      setCurrentPage((prev) => prev - 1);
+    }
+  };
+
+  const handleSearchChange = _debounce(
+    async (event: React.ChangeEvent<HTMLInputElement>) => {
+      const query = event.target.value;
       try {
-        const data = await apiCall("/admin-dashboard/products", "GET");
-        const solutions = data?.results?.solutions || [];
-        const extractedData = solutions.map(
-          ({ name, price, status, license_count, id }) => ({
-            name,
-            price,
-            status,
-            license_count,
-            id,
-          })
+        const data = await apiCall(
+          `/admin-dashboard/products?search=${query}`,
+          "GET"
         );
 
-        setSolutionData(extractedData);
-        setLoading(false);
+        setSolutionData(data?.results?.solutions || []);
+        setNextPageUrl(data?.next || null);
+        setPreviousPageUrl(data?.previous || null);
+        setTotalPages(Math.ceil((data?.count || 0) / 10));
       } catch (err) {
-        console.error("Error fetching dashboard data:", err);
-        setLoading(false);
+        console.error("Error searching solutions:", err);
       }
-    };
+    },
+    500
+  );
 
-    fetchSolutionData();
-  }, []);
   const endpoints = {
     0: "/admin-dashboard/customers/stats",
     1: "/admin-dashboard/users/stats",
@@ -93,10 +142,7 @@ const SolutionLicenseMain = () => {
     SolutionMainColumnDefs,
     (action: string, id: string) => handleOpenDrawer(action, id)
   );
-  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const query = event.target.value;
-    console.log(query);
-  };
+
   const context = useContext(SidebarContext);
   const [newSolution, setNewSolution] = useState(false);
 
@@ -201,7 +247,7 @@ const SolutionLicenseMain = () => {
             </Stack>
           </Box>
           <Box
-            mr={4}
+            // mr={4}
             display={"flex"}
             alignItems={"center"}
             gap={2}
@@ -228,7 +274,17 @@ const SolutionLicenseMain = () => {
               marginTop: "24px",
             }}
           >
-            <AgGridTable rowData={solutionData} columnDefs={SolutionMainCol} />
+            <AgGridServerSideTable
+              rowData={solutionData}
+              columnDefs={SolutionMainCol}
+              currentPage={currentPage}
+              totalPages={totalPages}
+              nextPageUrl={nextPageUrl}
+              previousPageUrl={previousPageUrl}
+              onNextPage={handleNextPage}
+              onPreviousPage={handlePreviousPage}
+              height={580}
+            />
 
             <Box>
               {drawerType === "resume" && selectedId && (

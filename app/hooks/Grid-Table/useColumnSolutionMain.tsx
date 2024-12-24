@@ -42,7 +42,7 @@ const useColumnSolutionMain = (
             width: 120,
             flex: 1,
             valueFormatter: (params: any) =>
-              params.value ? `$${params.value}` : "N/A",
+              params.value ? `€${params.value}` : "N/A",
           };
         case "status":
           return {
