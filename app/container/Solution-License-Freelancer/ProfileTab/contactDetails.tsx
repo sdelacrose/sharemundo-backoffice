@@ -5,8 +5,6 @@ const ContactDetails = () => {
   return (
     <>
       <Box width={"50%"}>
-        {/* Contact Details------------------------------------------------------------------ */}
-
         <Typography variant="h5">Contact Details</Typography>
         <Divider
           sx={{
@@ -100,9 +98,6 @@ const ContactDetails = () => {
             </Stack>
           </Box>
         </Stack>
-
-        {/* Other Details------------------------------------------------------------------------------------- */}
-
         <Typography variant="h5" mt={4}>
           Other Details
         </Typography>
