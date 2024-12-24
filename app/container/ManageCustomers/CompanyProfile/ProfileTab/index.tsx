@@ -13,8 +13,6 @@ interface ProfileTabProps {
 }
 
 const ProfileTab: React.FC<ProfileTabProps> = ({ profileData }) => {
-  console.log("profileData", profileData);
-
   return (
     <Box display="flex" alignItems="start" gap={2.5} mr={4}>
       {profileData?.user_type === "company_user" ? (
@@ -24,8 +22,8 @@ const ProfileTab: React.FC<ProfileTabProps> = ({ profileData }) => {
         </>
       ) : (
         <>
-          <FreelancerDetails freelancerDetail={profileData}/>
-          <FreelanceContactDetails freelanceContactDetail={profileData}/>
+          <FreelancerDetails freelancerDetail={profileData} />
+          <FreelanceContactDetails freelanceContactDetail={profileData} />
         </>
       )}
     </Box>

@@ -10,11 +10,9 @@ const page = async ({ params }: CompanyProfilePageProps) => {
   const { id } = params;
 
   try {
-    // Make the API call to fetch customer details
     const customerDetail = await apiCall(`/admin-dashboard/customers/${id}`);
 
-    // Pass the data as a prop to CompanyProfile
-    return <CompanyProfile customerDetail={customerDetail} id={id}/>;
+    return <CompanyProfile customerDetail={customerDetail} id={id} />;
   } catch (error) {
     console.error("Failed to fetch customer or license details:", error);
 

@@ -1,4 +1,5 @@
 "use client";
+
 import { Box, Divider, Typography } from "@mui/material";
 import React, { useContext, useEffect, useMemo, useState } from "react";
 import Header from "@/app/components/common/Header";
@@ -9,11 +10,16 @@ import BillingTab from "./billingTab";
 import UserConnectionTab from "./userConnectionTab";
 import LicenseTab from "./licenseTab";
 import ProfileTab from "./ProfileTab";
+import LicenseDetail from "../../LicenseDetail";
 import { apiCall } from "@/app/utils/APIUtils";
 
 const CompanyProfile = ({ customerDetail, id }: any) => {
   const context = useContext(SidebarContext);
   const [activeTab, setActiveTab] = useState(0);
+  const [selectedLicenseId, setSelectedLicenseId] = useState<string | null>(
+    null
+  );
+  const [isLicenseDetailOpen, setLicenseDetailOpen] = useState(false);
 
   if (!customerDetail) {
     return <div>Loading customer details...</div>;
@@ -39,20 +45,38 @@ const CompanyProfile = ({ customerDetail, id }: any) => {
     () => [
       { field: "product_name", headerName: "Product Name", width: 200 },
       { field: "total_license", headerName: "Total License", width: 150 },
-      { field: "available_licenses", headerName: "Available Licenses", width: 150 },
-      { field: "assigned_licenses", headerName: "Assigned Licenses", width: 150 },
+      {
+        field: "available_licenses",
+        headerName: "Available Licenses",
+        width: 150,
+      },
+      {
+        field: "assigned_licenses",
+        headerName: "Assigned Licenses",
+        width: 150,
+      },
       { field: "renewal_date", headerName: "Renewal Date", width: 150 },
       {
         field: "actions",
         headerName: "Actions",
         width: 120,
-        cellRenderer: () => (
-          <span style={{ color: "#0057B7", cursor: "pointer" }}>View Details</span>
+        cellRenderer: ({ data }: any) => (
+          <span
+            style={{ color: "#0057B7", cursor: "pointer" }}
+            onClick={() => handleViewDetails(data)}
+          >
+            View Details
+          </span>
         ),
       },
     ],
     []
   );
+
+  const handleViewDetails = (data: any) => {
+    setSelectedLicenseId(data.product_id);
+    setLicenseDetailOpen(true);
+  };
 
   const fetchLicenses = async (url: string) => {
     try {
@@ -64,6 +88,7 @@ const CompanyProfile = ({ customerDetail, id }: any) => {
 
       const licenses = licenseDetail.results.licenses.map((license: any) => ({
         product_name: license.product.name,
+        product_id: license.product.id, // Include product_id for details API
         total_license: license.product.license_count,
         available_licenses: license.product.license_count,
         assigned_licenses: license.is_active ? 1 : 0,
@@ -104,7 +129,7 @@ const CompanyProfile = ({ customerDetail, id }: any) => {
       case 1:
         return <UserConnectionTab />;
       case 2:
-        return <BillingTab id={id}/>;
+        return <BillingTab id={id} />;
       case 3:
         return (
           <LicenseTab
@@ -140,9 +165,11 @@ const CompanyProfile = ({ customerDetail, id }: any) => {
         <Box sx={{ margin: "24px 24px 24px 0" }}>
           <Typography variant="h2" paddingBottom={"8px"}>
             {customerDetail?.user_type === "company_user"
-              ? `${companyProfile?.company_name || "Company Name Not Available"}, ${
-                  companyProfile?.company_town || "Town Not Available"
-                }, ${companyProfile?.company_country || "Country Not Available"}`
+              ? `${
+                  companyProfile?.company_name || "Company Name Not Available"
+                }, ${companyProfile?.company_town || "Town Not Available"}, ${
+                  companyProfile?.company_country || "Country Not Available"
+                }`
               : `${customerDetail?.first_name || "First Name Not Available"} ${
                   customerDetail?.last_name || "Last Name Not Available"
                 }`}
@@ -170,6 +197,12 @@ const CompanyProfile = ({ customerDetail, id }: any) => {
           {renderTabContent()}
         </Box>
       </Box>
+
+      <LicenseDetail
+        open={isLicenseDetailOpen}
+        handleClose={() => setLicenseDetailOpen(false)}
+        licenseId={id}
+      />
     </>
   );
 };
