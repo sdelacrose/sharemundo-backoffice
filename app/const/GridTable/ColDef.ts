@@ -29,6 +29,13 @@ export const manageCustomersColumnDefs = [
     },
   },
   {
+    field: "is_active",
+    headerName: "Status",
+    cellRenderer: (params: any) => {
+      return params.value ? "Active" : "Inactive";
+    },
+  },
+  {
     field: "number_of_admins",
     headerName: "No of Admins",
     valueFormatter: (params: any) => {

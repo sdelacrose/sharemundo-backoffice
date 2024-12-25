@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { useMemo } from "react";
 import { Button } from "@mui/material";
 import LastColumnHeader from "@/app/components/common/LastColumnHeader";
@@ -13,7 +13,7 @@ interface Column {
 }
 
 const useColumnManageUserDefs = (columns: Column[]) => {
-  const router = useRouter()
+  const router = useRouter();
   return useMemo(() => {
     return columns.map((col) => {
       switch (col.field) {
@@ -24,8 +24,12 @@ const useColumnManageUserDefs = (columns: Column[]) => {
             flex: 1.4,
             cellRenderer: (params) => {
               const { first_name, last_name } = params.data;
-              const formattedName = `${first_name.charAt(0).toUpperCase() + first_name.slice(1).toLowerCase()} ${
-                last_name.charAt(0).toUpperCase() + last_name.slice(1).toLowerCase()
+              const formattedName = `${
+                first_name.charAt(0).toUpperCase() +
+                first_name.slice(1).toLowerCase()
+              } ${
+                last_name.charAt(0).toUpperCase() +
+                last_name.slice(1).toLowerCase()
               }`;
               return <span>{formattedName}</span>;
             },
@@ -41,6 +45,11 @@ const useColumnManageUserDefs = (columns: Column[]) => {
             ...col,
             headerName: "Role",
           };
+          case "is_active":
+            return {
+              ...col,
+              headerName: "Status",
+            };
         case "number_of_admins":
           return {
             ...col,
@@ -62,11 +71,24 @@ const useColumnManageUserDefs = (columns: Column[]) => {
             headerName: "Actions",
             headerComponent: LastColumnHeader,
             cellRenderer: (params) => (
-              <Button style={{ color: "#0057b7" }}
-              onClick={() => router.push(`/manage-customers/${params.data.id}`)}
-              >
-                View Details
-              </Button>
+              <>
+                <Button
+                  style={{ color: "#0057b7" }}
+                  onClick={() =>
+                    router.push(`/manage-customers/${params.data.id}`)
+                  }
+                >
+                  View
+                </Button>
+                <Button
+                  style={{ color: "#0057b7" }}
+                  onClick={() =>
+                    console.log(params.data)
+                  }
+                >
+                  {params.data.is_active === true ? 'Block' : 'Active'}
+                </Button>
+              </>
             ),
           };
         default:
