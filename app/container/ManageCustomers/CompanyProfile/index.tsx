@@ -140,7 +140,7 @@ const CompanyProfile = ({ customerDetail, id }: any) => {
         return isFreelancer ? (
           <ConnectionTab id={id} setActiveTab={handleTabChange} />
         ) : (
-          <UserConnectionTab id={id} />
+          <UserConnectionTab id={id} setActiveTab={handleTabChange}/>
         );
       case 2:
         return <BillingTab id={id} />;
