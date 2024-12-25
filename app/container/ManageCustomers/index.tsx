@@ -17,11 +17,13 @@ import CustomSearchField from "@/app/components/common/CustomSearch";
 import CustomFilterSelect from "@/app/components/common/CustomFilterSelect";
 import useColumnManageUserDefs from "@/app/hooks/Grid-Table/useColumnManageUser";
 import AddCustomerDrawer from "./addCustomerDrawer";
-import BlockDrawer from "./addBlockDrawer";
+import BlockCustomerDrawer from "./blockCustomerDrawer";
 import SharpLineChart from "@/app/components/common/SharpLineChart";
 import { apiCall } from "@/app/utils/APIUtils";
 import _debounce from "lodash/debounce";
 import AgGridServerSideTable from "@/app/ag-grid/AgGridServerSideTable";
+import BlockBulkCustomerDrawer from "./blockBulkCustomerDrawer";
+import ActiveBulkCustomerDrawer from "./activeBulkCustomerDrawer";
 
 const ManageCustomers = ({ customerDetail }: any) => {
   const context = useContext(SidebarContext);
@@ -32,12 +34,17 @@ const ManageCustomers = ({ customerDetail }: any) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const [openBlockDrawer, setBlockDrawer] = useState(false);
+  const [openBulkBlockDrawer, setBulkBlockDrawer] = useState(false);
+
   const [chartData, setChartData] = useState<{ name: string; value: number }[]>(
     []
   );
   const [selectedRows, setSelectedRows] = useState([]);
 
   const [blockDrawerOpen, setBlockDrawerOpen] = useState(false);
+  const [blockBulkCustomersDrawerOpen, setBlockBulkCustomersDrawerOpen] = useState(false);
+  const [activateBulkCustomersDrawerOpen, setActivateBulkCustomersDrawerOpen] = useState(false);
+
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
 
   const handleAddDrawer = () => {
@@ -73,8 +80,10 @@ const ManageCustomers = ({ customerDetail }: any) => {
 
   const manageUserCol = useColumnManageUserDefs({
     columns: manageCustomersColumnDefs,
-    onBlockClick: (id) => handleOpenBlockDrawer(id), // Trigger block modal
+    onBlockClick: (id) => handleBlockUser(id), // For blocking users
+    onActivateClick: (id) => handleActivateUser(id), // For activating users
   });
+  
 
   const fetchCustomers = async (url: string) => {
     try {
@@ -146,24 +155,42 @@ const ManageCustomers = ({ customerDetail }: any) => {
     }
   };
 
-  const handleBlockUser = async () => {
+  const handleBlockUser = async (id: number) => {
     try {
       await apiCall(
         `/admin-dashboard/update-customer-status`,
         "POST",
         {
-          user_ids: selectedIds,
+          user_ids: [id],
           is_active: false,
         },
         undefined,
-        { successMessage: "User(s) blocked successfully!" }
+        { successMessage: "User blocked successfully!" }
       );
-      setBlockDrawerOpen(false);
-      fetchCustomers("/admin-dashboard/customers");
+      fetchCustomers("/admin-dashboard/customers"); // Refresh the table
     } catch (err) {
-      console.error("Failed to block user(s):", err);
+      console.error("Failed to block user:", err);
     }
   };
+  
+  const handleActivateUser = async (id: number) => {
+    try {
+      await apiCall(
+        `/admin-dashboard/update-customer-status`,
+        "POST",
+        {
+          user_ids: [id],
+          is_active: true,
+        },
+        undefined,
+        { successMessage: "User activated successfully!" }
+      );
+      fetchCustomers("/admin-dashboard/customers"); // Refresh the table
+    } catch (err) {
+      console.error("Failed to activate user:", err);
+    }
+  };
+  
 
   const handleRowSelection = (event) => {
     const selected = event.api.getSelectedRows();
@@ -175,7 +202,59 @@ const ManageCustomers = ({ customerDetail }: any) => {
     return <div>Error: Sidebar context is undefined!</div>;
   }
 
-  console.log("selected", selectedRows);
+  const handleBlockBulkUsers = async () => {
+    try {
+      const idsToBlock = selectedRows.map((row: any) => row.id); // Extract IDs from selected rows
+      if (idsToBlock.length === 0) {
+        console.warn("No users selected for bulk block");
+        return;
+      }
+  
+      await apiCall(
+        `/admin-dashboard/update-customer-status`,
+        "POST",
+        {
+          user_ids: idsToBlock,
+          is_active: false,
+        },
+        undefined,
+        { successMessage: "Users blocked successfully!" }
+      );
+  
+      setBlockBulkCustomersDrawerOpen(false); 
+      fetchCustomers("/admin-dashboard/customers");
+    } catch (err) {
+      console.error("Failed to block users:", err);
+    }
+  };
+  
+
+  const handleActivateBulkUsers = async () => {
+    try {
+      const idsToActivate = selectedRows.map((row: any) => row.id); // Extract IDs from selected rows
+      if (idsToActivate.length === 0) {
+        console.warn("No users selected for bulk block");
+        return;
+      }
+  
+      await apiCall(
+        `/admin-dashboard/update-customer-status`,
+        "POST",
+        {
+          user_ids: idsToActivate,
+          is_active: true,
+        },
+        undefined,
+        { successMessage: "Users activated successfully!" }
+      );
+  
+      setActivateBulkCustomersDrawerOpen(false); 
+      fetchCustomers("/admin-dashboard/customers");
+    } catch (err) {
+      console.error("Failed to activate users:", err);
+    }
+  };
+  
 
   return (
     <>
@@ -242,11 +321,16 @@ const ManageCustomers = ({ customerDetail }: any) => {
             >
               Add Customers
             </Button>
+            <Button startIcon={<BlockUser />}
+                 onClick={()=> setActivateBulkCustomersDrawerOpen(true)}
+                 disabled={selectedRows.length === 0}
+            >Active Bulk Users</Button>
             <Button
               startIcon={<BlockUser />}
-              // onClick={handleBlockDrawer}
+              onClick={()=> setBlockBulkCustomersDrawerOpen(true)}
+              disabled={selectedRows.length === 0}
             >
-              Block User
+              Block Bulk Users
             </Button>
           </ButtonGroup>
           <Box mr={4} display={"flex"} alignItems={"center"} gap={2}>
@@ -293,12 +377,35 @@ const ManageCustomers = ({ customerDetail }: any) => {
           <></>
         )}
         {blockDrawerOpen && (
-          <BlockDrawer
+          <BlockCustomerDrawer
             open={blockDrawerOpen}
             handleClose={handleCloseBlockDrawer}
             handleBlock={handleBlockUser}
           />
         )}
+        {blockBulkCustomersDrawerOpen && (
+          <BlockBulkCustomerDrawer
+          open={blockBulkCustomersDrawerOpen}
+          handleClose={() => setBlockBulkCustomersDrawerOpen(false)}
+          handleBlock={handleBlockBulkUsers}
+          selectedUsers={selectedRows.map((row: any) => ({
+            id: row.id,
+            name: row.name || `User ID: ${row.id}`,
+          }))}
+        />
+        )}
+        {activateBulkCustomersDrawerOpen && (
+          <ActiveBulkCustomerDrawer
+          open={activateBulkCustomersDrawerOpen}
+          handleClose={() => setActivateBulkCustomersDrawerOpen(false)}
+          handleActivate={handleActivateBulkUsers}
+          selectedUsers={selectedRows.map((row: any) => ({
+            id: row.id,
+            name: row.name || `User ID: ${row.id}`,
+          }))}
+        />
+        )}
+
       </Box>
     </>
   );

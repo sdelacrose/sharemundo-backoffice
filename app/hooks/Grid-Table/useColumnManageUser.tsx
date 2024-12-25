@@ -12,7 +12,11 @@ interface Column {
   flex?: number;
 }
 
-const useColumnManageUserDefs = ({columns, onBlockClick }) => {
+const useColumnManageUserDefs = ({
+  columns,
+  onBlockClick,
+  onActivateClick,
+}) => {
   const router = useRouter();
   return useMemo(() => {
     return columns.map((col) => {
@@ -21,7 +25,7 @@ const useColumnManageUserDefs = ({columns, onBlockClick }) => {
           return {
             ...col,
             headerName: "Name",
-            flex: 1.4,
+            flex: 1,
             cellRenderer: (params) => {
               const { first_name, last_name } = params.data;
               const formattedName = `${
@@ -38,22 +42,30 @@ const useColumnManageUserDefs = ({columns, onBlockClick }) => {
           return {
             ...col,
             headerName: "Sharemundo Link",
-            flex: 1.4,
+            flex: 1.2,
           };
         case "role":
           return {
             ...col,
             headerName: "Role",
+            flex: 0.5,
           };
-          case "is_active":
-            return {
-              ...col,
-              headerName: "Status",
-            };
+        case "is_active":
+          return {
+            ...col,
+            flex: 0.5,
+            headerName: "Status",
+            cellRenderer: (params) => (
+              <span style={{ color: params.data.is_active ? "green" : "red" }}>
+                {params.data.is_active ? "Active" : "Inactive"}
+              </span>
+            ),
+          };
         case "number_of_admins":
           return {
             ...col,
             headerName: "No of Admins",
+            flex: 0.8,
           };
         case "number_of_internal_users":
           return {
@@ -81,10 +93,14 @@ const useColumnManageUserDefs = ({columns, onBlockClick }) => {
                   View
                 </Button>
                 <Button
-                  style={{ color: "#0057b7" }}
-                  onClick={() => onBlockClick(params.data.id)}
+                  style={{ color: params.data.is_active ? "red" : "green" }}
+                  onClick={() =>
+                    params.data.is_active
+                      ? onBlockClick(params.data.id)
+                      : onActivateClick(params.data.id)
+                  }
                 >
-                  {params.data.is_active === true ? 'Block' : 'Active'}
+                  {params.data.is_active ? "Block" : "Activate"}
                 </Button>
               </>
             ),
@@ -93,7 +109,7 @@ const useColumnManageUserDefs = ({columns, onBlockClick }) => {
           return col;
       }
     });
-  }, [columns]);
+  }, [columns, onBlockClick, onActivateClick]);
 };
 
 export default useColumnManageUserDefs;

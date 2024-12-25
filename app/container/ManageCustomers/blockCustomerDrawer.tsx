@@ -7,7 +7,7 @@ interface CreateNewDrawerProps {
   handleClose: () => void;
 }
 
-const BlockDrawer: React.FC<any> = ({ open, handleClose, handleBlock }) => {
+const BlockCustomerDrawer: React.FC<any> = ({ open, handleClose, handleBlock }) => {
   return (
     <>
       <Drawer
@@ -87,4 +87,4 @@ const BlockDrawer: React.FC<any> = ({ open, handleClose, handleBlock }) => {
   );
 };
 
-export default BlockDrawer;
+export default BlockCustomerDrawer;
