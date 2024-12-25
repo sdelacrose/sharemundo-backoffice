@@ -127,7 +127,7 @@ const CompanyProfile = ({ customerDetail, id }: any) => {
       case 0:
         return <ProfileTab profileData={customerDetail} />;
       case 1:
-        return <UserConnectionTab />;
+        return <UserConnectionTab id={id}/>;
       case 2:
         return <BillingTab id={id} />;
       case 3:

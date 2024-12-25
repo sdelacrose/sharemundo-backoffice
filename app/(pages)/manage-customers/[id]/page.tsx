@@ -1,23 +1,44 @@
+"use client";
+
+import React, { useEffect, useState } from "react";
 import CompanyProfile from "@/app/container/ManageCustomers/CompanyProfile";
-import React from "react";
 import { apiCall } from "@/app/utils/APIUtils";
 
 interface CompanyProfilePageProps {
   params: { id: string };
 }
 
-const page = async ({ params }: CompanyProfilePageProps) => {
+const page = ({ params }: CompanyProfilePageProps) => {
   const { id } = params;
+  const [customerDetail, setCustomerDetail] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState("");
 
-  try {
-    const customerDetail = await apiCall(`/admin-dashboard/customers/${id}`);
+  useEffect(() => {
+    const fetchCustomerDetail = async () => {
+      try {
+        const response = await apiCall(`/admin-dashboard/customers/${id}`);
+        setCustomerDetail(response);
+      } catch (err) {
+        console.error("Failed to fetch customer details:", err);
+        setError("Error fetching customer details.");
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-    return <CompanyProfile customerDetail={customerDetail} id={id} />;
-  } catch (error) {
-    console.error("Failed to fetch customer or license details:", error);
+    fetchCustomerDetail();
+  }, [id]);
 
-    return <div>Error fetching customer or license details.</div>;
+  if (isLoading) {
+    return <div>Loading customer details...</div>;
   }
+
+  if (error) {
+    return <div>{error}</div>;
+  }
+
+  return <CompanyProfile customerDetail={customerDetail} id={id} />;
 };
 
 export default page;
