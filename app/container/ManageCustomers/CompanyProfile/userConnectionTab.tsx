@@ -51,11 +51,9 @@ const UserConnectionTab = ({ id }: { id: string }) => {
 
       if (isConnections) {
         const connections = response.results.connections.map((connection: any) => ({
-          name: connection.related_users[0]?.first_name
-            ? `${connection.related_users[0].first_name} ${connection.related_users[0].last_name}`
-            : "N/A",
-          sharemundo_links_id: connection.initiator_id,
-          type: connection.target_type.charAt(0).toUpperCase() + connection.target_type.slice(1),
+          name: connection.name || "N/A",
+          sharemundo_links_id: connection.sharemundo_links_id,
+          type: connection.type.charAt(0).toUpperCase() + connection.type.slice(1),
           connection_date: new Date(connection.created_at).toLocaleDateString(),
           actions: "View / Remove",
         }));
@@ -165,9 +163,9 @@ const UserConnectionTab = ({ id }: { id: string }) => {
           />
           <CustomFilterSelect
             items={[
-              { label: "All", value: "all" },
-              { label: "Active", value: "active" },
-              { label: "Disabled", value: "disabled" },
+              { label: "All" },
+              { label: "Active" },
+              { label: "Disabled" },
             ]}
             onSelect={handleSelect}
           />

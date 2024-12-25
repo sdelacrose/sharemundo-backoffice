@@ -4,7 +4,7 @@ import { Box, Divider, Typography } from "@mui/material";
 import React, { useContext, useEffect, useMemo, useState } from "react";
 import Header from "@/app/components/common/Header";
 import { SidebarContext } from "@/app/(pages)/layout";
-import { solutionsBreadcrumb, tabs } from "./solutionData";
+import { solutionsBreadcrumb } from "./solutionData";
 import CustomTabs from "@/app/components/common/CustomTab";
 import BillingTab from "./billingTab";
 import UserConnectionTab from "./userConnectionTab";
@@ -12,6 +12,7 @@ import LicenseTab from "./licenseTab";
 import ProfileTab from "./ProfileTab";
 import LicenseDetail from "../../LicenseDetail";
 import { apiCall } from "@/app/utils/APIUtils";
+import ConnectionTab from "./connectionTab";
 
 const CompanyProfile = ({ customerDetail, id }: any) => {
   const context = useContext(SidebarContext);
@@ -122,12 +123,25 @@ const CompanyProfile = ({ customerDetail, id }: any) => {
     fetchLicenses(`/admin-dashboard/customers/${id}/licenses`);
   }, [id]);
 
+  const isFreelancer = customerDetail?.user_type === "freelancer";
+
+  const tabs = [
+    { label: "Profile" },
+    { label: isFreelancer ? "Connection" : "User" },
+    { label: "Billing" },
+    { label: "Licenses" },
+  ];
+
   const renderTabContent = () => {
     switch (activeTab) {
       case 0:
         return <ProfileTab profileData={customerDetail} />;
       case 1:
-        return <UserConnectionTab id={id}/>;
+        return isFreelancer ? (
+          <ConnectionTab id={id} setActiveTab={handleTabChange} />
+        ) : (
+          <UserConnectionTab id={id} />
+        );
       case 2:
         return <BillingTab id={id} />;
       case 3:
@@ -147,7 +161,6 @@ const CompanyProfile = ({ customerDetail, id }: any) => {
         return <div>Invalid Tab</div>;
     }
   };
-
   return (
     <>
       <Box
@@ -176,11 +189,7 @@ const CompanyProfile = ({ customerDetail, id }: any) => {
           </Typography>
 
           <Typography variant="body2" color="#0057b7" mt={1} fontSize={16}>
-            {customerDetail?.user_type === "company_user"
-              ? "Company"
-              : customerDetail?.user_type === "freelancer"
-              ? "Freelancer"
-              : "Role Not Available"}
+            {isFreelancer ? "Freelancer" : "Company"}
           </Typography>
 
           <Divider
@@ -192,7 +201,7 @@ const CompanyProfile = ({ customerDetail, id }: any) => {
           />
 
           <Box mb={4}>
-            <CustomTabs tabs={tabs} onTabChange={handleTabChange} />
+            <CustomTabs tabs={tabs} onTabChange={handleTabChange} value={activeTab}/>
           </Box>
           {renderTabContent()}
         </Box>
