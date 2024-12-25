@@ -12,7 +12,7 @@ interface Column {
   flex?: number;
 }
 
-const useColumnManageUserDefs = (columns: Column[]) => {
+const useColumnManageUserDefs = ({columns, onBlockClick }) => {
   const router = useRouter();
   return useMemo(() => {
     return columns.map((col) => {
@@ -82,9 +82,7 @@ const useColumnManageUserDefs = (columns: Column[]) => {
                 </Button>
                 <Button
                   style={{ color: "#0057b7" }}
-                  onClick={() =>
-                    console.log(params.data)
-                  }
+                  onClick={() => onBlockClick(params.data.id)}
                 >
                   {params.data.is_active === true ? 'Block' : 'Active'}
                 </Button>

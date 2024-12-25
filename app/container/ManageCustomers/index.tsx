@@ -23,7 +23,7 @@ import { apiCall } from "@/app/utils/APIUtils";
 import _debounce from "lodash/debounce";
 import AgGridServerSideTable from "@/app/ag-grid/AgGridServerSideTable";
 
-const ManageCustomers = ({customerDetail}:any) => {
+const ManageCustomers = ({ customerDetail }: any) => {
   const context = useContext(SidebarContext);
   const [addDrawer, setAddDrawer] = useState(false);
   const [rowData, setRowData] = useState<any>([]);
@@ -35,14 +35,23 @@ const ManageCustomers = ({customerDetail}:any) => {
   const [chartData, setChartData] = useState<{ name: string; value: number }[]>(
     []
   );
-  const manageUserCol = useColumnManageUserDefs(manageCustomersColumnDefs);
+  const [selectedRows, setSelectedRows] = useState([]);
+
+  const [blockDrawerOpen, setBlockDrawerOpen] = useState(false);
+  const [selectedIds, setSelectedIds] = useState<number[]>([]);
 
   const handleAddDrawer = () => {
     setAddDrawer(true);
   };
 
-  const handleCloseDrawer = () => {
-    setAddDrawer(false);
+  const handleOpenBlockDrawer = (id: number) => {
+    setSelectedIds([id]);
+    setBlockDrawerOpen(true);
+  };
+
+  const handleCloseBlockDrawer = () => {
+    setBlockDrawerOpen(false);
+    setSelectedIds([]);
   };
 
   useEffect(() => {
@@ -62,12 +71,17 @@ const ManageCustomers = ({customerDetail}:any) => {
     fetchCustomerStats();
   }, []);
 
+  const manageUserCol = useColumnManageUserDefs({
+    columns: manageCustomersColumnDefs,
+    onBlockClick: (id) => handleOpenBlockDrawer(id), // Trigger block modal
+  });
+
   const fetchCustomers = async (url: string) => {
     try {
       const trimmedUrl = url.includes("/admin-dashboard")
         ? url.substring(url.indexOf("/admin-dashboard"))
         : url;
-  
+
       const data = await apiCall(trimmedUrl);
       setRowData(data?.results || []);
       setNextPageUrl(data?.next ? data.next : null);
@@ -77,21 +91,21 @@ const ManageCustomers = ({customerDetail}:any) => {
       console.error("Failed to fetch customers:", err);
     }
   };
-  
+
   const handleNextPage = () => {
     if (nextPageUrl) {
       fetchCustomers(nextPageUrl);
       setCurrentPage((prev) => prev + 1);
     }
   };
-  
+
   const handlePreviousPage = () => {
     if (previousPageUrl) {
       fetchCustomers(previousPageUrl);
       setCurrentPage((prev) => prev - 1);
     }
   };
-  
+
   useEffect(() => {
     fetchCustomers("/admin-dashboard/customers");
   }, []);
@@ -132,17 +146,36 @@ const ManageCustomers = ({customerDetail}:any) => {
     }
   };
 
-  const handleBlockDrawer = () => {
-    setBlockDrawer(true);
+  const handleBlockUser = async () => {
+    try {
+      await apiCall(
+        `/admin-dashboard/update-customer-status`,
+        "POST",
+        {
+          user_ids: selectedIds,
+          is_active: false,
+        },
+        undefined,
+        { successMessage: "User(s) blocked successfully!" }
+      );
+      setBlockDrawerOpen(false);
+      fetchCustomers("/admin-dashboard/customers");
+    } catch (err) {
+      console.error("Failed to block user(s):", err);
+    }
   };
 
-  const handleCloseBlockDrawer = () => {
-    setBlockDrawer(false);
+  const handleRowSelection = (event) => {
+    const selected = event.api.getSelectedRows();
+    setSelectedRows(selected);
+    console.log("Selected Rows: ", selected);
   };
 
   if (context === undefined) {
     return <div>Error: Sidebar context is undefined!</div>;
   }
+
+  console.log("selected", selectedRows);
 
   return (
     <>
@@ -209,7 +242,10 @@ const ManageCustomers = ({customerDetail}:any) => {
             >
               Add Customers
             </Button>
-            <Button startIcon={<BlockUser />} onClick={handleBlockDrawer}>
+            <Button
+              startIcon={<BlockUser />}
+              // onClick={handleBlockDrawer}
+            >
               Block User
             </Button>
           </ButtonGroup>
@@ -248,16 +284,19 @@ const ManageCustomers = ({customerDetail}:any) => {
             previousPageUrl={previousPageUrl}
             onNextPage={handleNextPage}
             onPreviousPage={handlePreviousPage}
+            handleRowSelection={handleRowSelection}
             height={580}
           />
         </Box>
         {addDrawer && (
-          <AddCustomerDrawer open={addDrawer} handleClose={handleCloseDrawer} />
+          // <AddCustomerDrawer open={addDrawer} handleClose={handleCloseDrawer} />
+          <></>
         )}
-        {openBlockDrawer && (
+        {blockDrawerOpen && (
           <BlockDrawer
-            open={openBlockDrawer}
+            open={blockDrawerOpen}
             handleClose={handleCloseBlockDrawer}
+            handleBlock={handleBlockUser}
           />
         )}
       </Box>

@@ -7,7 +7,7 @@ interface CreateNewDrawerProps {
   handleClose: () => void;
 }
 
-const BlockDrawer: React.FC<CreateNewDrawerProps> = ({ open, handleClose }) => {
+const BlockDrawer: React.FC<any> = ({ open, handleClose, handleBlock }) => {
   return (
     <>
       <Drawer
@@ -64,6 +64,7 @@ const BlockDrawer: React.FC<CreateNewDrawerProps> = ({ open, handleClose }) => {
                 variant="contained"
                 fontSize="16px"
                 padding="16px 24px"
+                onClick={handleBlock}
               >
                 Block
               </CustomButton>
