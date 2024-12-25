@@ -7,7 +7,7 @@ interface CreateNewDrawerProps {
   handleClose: () => void;
 }
 
-const ActiveCustomerDrawer: React.FC<any> = ({ open, handleClose, handleActive }) => {
+const ActiveCustomerDrawer: React.FC<any> = ({ open, handleClose, handleActivate }) => {
   return (
     <>
       <Drawer
@@ -43,7 +43,7 @@ const ActiveCustomerDrawer: React.FC<any> = ({ open, handleClose, handleActive }
               Block User(s)?{" "}
             </Typography>
             <Typography variant="caption" fontSize={14} color="#667185">
-              Do you want to block user XYZ?
+              Do you want to activate user?
             </Typography>
             <Box
               sx={{
@@ -64,9 +64,9 @@ const ActiveCustomerDrawer: React.FC<any> = ({ open, handleClose, handleActive }
                 variant="contained"
                 fontSize="16px"
                 padding="16px 24px"
-                onClick={handleActive}
+                onClick={handleActivate}
               >
-                Block
+                Activate
               </CustomButton>
             </Box>
           </Stack>

@@ -48,12 +48,12 @@ const useColumnManageUserDefs = ({
           return {
             ...col,
             headerName: "Role",
-            flex: 0.5,
+            flex: 0.8,
           };
         case "is_active":
           return {
             ...col,
-            flex: 0.5,
+            flex: 0.7,
             headerName: "Status",
             cellRenderer: (params) => (
               <span style={{ color: params.data.is_active ? "green" : "red" }}>
