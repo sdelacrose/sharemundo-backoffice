@@ -8,11 +8,11 @@ import CustomSearchField from "@/app/components/common/CustomSearch";
 import { Search } from "@/app/assets/icons";
 import AgGridServerSideTable from "@/app/ag-grid/AgGridServerSideTable";
 import { apiCall } from "@/app/utils/APIUtils";
-import { capitalizeFirstLetter } from "@/app/utils/CapitalizeFirstLetter";
 
 const UserConnectionTab = ({ id }: { id: string }) => {
-  const [viewMode, setViewMode] = useState<"internal" | "connections">("connections");
+  const [viewMode, setViewMode] = useState<"internal" | "connections">("internal");
   const [rowData, setRowData] = useState([]);
+  const [filteredRowData, setFilteredRowData] = useState([]);
   const [nextPageUrl, setNextPageUrl] = useState<string | null>(null);
   const [previousPageUrl, setPreviousPageUrl] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
@@ -24,7 +24,7 @@ const UserConnectionTab = ({ id }: { id: string }) => {
     setSelectedFilter(label);
   };
 
-  const columnDefs = [
+  const internalColumnDefs = [
     { field: "name", headerName: "Display Name", flex: 2 },
     { field: "email", headerName: "Email", flex: 2 },
     { field: "sharemundo_links_id", headerName: "Sharemundo Links ID", flex: 2 },
@@ -33,8 +33,15 @@ const UserConnectionTab = ({ id }: { id: string }) => {
     { field: "allocated_licenses", headerName: "Assigned Licenses", flex: 1 },
   ];
 
-  // Fetch Users Data
-  const fetchUsers = async (url: string) => {
+  const connectionColumnDefs = [
+    { field: "name", headerName: "Name", flex: 2 },
+    { field: "sharemundo_links_id", headerName: "Sharemundo Links ID", flex: 2 },
+    { field: "type", headerName: "Type", flex: 1 },
+    { field: "connection_date", headerName: "Connection Date", flex: 1 },
+    { field: "actions", headerName: "Actions", flex: 1 },
+  ];
+
+  const fetchUsersOrConnections = async (url: string, isConnections: boolean) => {
     try {
       const trimmedUrl = url.includes("/admin-dashboard")
         ? url.substring(url.indexOf("/admin-dashboard"))
@@ -42,43 +49,76 @@ const UserConnectionTab = ({ id }: { id: string }) => {
 
       const response = await apiCall(trimmedUrl);
 
-      const users = response.results.internal_users.map((user: any) => ({
-        name: `${user.first_name} ${user.last_name}`,
-        email: user.email,
-        sharemundo_links_id: user.sharemundo_links_id,
-        status: user.is_active ? "Active" : "Disabled",
-        role: capitalizeFirstLetter(user.role),
-        allocated_licenses: user.allocated_licenses,
-      }));
+      if (isConnections) {
+        const connections = response.results.connections.map((connection: any) => ({
+          name: connection.related_users[0]?.first_name
+            ? `${connection.related_users[0].first_name} ${connection.related_users[0].last_name}`
+            : "N/A",
+          sharemundo_links_id: connection.initiator_id,
+          type: connection.target_type.charAt(0).toUpperCase() + connection.target_type.slice(1),
+          connection_date: new Date(connection.created_at).toLocaleDateString(),
+          actions: "View / Remove",
+        }));
+        setRowData(connections);
+        setFilteredRowData(connections);
+      } else {
+        const users = response.results.internal_users.map((user: any) => ({
+          name: `${user.first_name} ${user.last_name}`,
+          email: user.email,
+          sharemundo_links_id: user.sharemundo_links_id,
+          status: user.is_active ? "Active" : "Disabled",
+          role: user.role.charAt(0).toUpperCase() + user.role.slice(1),
+          allocated_licenses: user.allocated_licenses,
+        }));
+        setRowData(users);
+        setFilteredRowData(users);
+      }
 
-      setRowData(users);
       setNextPageUrl(response.next || null);
       setPreviousPageUrl(response.previous || null);
       setTotalPages(Math.ceil(response.count / 10));
     } catch (error) {
-      console.error("Failed to fetch users:", error);
+      console.error("Failed to fetch data:", error);
     }
   };
 
-  // Handle Pagination
   const handleNextPage = () => {
     if (nextPageUrl) {
-      fetchUsers(nextPageUrl);
+      fetchUsersOrConnections(nextPageUrl, viewMode === "connections");
       setCurrentPage((prev) => prev + 1);
     }
   };
 
   const handlePreviousPage = () => {
     if (previousPageUrl) {
-      fetchUsers(previousPageUrl);
+      fetchUsersOrConnections(previousPageUrl, viewMode === "connections");
       setCurrentPage((prev) => prev - 1);
     }
   };
 
-  // Fetch Data on Component Mount
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const query = event.target.value.toLowerCase();
+
+    const filteredData = rowData.filter(
+      (item: any) =>
+        item.name.toLowerCase().includes(query) || (item.email && item.email.toLowerCase().includes(query))
+    );
+
+    setFilteredRowData(filteredData);
+  };
+
   useEffect(() => {
+    setRowData([]); // Clear data when switching tabs
+    setFilteredRowData([]);
+    setNextPageUrl(null);
+    setPreviousPageUrl(null);
+    setCurrentPage(1);
+    setTotalPages(0);
+
     if (viewMode === "internal") {
-      fetchUsers(`/admin-dashboard/customers/${id}/users`);
+      fetchUsersOrConnections(`/admin-dashboard/customers/${id}/users`, false);
+    } else {
+      fetchUsersOrConnections(`/admin-dashboard/customers/${id}/connections`, true);
     }
   }, [viewMode, id]);
 
@@ -89,15 +129,28 @@ const UserConnectionTab = ({ id }: { id: string }) => {
       </Typography>
       <Box display={"flex"} alignItems={"center"} gap={"12px"} mb={3}>
         <CustomButton
-          variant={viewMode === "internal" ? "contained" : "outlined"}
+          variant="contained"
+          sx={{
+            backgroundColor: viewMode === "internal" ? "#004FA7" : "#E4E7EC",
+            color: viewMode === "internal" ? "white" : "black",
+            "&:hover": {
+              backgroundColor: viewMode === "internal" ? "#1565c0" : "#E4E7EC",
+            },
+          }}
           onClick={() => setViewMode("internal")}
         >
           Internal Users
         </CustomButton>
         <CustomButton
-          variant={viewMode === "connections" ? "contained" : "outlined"}
+          variant="contained"
+          sx={{
+            backgroundColor: viewMode === "connections" ? "#004FA7" : "#E4E7EC",
+            color: viewMode === "connections" ? "white" : "black",
+            "&:hover": {
+              backgroundColor: viewMode === "connections" ? "#1565c0" : "#E4E7EC",
+            },
+          }}
           onClick={() => setViewMode("connections")}
-          background="#F0F2F5"
         >
           Connections
         </CustomButton>
@@ -106,8 +159,8 @@ const UserConnectionTab = ({ id }: { id: string }) => {
         <Box mr={4} display={"flex"} alignItems={"center"} gap={2}>
           <CustomSearchField
             startIcon={<Search />}
-            placeholder="Search here..."
-            onChange={(e) => console.log(e.target.value)}
+            placeholder="Search by name or email..."
+            onChange={handleSearchChange}
             width="340px"
           />
           <CustomFilterSelect
@@ -121,44 +174,26 @@ const UserConnectionTab = ({ id }: { id: string }) => {
         </Box>
       </Box>
 
-      {viewMode === "internal" ? (
-        <Box
-          sx={{
-            borderRadius: "10px",
-            border: "1px solid #E4E7EC",
-            backgroundColor: "#FFF",
-            boxShadow: "0px 4px 4px -2px rgba(0, 0, 0, 0.02)",
-            overflow: "hidden",
-            marginTop: "24px",
-            marginRight: "32px",
-          }}
-        >
-          <AgGridServerSideTable
-            rowData={rowData}
-            columnDefs={columnDefs}
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onNextPage={handleNextPage}
-            onPreviousPage={handlePreviousPage}
-          />
-        </Box>
-      ) : (
-        <Box
-          sx={{
-            borderRadius: "10px",
-            border: "1px solid #E4E7EC",
-            backgroundColor: "#FFF",
-            boxShadow: "0px 4px 4px -2px rgba(0, 0, 0, 0.02)",
-            overflow: "hidden",
-            marginTop: "24px",
-            marginRight: "32px",
-          }}
-        >
-          <Typography textAlign="center" p={3}>
-            Connections View Coming Soon
-          </Typography>
-        </Box>
-      )}
+      <Box
+        sx={{
+          borderRadius: "10px",
+          border: "1px solid #E4E7EC",
+          backgroundColor: "#FFF",
+          boxShadow: "0px 4px 4px -2px rgba(0, 0, 0, 0.02)",
+          overflow: "hidden",
+          marginTop: "24px",
+          marginRight: "32px",
+        }}
+      >
+        <AgGridServerSideTable
+          rowData={filteredRowData}
+          columnDefs={viewMode === "internal" ? internalColumnDefs : connectionColumnDefs}
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onNextPage={handleNextPage}
+          onPreviousPage={handlePreviousPage}
+        />
+      </Box>
     </Box>
   );
 };
