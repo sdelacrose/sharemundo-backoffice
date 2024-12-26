@@ -25,6 +25,7 @@ import AgGridServerSideTable from "@/app/ag-grid/AgGridServerSideTable";
 import BlockBulkCustomerDrawer from "./Drawers/blockBulkCustomerDrawer";
 import ActiveBulkCustomerDrawer from "./Drawers/activeBulkCustomerDrawer";
 import ActiveCustomerDrawer from "./Drawers/activeCustomerDrawer";
+import Loader from "@/app/components/common/Loader";
 
 const ManageCustomers = ({ customerDetail }: any) => {
   const context = useContext(SidebarContext);
@@ -36,6 +37,7 @@ const ManageCustomers = ({ customerDetail }: any) => {
   const [totalPages, setTotalPages] = useState(0);
   const [openBlockDrawer, setBlockDrawer] = useState(false);
   const [openBulkBlockDrawer, setBulkBlockDrawer] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const [chartData, setChartData] = useState<{ name: string; value: number }[]>(
     []
@@ -96,6 +98,8 @@ const ManageCustomers = ({ customerDetail }: any) => {
         : url;
 
       const data = await apiCall(trimmedUrl);
+      setLoading(false);
+
       setRowData(data?.results || []);
       setNextPageUrl(data?.next ? data.next : null);
       setPreviousPageUrl(data?.previous ? data.previous : null);
@@ -250,7 +254,13 @@ const ManageCustomers = ({ customerDetail }: any) => {
       setActiveDrawerOpen(true);
     },
   });
-
+  if (loading) {
+    return (
+      <div>
+        <Loader />
+      </div>
+    );
+  }
   return (
     <>
       <Box

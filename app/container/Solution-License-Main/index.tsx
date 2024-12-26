@@ -22,6 +22,7 @@ import NewSolutionDrawer from "./newSolutionDrawer";
 import { apiCall } from "@/app/utils/APIUtils";
 import AgGridServerSideTable from "@/app/ag-grid/AgGridServerSideTable";
 import _debounce from "lodash/debounce";
+import Loader from "@/app/components/common/Loader";
 
 const SolutionLicenseMain = () => {
   const [drawerType, setDrawerType] = useState<string | null>(null);
@@ -205,7 +206,13 @@ const SolutionLicenseMain = () => {
   const handleSolutionCreated = (newSolution: any) => {
     setSolutionData((prevData) => [...prevData, newSolution]);
   };
-
+  if (loading) {
+    return (
+      <div>
+        <Loader />
+      </div>
+    );
+  }
   return (
     <>
       <Box

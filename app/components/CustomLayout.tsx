@@ -5,6 +5,7 @@ import "../globals.scss";
 
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
+import CustomToaster from "./common/CustomToaster";
 
 export default function CustomLayout({
   children,
@@ -14,7 +15,10 @@ export default function CustomLayout({
   return (
     <ThemeProvider theme={theme}>
       <html lang="en" style={{ overflowX: "hidden" }}>
-        <body>{children}</body>
+        <body>
+          <CustomToaster />
+          {children}
+        </body>
       </html>
     </ThemeProvider>
   );

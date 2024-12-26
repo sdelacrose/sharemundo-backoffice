@@ -18,10 +18,11 @@ import useColumnBillingCustomers from "@/app/hooks/Grid-Table/usecolumnBillingCu
 import { apiCall } from "@/app/utils/APIUtils";
 import { useRouter } from "next/navigation";
 import AgGridServerSideTable from "@/app/ag-grid/AgGridServerSideTable";
+import Loader from "@/app/components/common/Loader";
 
 const Billings = () => {
   const [billingData, setBillingData] = useState<any>(null);
-  const [, setLoading] = useState<any>(false);
+  const [loading, setLoading] = useState<any>(false);
   const context = useContext(SidebarContext);
   const [activeTab, setActiveTab] = useState(0);
   const [topUserData, setTopUserData] = useState<any>(null);
@@ -167,7 +168,7 @@ const Billings = () => {
   };
   const renderChart = () => {
     if (!chartData) {
-      return <div>Loading...</div>;
+      return <div>Loadin....</div>;
     }
     switch (activeTab) {
       case 0:
@@ -191,6 +192,13 @@ const Billings = () => {
       fetchBillingData(previousPageUrl);
     }
   };
+  if (loading) {
+    return (
+      <div>
+        <Loader />
+      </div>
+    );
+  }
   return (
     <>
       <Box
