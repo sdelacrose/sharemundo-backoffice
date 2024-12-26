@@ -19,6 +19,26 @@ interface CreateEditDrawerProps {
   };
 }
 
+// const EditDrawer: React.FC<CreateEditDrawerProps> = ({
+//   open,
+//   handleClose,
+//   id,
+//   onUpdateData,
+//   initialData,
+// }) => {
+//   const {
+//     control,
+//     handleSubmit,
+//     setValue,
+//     formState: { errors, isSubmitting },
+//   } = useForm({
+//     defaultValues: {
+//       solutionName: initialData?.name || "",
+//       price: initialData?.price || "",
+//       link: initialData?.link || "",
+//       description: initialData?.description || "",
+//     },
+//   });
 const EditDrawer: React.FC<CreateEditDrawerProps> = ({
   open,
   handleClose,
@@ -33,13 +53,20 @@ const EditDrawer: React.FC<CreateEditDrawerProps> = ({
     formState: { errors, isSubmitting },
   } = useForm({
     defaultValues: {
-      solutionName: initialData?.name || "",
-      price: initialData?.price || "",
-      link: initialData?.link || "",
-      description: initialData?.description || "",
+      solutionName: "",
+      price: "",
+      link: "",
+      description: "",
     },
   });
-
+  useEffect(() => {
+    if (initialData) {
+      setValue("solutionName", initialData.name || "");
+      setValue("price", initialData.price || "");
+      setValue("link", initialData.link || "");
+      setValue("description", initialData.description || "");
+    }
+  }, [initialData, setValue]);
   const onSubmit = async (data: any) => {
     if (!id) return;
 

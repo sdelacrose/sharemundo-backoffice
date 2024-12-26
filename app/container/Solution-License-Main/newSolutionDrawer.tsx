@@ -1,4 +1,3 @@
-
 import { Cross } from "@/app/assets/icons";
 import CustomButton from "@/app/components/common/CustomButton";
 import CustomTextField from "@/app/components/common/CustomTextfield";
@@ -27,7 +26,7 @@ const NewSolutionDrawer: React.FC<CreateNewDrawerProps> = ({
     defaultValues: {
       solutionName: "",
       link: "",
-      details: "",
+      description: "",
       price: "",
     },
   });
@@ -36,7 +35,7 @@ const NewSolutionDrawer: React.FC<CreateNewDrawerProps> = ({
     const payload = {
       name: data.solutionName,
       link: data.link,
-      details: data.details,
+      description: data.description,
       price: parseFloat(data.price),
     };
 
@@ -141,7 +140,7 @@ const NewSolutionDrawer: React.FC<CreateNewDrawerProps> = ({
                   )}
                 />
                 <Controller
-                  name="details"
+                  name="description"
                   control={control}
                   render={({ field }) => (
                     <CustomTextField
@@ -149,7 +148,6 @@ const NewSolutionDrawer: React.FC<CreateNewDrawerProps> = ({
                       placeholder="Solution details"
                       fullWidth
                       multiline
-                      // rows={3}
                       {...field}
                     />
                   )}

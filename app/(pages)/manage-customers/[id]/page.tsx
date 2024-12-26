@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import CompanyProfile from "@/app/container/ManageCustomers/CompanyProfile";
 import { apiCall } from "@/app/utils/APIUtils";
+import Loader from "@/app/components/common/Loader";
 
 interface CompanyProfilePageProps {
   params: { id: string };
@@ -19,6 +20,7 @@ const page = ({ params }: CompanyProfilePageProps) => {
       try {
         const response = await apiCall(`/admin-dashboard/customers/${id}`);
         setCustomerDetail(response);
+        setIsLoading(false);
       } catch (err) {
         console.error("Failed to fetch customer details:", err);
         setError("Error fetching customer details.");
@@ -31,7 +33,11 @@ const page = ({ params }: CompanyProfilePageProps) => {
   }, [id]);
 
   if (isLoading) {
-    return <div>Loading customer details...</div>;
+    return (
+      <div>
+        <Loader />
+      </div>
+    );
   }
 
   if (error) {

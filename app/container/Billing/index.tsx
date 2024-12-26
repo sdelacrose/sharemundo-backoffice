@@ -12,6 +12,7 @@ import {
   BillingCustomerColumnDefs,
   BillingPaymentColumnDefs,
 } from "@/app/const/GridTable/ColDef";
+import * as XLSX from "xlsx";
 
 import useColumnBillingPayment from "@/app/hooks/Grid-Table/useColumnBillingPayment";
 import useColumnBillingCustomers from "@/app/hooks/Grid-Table/usecolumnBillingCustomers";
@@ -19,6 +20,8 @@ import { apiCall } from "@/app/utils/APIUtils";
 import { useRouter } from "next/navigation";
 import AgGridServerSideTable from "@/app/ag-grid/AgGridServerSideTable";
 import Loader from "@/app/components/common/Loader";
+import CustomButton from "@/app/components/common/CustomButton";
+import { ExportExcel } from "@/app/assets/icons";
 
 const Billings = () => {
   const [billingData, setBillingData] = useState<any>(null);
@@ -31,6 +34,8 @@ const Billings = () => {
   const [previousPageUrl, setPreviousPageUrl] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(0);
+  const [selectedRows, setSelectedRows] = useState([]);
+
   const router = useRouter();
   const endpoints = {
     0: "/admin-dashboard/invoices/failed-stats",
@@ -65,7 +70,11 @@ const Billings = () => {
   const BillingCustomerCol = useColumnBillingCustomers(
     BillingCustomerColumnDefs
   );
-
+  const handleRowSelection = (event) => {
+    const selected = event.api.getSelectedRows();
+    setSelectedRows(selected);
+    console.log("Selected Rows: ", selected);
+  };
   const fetchBillingData = async (url: string) => {
     try {
       const data = await apiCall("/admin-dashboard/invoices/failed", "GET");
@@ -199,6 +208,51 @@ const Billings = () => {
       </div>
     );
   }
+  const handleExportToExcel = async (
+    section: "paymentIssues" | "topCustomers"
+  ) => {
+    try {
+      let exportData;
+      let apiUrl = "";
+
+      if (section === "paymentIssues") {
+        apiUrl = "/admin-dashboard/invoices/failed";
+      } else if (section === "topCustomers") {
+        apiUrl = "/admin-dashboard/invoices/paid";
+      }
+
+      if (selectedRows.length > 0) {
+        exportData = selectedRows;
+      } else {
+        const data = await apiCall(`${apiUrl}?all=true`, "GET");
+        exportData = data || [];
+      }
+
+      const worksheet = XLSX.utils.json_to_sheet(exportData);
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, "Exported Data");
+
+      const excelBuffer = XLSX.write(workbook, {
+        bookType: "xlsx",
+        type: "array",
+      });
+
+      const blob = new Blob([excelBuffer], {
+        type: "application/octet-stream",
+      });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = `${
+        section === "paymentIssues" ? "PaymentIssues" : "TopCustomers"
+      }.xlsx`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch (error) {
+      console.error("Error exporting to Excel:", error);
+    }
+  };
+
   return (
     <>
       <Box
@@ -244,9 +298,29 @@ const Billings = () => {
               <Typography variant="h5" color="#475367">
                 Revenue Overview
               </Typography>
-              <CustomTabs tabs={tabs} onTabChange={handleTabChange} />
+              <CustomTabs
+                tabs={tabs}
+                onTabChange={handleTabChange}
+                value={activeTab}
+              />
               {renderChart()}
             </Stack>
+          </Box>
+          <Box
+            display={"flex"}
+            justifyContent={"space-between"}
+            alignItems={"center"}
+          >
+            <Typography variant="h5" fontWeight={500} mt={3}>
+              Payment Issues
+            </Typography>
+            <CustomButton
+              variant="contained"
+              endIcon={<ExportExcel />}
+              onClick={() => handleExportToExcel("paymentIssues")}
+            >
+              Export to Excel
+            </CustomButton>
           </Box>
           <Box
             sx={{
@@ -267,13 +341,27 @@ const Billings = () => {
               previousPageUrl={previousPageUrl}
               onNextPage={handleNextPage}
               onPreviousPage={handlePreviousPage}
-              height={528}
+              height={580}
+              rowSelection={true}
+              handleRowSelection={handleRowSelection}
             />
           </Box>
-          <Box>
-            <Typography variant="h5" fontWeight={500} mt={3}>
+          <Box
+            display={"flex"}
+            justifyContent={"space-between"}
+            alignItems={"center"}
+            mt={3}
+          >
+            <Typography variant="h5" fontWeight={500}>
               Top Customers
             </Typography>
+            <CustomButton
+              variant="contained"
+              endIcon={<ExportExcel />}
+              onClick={() => handleExportToExcel("topCustomers")}
+            >
+              Export to Excel
+            </CustomButton>
           </Box>
           <Box
             sx={{
@@ -294,6 +382,9 @@ const Billings = () => {
               previousPageUrl={previousPageUrl}
               onNextPage={handleNextPage}
               onPreviousPage={handlePreviousPage}
+              height={580}
+              rowSelection={true}
+              handleRowSelection={handleRowSelection}
             />
           </Box>
         </Box>

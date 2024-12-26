@@ -47,12 +47,22 @@ const SolutionLicenseMain = () => {
       const data = await apiCall(trimmedUrl, "GET");
       const solutions = data?.results?.solutions || [];
       const extractedData = solutions.map(
-        ({ name, price, status, license_count, id }: any) => ({
+        ({
           name,
           price,
           status,
           license_count,
           id,
+          link,
+          description,
+        }: any) => ({
+          name,
+          price,
+          status,
+          license_count,
+          id,
+          link: link || "",
+          description: description || "",
         })
       );
       setSolutionData(extractedData);
@@ -161,6 +171,9 @@ const SolutionLicenseMain = () => {
   };
 
   const renderChart = () => {
+    if (loading) {
+      return <Loader />;
+    }
     switch (activeTab) {
       case 0:
         return <BarChartComponent data={chartData} />;
@@ -179,7 +192,10 @@ const SolutionLicenseMain = () => {
         : `/admin-dashboard/products/${id}/stop`;
 
     try {
-      await apiCall(endpoint, "POST");
+      await apiCall(endpoint, "POST", null, null, {
+        successMessage: "Solution updated successfully!",
+        errorMessage: "Failed to update the solution. Please try again.",
+      });
       setSolutionData((prevData: any) =>
         prevData.map((item: any) =>
           item.id === id
@@ -204,8 +220,10 @@ const SolutionLicenseMain = () => {
   };
 
   const handleSolutionCreated = (newSolution: any) => {
+    console.log("newSolution-----", newSolution);
     setSolutionData((prevData) => [...prevData, newSolution]);
   };
+
   if (loading) {
     return (
       <div>
@@ -249,12 +267,15 @@ const SolutionLicenseMain = () => {
             bgcolor={"#fff"}
           >
             <Stack gap={2}>
-              <CustomTabs tabs={tabs} onTabChange={handleTabChange} />
+              <CustomTabs
+                tabs={tabs}
+                onTabChange={handleTabChange}
+                value={activeTab}
+              />
               {renderChart()}
             </Stack>
           </Box>
           <Box
-            // mr={4}
             display={"flex"}
             alignItems={"center"}
             gap={2}
@@ -303,6 +324,22 @@ const SolutionLicenseMain = () => {
                 />
               )}
               {drawerType === "edit" && selectedId && (
+                // <EditDrawer
+                //   open={drawerType === "edit"}
+                //   handleClose={handleCloseDrawer}
+                //   id={selectedId}
+                //   initialData={solutionData.find(
+                //     (item) => item.id === selectedId
+                //   )}
+                //   onUpdateData={(updatedItem) => {
+                //     setSolutionData((prevData) =>
+                //       prevData.map((item) =>
+                //         item.id === updatedItem.id ? updatedItem : item
+                //       )
+                //     );
+                //   }}
+                // />
+
                 <EditDrawer
                   open={drawerType === "edit"}
                   handleClose={handleCloseDrawer}
@@ -310,15 +347,10 @@ const SolutionLicenseMain = () => {
                   initialData={solutionData.find(
                     (item) => item.id === selectedId
                   )}
-                  onUpdateData={(updatedItem) => {
-                    setSolutionData((prevData) =>
-                      prevData.map((item) =>
-                        item.id === updatedItem.id ? updatedItem : item
-                      )
-                    );
-                  }}
+                  onUpdateData={handleUpdateData}
                 />
               )}
+
               {drawerType === "stop" && selectedId && (
                 <StopDrawer
                   open={drawerType === "stop"}
