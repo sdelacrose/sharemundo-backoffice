@@ -8,11 +8,11 @@ import CustomSearchField from "@/app/components/common/CustomSearch";
 import { Adduser, BlockUser, Search } from "@/app/assets/icons";
 import AgGridServerSideTable from "@/app/ag-grid/AgGridServerSideTable";
 import { apiCall } from "@/app/utils/APIUtils";
-import RemoveConnectionDrawer from "../removeConnectionDrawer";
-import RemoveUserDrawer from "../removeUserDrawer";
-import RestoreUserDrawer from "../restoreUserDrawer";
-import RemoveBulkUsersDrawer from "../removeBulkUsersDrawer";
-import RestoreBulkUsersDrawer from "../restoreBulkUsersDrawer";
+import RemoveConnectionDrawer from "../Drawers/removeConnectionDrawer";
+import RemoveUserDrawer from "../Drawers/removeUserDrawer";
+import RestoreUserDrawer from "../Drawers/restoreUserDrawer";
+import RemoveBulkUsersDrawer from "../Drawers/removeBulkUsersDrawer";
+import RestoreBulkUsersDrawer from "../Drawers/restoreBulkUsersDrawer";
 
 const UserConnectionTab = ({ id, setActiveTab }: any) => {
   const [viewMode, setViewMode] = useState<"internal" | "connections">(

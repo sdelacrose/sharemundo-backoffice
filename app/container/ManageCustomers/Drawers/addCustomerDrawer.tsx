@@ -10,7 +10,7 @@ import {
   Typography,
 } from "@mui/material";
 import React, { useState } from "react";
-import { Role } from "./manageData";
+import { Role } from "../manageData";
 import CustomCheckbox from "@/app/components/common/CustomCheckBox";
 import PasswordField from "@/app/components/common/CustomPassword";
 interface CreateNewDrawerProps {

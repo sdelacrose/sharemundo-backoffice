@@ -4,7 +4,7 @@ import { Box, Button } from "@mui/material";
 import React, { useState, useEffect } from "react";
 import AgGridServerSideTable from "@/app/ag-grid/AgGridServerSideTable";
 import { apiCall } from "@/app/utils/APIUtils";
-import RemoveConnectionDrawer from "../removeConnectionDrawer";
+import RemoveConnectionDrawer from "../Drawers/removeConnectionDrawer";
 
 const ConnectionTab = ({ id, setActiveTab }: { id: string; setActiveTab: (tabIndex: number) => void }) => {
   const [rowData, setRowData] = useState([]);

@@ -16,15 +16,15 @@ import { Adduser, BlockUser, Search } from "@/app/assets/icons";
 import CustomSearchField from "@/app/components/common/CustomSearch";
 import CustomFilterSelect from "@/app/components/common/CustomFilterSelect";
 import useColumnManageUserDefs from "@/app/hooks/Grid-Table/useColumnManageUser";
-import AddCustomerDrawer from "./addCustomerDrawer";
-import BlockCustomerDrawer from "./blockCustomerDrawer";
+import AddCustomerDrawer from "./Drawers/addCustomerDrawer";
+import BlockCustomerDrawer from "./Drawers/blockCustomerDrawer";
 import SharpLineChart from "@/app/components/common/SharpLineChart";
 import { apiCall } from "@/app/utils/APIUtils";
 import _debounce from "lodash/debounce";
 import AgGridServerSideTable from "@/app/ag-grid/AgGridServerSideTable";
-import BlockBulkCustomerDrawer from "./blockBulkCustomerDrawer";
-import ActiveBulkCustomerDrawer from "./activeBulkCustomerDrawer";
-import ActiveCustomerDrawer from "./activeCustomerDrawer";
+import BlockBulkCustomerDrawer from "./Drawers/blockBulkCustomerDrawer";
+import ActiveBulkCustomerDrawer from "./Drawers/activeBulkCustomerDrawer";
+import ActiveCustomerDrawer from "./Drawers/activeCustomerDrawer";
 
 const ManageCustomers = ({ customerDetail }: any) => {
   const context = useContext(SidebarContext);
