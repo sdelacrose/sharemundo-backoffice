@@ -8,6 +8,7 @@ import CustomSearchField from "@/app/components/common/CustomSearch";
 import { Adduser, BlockUser, Search } from "@/app/assets/icons";
 import AgGridServerSideTable from "@/app/ag-grid/AgGridServerSideTable";
 import { apiCall } from "@/app/utils/APIUtils";
+import RemoveConnectionDrawer from "../Drawers/removeConnectionDrawer";
 import RemoveUserDrawer from "../Drawers/removeUserDrawer";
 import RestoreUserDrawer from "../Drawers/restoreUserDrawer";
 import RemoveBulkUsersDrawer from "../Drawers/removeBulkUsersDrawer";
@@ -24,8 +25,8 @@ const UserConnectionTab = ({ id, setActiveTab }: any) => {
   const [previousPageUrl, setPreviousPageUrl] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
-  const [, setSelectedRowId] = useState<number | null>(null);
-  const [, setRemoveDrawerOpen] = useState(false);
+  const [selectedRowId, setSelectedRowId] = useState<number | null>(null);
+  const [removeDrawerOpen, setRemoveDrawerOpen] = useState(false);
   const [, setSelectedFilter] = useState<string | null>(null);
   const [removeUserDrawerOpen, setRemoveUserDrawerOpen] = useState(false);
   const [restoreUserDrawerOpen, setRestoreUserDrawerOpen] = useState(false);
@@ -33,6 +34,7 @@ const UserConnectionTab = ({ id, setActiveTab }: any) => {
     useState(false);
   const [restoreBulkUsersDrawerOpen, setRestoreBulkUsersDrawerOpen] =
     useState(false);
+  const [selectedUserIds, setSelectedUserIds] = useState<number[]>([]);
   const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
   const [selectedRows, setSelectedRows] = useState([]);
   const [addUserDrawerOpen, setAddUserDrawerOpen] = useState(false);
@@ -51,30 +53,33 @@ const UserConnectionTab = ({ id, setActiveTab }: any) => {
     setRemoveDrawerOpen(true);
   };
 
- 
+  const handleCloseRemoveDrawer = () => {
+    setRemoveDrawerOpen(false);
+    setSelectedRowId(null);
+  };
 
-  // const handleRemoveConnection = async () => {
-  //   if (!selectedRowId) return;
+  const handleRemoveConnection = async () => {
+    if (!selectedRowId) return;
 
-  //   try {
-  //     await apiCall(
-  //       `/accounts/connections/${selectedRowId}`,
-  //       "DELETE",
-  //       null,
-  //       null,
-  //       {
-  //         successMessage: "Connection removed successfully!",
-  //       }
-  //     );
-  //     fetchUsersOrConnections(
-  //       `/admin-dashboard/customers/${id}/connections`,
-  //       viewMode === "connections"
-  //     );
-  //     handleCloseRemoveDrawer();
-  //   } catch (error) {
-  //     console.error("Failed to remove connection:", error);
-  //   }
-  // };
+    try {
+      await apiCall(
+        `/accounts/connections/${selectedRowId}`,
+        "DELETE",
+        null,
+        null,
+        {
+          successMessage: "Connection removed successfully!",
+        }
+      );
+      fetchUsersOrConnections(
+        `/admin-dashboard/customers/${id}/connections`,
+        viewMode === "connections"
+      );
+      handleCloseRemoveDrawer();
+    } catch (error) {
+      console.error("Failed to remove connection:", error);
+    }
+  };
 
   const internalColumnDefs = [
     { field: "name", headerName: "Display Name", flex: 1 },

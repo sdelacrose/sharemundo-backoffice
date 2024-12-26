@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { Box } from "@mui/material";
 import AgGridServerSideTable from "@/app/ag-grid/AgGridServerSideTable";
+import { apiCall } from "@/app/utils/APIUtils";
 
 const LicenseTab = ({
   rowData,

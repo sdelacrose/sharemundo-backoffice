@@ -17,19 +17,30 @@ import ConnectionTab from "./connectionTab";
 const CompanyProfile = ({ customerDetail, id }: any) => {
   const context = useContext(SidebarContext);
   const [activeTab, setActiveTab] = useState(0);
-  const [, setSelectedLicenseId] = useState<string | null>(null);
+  const [selectedLicenseId, setSelectedLicenseId] = useState<string | null>(
+    null
+  );
   const [isLicenseDetailOpen, setLicenseDetailOpen] = useState(false);
+
+  if (!customerDetail) {
+    return <div>Loading customer details...</div>;
+  }
+
+  const companyProfile = customerDetail.company_profile;
+
+  if (context === undefined) {
+    return <div>Error: Sidebar context is undefined!</div>;
+  }
+
+  const handleTabChange = (newValue: number) => {
+    setActiveTab(newValue);
+  };
+
   const [nextPageUrl, setNextPageUrl] = useState<string | null>(null);
   const [previousPageUrl, setPreviousPageUrl] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const [rowData, setRowData] = useState([]);
-
-  const companyProfile = customerDetail.company_profile;
-
-  const handleTabChange = (newValue: number) => {
-    setActiveTab(newValue);
-  };
 
   const columnDefs = useMemo(
     () => [
@@ -129,7 +140,7 @@ const CompanyProfile = ({ customerDetail, id }: any) => {
         return isFreelancer ? (
           <ConnectionTab id={id} setActiveTab={handleTabChange} />
         ) : (
-          <UserConnectionTab id={id} setActiveTab={handleTabChange} />
+          <UserConnectionTab id={id} setActiveTab={handleTabChange}/>
         );
       case 2:
         return <BillingTab id={id} />;
@@ -150,12 +161,6 @@ const CompanyProfile = ({ customerDetail, id }: any) => {
         return <div>Invalid Tab</div>;
     }
   };
-  if (!customerDetail) {
-    return <div>Loading customer details...</div>;
-  }
-  if (context === undefined) {
-    return <div>Error: Sidebar context is undefined!</div>;
-  }
   return (
     <>
       <Box
@@ -196,11 +201,7 @@ const CompanyProfile = ({ customerDetail, id }: any) => {
           />
 
           <Box mb={4}>
-            <CustomTabs
-              tabs={tabs}
-              onTabChange={handleTabChange}
-              value={activeTab}
-            />
+            <CustomTabs tabs={tabs} onTabChange={handleTabChange} value={activeTab}/>
           </Box>
           {renderTabContent()}
         </Box>
