@@ -14,6 +14,7 @@ import RestoreUserDrawer from "../Drawers/restoreUserDrawer";
 import RemoveBulkUsersDrawer from "../Drawers/removeBulkUsersDrawer";
 import RestoreBulkUsersDrawer from "../Drawers/restoreBulkUsersDrawer";
 import AddUserDrawer from "./addUserDrawer";
+import { filterByConnectionItems, filterByUserTypeItems } from "../manageData";
 
 const UserConnectionTab = ({ id, setActiveTab }: any) => {
   const [viewMode, setViewMode] = useState<"internal" | "connections">(
@@ -29,6 +30,7 @@ const UserConnectionTab = ({ id, setActiveTab }: any) => {
   const [removeDrawerOpen, setRemoveDrawerOpen] = useState(false);
   const [, setSelectedFilter] = useState<string | null>(null);
   const [removeUserDrawerOpen, setRemoveUserDrawerOpen] = useState(false);
+  const [removeConnectionDrawer, setRemoveConnectionDrawer] = useState(false);
   const [restoreUserDrawerOpen, setRestoreUserDrawerOpen] = useState(false);
   const [removeBulkUsersDrawerOpen, setRemoveBulkUsersDrawerOpen] =
     useState(false);
@@ -39,46 +41,8 @@ const UserConnectionTab = ({ id, setActiveTab }: any) => {
   const [selectedRows, setSelectedRows] = useState([]);
   const [addUserDrawerOpen, setAddUserDrawerOpen] = useState(false);
 
-  const handleSelect = (label: string | null) => {
-    console.log("Selected filter:", label);
-    setSelectedFilter(label);
-  };
-
   const handleViewClick = () => {
     setActiveTab(0);
-  };
-
-  const handleOpenRemoveDrawer = (data: any) => {
-    setSelectedRowId(data.id);
-    setRemoveDrawerOpen(true);
-  };
-
-  const handleCloseRemoveDrawer = () => {
-    setRemoveDrawerOpen(false);
-    setSelectedRowId(null);
-  };
-
-  const handleRemoveConnection = async () => {
-    if (!selectedRowId) return;
-
-    try {
-      await apiCall(
-        `/accounts/connections/${selectedRowId}`,
-        "DELETE",
-        null,
-        null,
-        {
-          successMessage: "Connection removed successfully!",
-        }
-      );
-      fetchUsersOrConnections(
-        `/admin-dashboard/customers/${id}/connections`,
-        viewMode === "connections"
-      );
-      handleCloseRemoveDrawer();
-    } catch (error) {
-      console.error("Failed to remove connection:", error);
-    }
   };
 
   const internalColumnDefs = [
@@ -275,6 +239,53 @@ const UserConnectionTab = ({ id, setActiveTab }: any) => {
     }
   }, [viewMode, id]);
 
+  const handleSelect = async (filter: {
+    key: string;
+    value: string | null;
+  }) => {
+    try {
+      let apiUrl = `/admin-dashboard/customers/${id}/connections`;
+      const params: Record<string, string> = {};
+
+      // Add filter to params
+      if (filter.key && filter.value && filter.value !== "all") {
+        params[filter.key] = filter.value;
+      }
+
+      // Convert params object to query string
+      const queryString = new URLSearchParams(params).toString();
+      if (queryString) {
+        apiUrl += `?${queryString}`;
+      }
+
+      const data = await apiCall(apiUrl);
+      setRowData(data?.results.connections);
+      setNextPageUrl(data?.next || null);
+      setPreviousPageUrl(data?.previous || null);
+      setTotalPages(Math.ceil(data?.count / 10));
+    } catch (err) {
+      console.error("Failed to fetch filtered connections:", err);
+    }
+  };
+
+  useEffect(() => {
+    const fetchConnections = async () => {
+      try {
+        const data = await apiCall(
+          `/admin-dashboard/customers/${id}/connections`
+        );
+        setRowData(data?.results.connections);
+        setNextPageUrl(data?.next || null);
+        setPreviousPageUrl(data?.previous || null);
+        setTotalPages(Math.ceil(data?.count / 10));
+      } catch (err) {
+        console.error("Failed to fetch connections:", err);
+      }
+    };
+
+    fetchConnections();
+  }, [id]);
+
   const handleRemoveUser = async (userId: number) => {
     try {
       await apiCall(
@@ -315,7 +326,7 @@ const UserConnectionTab = ({ id, setActiveTab }: any) => {
 
   const handleRemoveBulkUsers = async () => {
     try {
-      const idsToRemove = selectedRows.map((row: any) => row.id); // Extract IDs from selected rows
+      const idsToRemove = selectedRows.map((row: any) => row.id);
       if (idsToRemove.length === 0) {
         console.warn("No users selected for bulk removal");
         return;
@@ -362,6 +373,38 @@ const UserConnectionTab = ({ id, setActiveTab }: any) => {
       fetchUsersOrConnections(`/admin-dashboard/customers/${id}/users`, false);
     } catch (error) {
       console.error("Failed to restore users:", error);
+    }
+  };
+  const handleOpenRemoveDrawer = (data: any) => {
+    setSelectedRowId(data.id);
+    setRemoveConnectionDrawer(true);
+  };
+
+  // Function to close the RemoveConnectionDrawer
+  const handleCloseRemoveDrawer = () => {
+    setRemoveConnectionDrawer(false);
+    setSelectedRowId(null);
+  };
+
+  // Function to handle removal logic
+  const handleRemoveConnection = async (userId: number) => {
+    try {
+      await apiCall(
+        `/admin-dashboard/connection/${userId}`,
+        "DELETE",
+        null,
+        null,
+        {
+          successMessage: "Connection removed successfully!",
+        }
+      );
+      fetchUsersOrConnections(
+        `/admin-dashboard/customers/${id}/connections`,
+        viewMode === "connections"
+      );
+      setRemoveConnectionDrawer(false); // Close drawer after successful operation
+    } catch (error) {
+      console.error("Failed to remove connection:", error);
     }
   };
 
@@ -465,12 +508,10 @@ const UserConnectionTab = ({ id, setActiveTab }: any) => {
                   width="340px"
                 />
                 <CustomFilterSelect
-                  items={[
-                    { label: "All" },
-                    { label: "Active" },
-                    { label: "Disabled" },
-                  ]}
-                  onSelect={handleSelect}
+                  items={filterByUserTypeItems}
+                  onSelect={(value) =>
+                    handleSelect({ key: "user_type", value })
+                  }
                 />
               </Box>
             </Box>
@@ -487,12 +528,8 @@ const UserConnectionTab = ({ id, setActiveTab }: any) => {
                 width="340px"
               />
               <CustomFilterSelect
-                items={[
-                  { label: "All" },
-                  { label: "Active" },
-                  { label: "Disabled" },
-                ]}
-                onSelect={handleSelect}
+                items={filterByConnectionItems}
+                onSelect={(value) => handleSelect({ key: "type", value })}
               />
             </Box>
           </Box>
@@ -530,6 +567,14 @@ const UserConnectionTab = ({ id, setActiveTab }: any) => {
         <AddUserDrawer
           open={addUserDrawerOpen}
           handleClose={() => setAddUserDrawerOpen(false)}
+        />
+      )}
+
+      {removeConnectionDrawer && (
+        <RemoveConnectionDrawer
+          open={removeConnectionDrawer}
+          handleClose={handleCloseRemoveDrawer}
+          handleRemoveConnection={() => handleRemoveConnection(selectedRowId!)}
         />
       )}
       {removeUserDrawerOpen && (
