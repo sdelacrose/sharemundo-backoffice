@@ -2,7 +2,10 @@ import { Cross } from "@/app/assets/icons";
 import CustomButton from "@/app/components/common/CustomButton";
 import { Box, Drawer, Stack, Typography } from "@mui/material";
 import React from "react";
-
+interface CreateNewDrawerProps {
+  open: boolean;
+  handleClose: () => void;
+}
 
 const BlockCustomerDrawer: React.FC<any> = ({ open, handleClose, handleBlock }) => {
   return (

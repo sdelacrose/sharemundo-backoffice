@@ -1,3 +1,4 @@
+import { getAuthToken } from "./GetAuthToken";
 import toast from "react-hot-toast";
 interface ApiCallOptions {
   successMessage?: string;
