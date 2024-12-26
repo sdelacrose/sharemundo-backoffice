@@ -40,10 +40,10 @@ const ActiveCustomerDrawer: React.FC<any> = ({ open, handleClose, handleActivate
         >
           <Stack gap={3}>
             <Typography variant="h3" letterSpacing={"0.4px"}>
-              Active Customer
+              Active Customer?
             </Typography>
             <Typography variant="caption" fontSize={14} color="#667185">
-              Do you want to activate user?
+              Do you want to activate this customer?
             </Typography>
             <Box
               sx={{
