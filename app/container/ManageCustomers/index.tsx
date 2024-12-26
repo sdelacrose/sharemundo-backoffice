@@ -16,7 +16,6 @@ import { Adduser, BlockUser, Search } from "@/app/assets/icons";
 import CustomSearchField from "@/app/components/common/CustomSearch";
 import CustomFilterSelect from "@/app/components/common/CustomFilterSelect";
 import useColumnManageUserDefs from "@/app/hooks/Grid-Table/useColumnManageUser";
-import AddCustomerDrawer from "./Drawers/addCustomerDrawer";
 import BlockCustomerDrawer from "./Drawers/blockCustomerDrawer";
 import SharpLineChart from "@/app/components/common/SharpLineChart";
 import { apiCall } from "@/app/utils/APIUtils";
@@ -27,7 +26,7 @@ import ActiveBulkCustomerDrawer from "./Drawers/activeBulkCustomerDrawer";
 import ActiveCustomerDrawer from "./Drawers/activeCustomerDrawer";
 import Loader from "@/app/components/common/Loader";
 
-const ManageCustomers = ({ customerDetail }: any) => {
+const ManageCustomers = () => {
   const context = useContext(SidebarContext);
   const [addDrawer, setAddDrawer] = useState(false);
   const [rowData, setRowData] = useState<any>([]);
@@ -35,8 +34,6 @@ const ManageCustomers = ({ customerDetail }: any) => {
   const [previousPageUrl, setPreviousPageUrl] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
-  const [openBlockDrawer, setBlockDrawer] = useState(false);
-  const [openBulkBlockDrawer, setBulkBlockDrawer] = useState(false);
   const [loading, setLoading] = useState(true);
 
   const [chartData, setChartData] = useState<{ name: string; value: number }[]>(
@@ -58,15 +55,17 @@ const ManageCustomers = ({ customerDetail }: any) => {
     setAddDrawer(true);
   };
 
-  const handleOpenBlockDrawer = (id: number) => {
-    setSelectedIds([id]);
-    setBlockDrawerOpen(true);
-  };
-
-  const handleCloseBlockDrawer = () => {
-    setBlockDrawerOpen(false);
-    setSelectedIds([]);
-  };
+  const manageUserCol = useColumnManageUserDefs({
+    columns: manageCustomersColumnDefs,
+    onBlockClick: (id) => {
+      setSelectedIds([id]);
+      setBlockDrawerOpen(true);
+    },
+    onActivateClick: (id) => {
+      setSelectedIds([id]);
+      setActiveDrawerOpen(true);
+    },
+  });
 
   useEffect(() => {
     const fetchCustomerStats = async () => {
@@ -243,17 +242,6 @@ const ManageCustomers = ({ customerDetail }: any) => {
     setActiveDrawerOpen(false);
   };
 
-  const manageUserCol = useColumnManageUserDefs({
-    columns: manageCustomersColumnDefs,
-    onBlockClick: (id) => {
-      setSelectedIds([id]);
-      setBlockDrawerOpen(true);
-    },
-    onActivateClick: (id) => {
-      setSelectedIds([id]);
-      setActiveDrawerOpen(true);
-    },
-  });
   if (loading) {
     return (
       <div>

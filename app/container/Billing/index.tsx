@@ -35,12 +35,19 @@ const Billings = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(0);
   const [selectedRows, setSelectedRows] = useState([]);
-
+  const [topUserNextPageUrl, setTopUserNextPageUrl] = useState<string | null>(
+    null
+  );
+  const [topUserPreviousPageUrl, setTopUserPreviousPageUrl] = useState<
+    string | null
+  >(null);
+  const [topUserCurrentPage, setTopUserCurrentPage] = useState<number>(1);
+  const [topUserTotalPages, setTopUserTotalPages] = useState<number>(0);
   const router = useRouter();
-  const endpoints = {
-    0: "/admin-dashboard/invoices/failed-stats",
-    1: "/admin-dashboard/invoices/revenue-stats",
-  };
+  // const endpoints = {
+  //   0: "/admin-dashboard/invoices/failed-stats",
+  //   1: "/admin-dashboard/invoices/revenue-stats",
+  // };
   const handleAction = (actionType: string, rowData: any) => {
     if (actionType === "download") {
       if (rowData.invoice_pdf) {
@@ -75,10 +82,77 @@ const Billings = () => {
     setSelectedRows(selected);
     console.log("Selected Rows: ", selected);
   };
-  const fetchBillingData = async (url: string) => {
+  const fetchTopUserData = async (url: string) => {
+    console.log("fetchTopUserData called with URL:", url);
+
     try {
-      const data = await apiCall("/admin-dashboard/invoices/failed", "GET");
-      const billingsData = data || [];
+      setLoading(true);
+      const data = await apiCall(url, "GET");
+
+      const topUsersData = data?.results?.users || [];
+      if (!Array.isArray(topUsersData)) {
+        throw new Error(
+          `Expected an array in results.users but got: ${JSON.stringify(
+            topUsersData
+          )}`
+        );
+      }
+
+      const extractedData = topUsersData.map((user: any) => ({
+        id: user.id || "N/A",
+        first_name: user.first_name || "N/A",
+        sharemundo_links_id: user.sharemundo_links_id || "N/A",
+        user_type: user.user_type || "N/A",
+        last_12_month_revenue: user.last_12_month_revenue || 0,
+        next_12_month_revenue: user.next_12_month_revenue || 0,
+        total_revenue: user.total_revenue || 0,
+      }));
+
+      setTopUserData(extractedData);
+      console.log("Extracted Top User Data:", extractedData);
+
+      setTopUserNextPageUrl(data?.next || null);
+      setTopUserPreviousPageUrl(data?.previous || null);
+      setTopUserTotalPages(Math.ceil((data?.count || 0) / 10));
+      setLoading(false);
+    } catch (err) {
+      console.error("Error fetching top user data:", err);
+      setLoading(false);
+    }
+  };
+
+  const handleTopUserNextPage = () => {
+    if (topUserNextPageUrl) {
+      setTopUserCurrentPage((prev) => prev + 1);
+      fetchTopUserData(topUserNextPageUrl);
+    }
+  };
+
+  const handleTopUserPreviousPage = () => {
+    if (topUserPreviousPageUrl) {
+      setTopUserCurrentPage((prev) => prev - 1);
+      fetchTopUserData(topUserPreviousPageUrl);
+    }
+  };
+
+  useEffect(() => {
+    fetchTopUserData("/admin-dashboard/invoices/paid");
+  }, []);
+
+  const fetchBillingData = async (url: string) => {
+    console.log("fetchBillingData called with URL:", url);
+
+    try {
+      const data = await apiCall(url, "GET");
+      console.log("API Response (Billing):", data);
+      const billingsData = data?.results?.users || [];
+      if (!Array.isArray(billingsData)) {
+        throw new Error(
+          `Expected an array in results.users but got: ${JSON.stringify(
+            billingsData
+          )}`
+        );
+      }
 
       const extractedData = billingsData.map((user: any) => {
         const invoice = user.invoices?.[0] || {};
@@ -93,47 +167,27 @@ const Billings = () => {
           invoice_pdf: invoice.invoice_pdf || "N/A",
         };
       });
+
       setBillingData(extractedData);
+      console.log("Extracted Billing Data:", extractedData);
+
       setNextPageUrl(data?.next || null);
       setPreviousPageUrl(data?.previous || null);
       setTotalPages(Math.ceil((data?.count || 0) / 10));
-      setBillingData(extractedData);
       setLoading(false);
     } catch (err) {
       console.error("Error fetching billing data:", err);
       setLoading(false);
     }
   };
+
   useEffect(() => {
     fetchBillingData("/admin-dashboard/invoices/failed");
   }, []);
+
   useEffect(() => {
-    const fetchTopUserDataData = async () => {
-      try {
-        setLoading(true);
-
-        const data = await apiCall("/admin-dashboard/invoices/paid", "GET");
-
-        const extractedData = data.map((user: any) => ({
-          id: user.id || "N/a",
-          first_name: user.first_name || "N/A",
-          sharemundo_links_id: user.sharemundo_links_id || "N/A",
-          user_type: user.user_type || "N/A",
-          last_12_month_revenue: user.last_12_month_revenue || 0,
-          next_12_month_revenue: user.next_12_month_revenue || 0,
-          total_revenue: user.total_revenue || 0,
-        }));
-        setTopUserData(extractedData);
-        setLoading(false);
-      } catch (err) {
-        console.error("Error fetching top user data:", err);
-        setLoading(false);
-      }
-    };
-
-    fetchTopUserDataData();
+    fetchTopUserData("/admin-dashboard/invoices/paid");
   }, []);
-
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -201,13 +255,6 @@ const Billings = () => {
       fetchBillingData(previousPageUrl);
     }
   };
-  if (loading) {
-    return (
-      <div>
-        <Loader />
-      </div>
-    );
-  }
   const handleExportToExcel = async (
     section: "paymentIssues" | "topCustomers"
   ) => {
@@ -253,6 +300,13 @@ const Billings = () => {
     }
   };
 
+  if (loading) {
+    return (
+      <div>
+        <Loader />
+      </div>
+    );
+  }
   return (
     <>
       <Box
@@ -333,7 +387,7 @@ const Billings = () => {
             }}
           >
             <AgGridServerSideTable
-              rowData={billingData}
+              rowData={billingData || []}
               columnDefs={BillingPaymentCol}
               currentPage={currentPage}
               totalPages={totalPages}
@@ -374,14 +428,14 @@ const Billings = () => {
             }}
           >
             <AgGridServerSideTable
-              rowData={topUserData}
+              rowData={topUserData || []}
               columnDefs={BillingCustomerCol}
-              currentPage={currentPage}
-              totalPages={totalPages}
-              nextPageUrl={nextPageUrl}
-              previousPageUrl={previousPageUrl}
-              onNextPage={handleNextPage}
-              onPreviousPage={handlePreviousPage}
+              currentPage={topUserCurrentPage}
+              totalPages={topUserTotalPages}
+              nextPageUrl={topUserNextPageUrl}
+              previousPageUrl={topUserPreviousPageUrl}
+              onNextPage={handleTopUserNextPage}
+              onPreviousPage={handleTopUserPreviousPage}
               height={580}
               rowSelection={true}
               handleRowSelection={handleRowSelection}

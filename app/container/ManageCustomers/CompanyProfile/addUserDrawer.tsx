@@ -1,30 +1,21 @@
 import CustomButton from "@/app/components/common/CustomButton";
-import CustomSelect from "@/app/components/common/CustomSelect";
 import CustomTextField from "@/app/components/common/CustomTextfield";
 import {
   Box,
   Divider,
   Drawer,
-  SelectChangeEvent,
   Stack,
   Typography,
 } from "@mui/material";
 import React, { useState } from "react";
 import CustomCheckbox from "@/app/components/common/CustomCheckBox";
 import PasswordField from "@/app/components/common/CustomPassword";
-import { Role } from "./solutionData";
 
 const AddUserDrawer: React.FC<any> = ({
   open,
   handleClose,
 }) => {
-  const [selectedrole, setSelectedRole] = useState("");
   const [password, ] = useState("password");
-
-  const handleSelectChange = (event: SelectChangeEvent) => {
-    setSelectedRole(event.target.value as string);
-  };
-
   return (
     <>
       <Drawer

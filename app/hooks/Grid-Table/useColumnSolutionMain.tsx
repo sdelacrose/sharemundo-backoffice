@@ -1,5 +1,4 @@
 import ActionSolutions from "@/app/components/Data-Table/ActionSolutions";
-import Actions from "@/app/components/Data-Table/ActionSolutions";
 import StatusCheck from "@/app/components/Data-Table/StatusCheck";
 import { useMemo } from "react";
 interface Column {
