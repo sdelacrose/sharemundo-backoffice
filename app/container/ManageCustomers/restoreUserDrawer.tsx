@@ -40,10 +40,10 @@ const RestoreUserDrawer: React.FC<any> = ({ open, handleClose, handleRestoreUser
         >
           <Stack gap={3}>
             <Typography variant="h3" letterSpacing={"0.4px"}>
-              Remove Connection?
+              Restore Connection?
             </Typography>
             <Typography variant="caption" fontSize={14} color="#667185">
-              Do you want to remove this connection?
+              Do you want to restore this connection?
             </Typography>
             <Box
               sx={{
@@ -66,7 +66,7 @@ const RestoreUserDrawer: React.FC<any> = ({ open, handleClose, handleRestoreUser
                 padding="16px 24px"
                 onClick={handleRestoreUser}
               >
-                Remove
+                Restore
               </CustomButton>
             </Box>
           </Stack>

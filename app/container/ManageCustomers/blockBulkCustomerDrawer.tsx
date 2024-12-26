@@ -48,7 +48,7 @@ const BlockBulkCustomerDrawer: React.FC<BlockBulkCustomerDrawerProps> = ({
         >
           <Stack gap={3}>
             <Typography variant="h3" letterSpacing={"0.4px"}>
-              Block User(s)?
+              Block Bulk Customers?
             </Typography>
             <Typography variant="caption" fontSize={14} color="#667185">
               You are about to block the following users:

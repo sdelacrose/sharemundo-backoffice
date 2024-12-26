@@ -9,6 +9,10 @@ import { Adduser, BlockUser, Search } from "@/app/assets/icons";
 import AgGridServerSideTable from "@/app/ag-grid/AgGridServerSideTable";
 import { apiCall } from "@/app/utils/APIUtils";
 import RemoveConnectionDrawer from "../removeConnectionDrawer";
+import RemoveUserDrawer from "../removeUserDrawer";
+import RestoreUserDrawer from "../restoreUserDrawer";
+import RemoveBulkUsersDrawer from "../removeBulkUsersDrawer";
+import RestoreBulkUsersDrawer from "../restoreBulkUsersDrawer";
 
 const UserConnectionTab = ({ id, setActiveTab }: any) => {
   const [viewMode, setViewMode] = useState<"internal" | "connections">(
@@ -23,6 +27,15 @@ const UserConnectionTab = ({ id, setActiveTab }: any) => {
   const [selectedRowId, setSelectedRowId] = useState<number | null>(null);
   const [removeDrawerOpen, setRemoveDrawerOpen] = useState(false);
   const [, setSelectedFilter] = useState<string | null>(null);
+  const [removeUserDrawerOpen, setRemoveUserDrawerOpen] = useState(false);
+  const [restoreUserDrawerOpen, setRestoreUserDrawerOpen] = useState(false);
+  const [removeBulkUsersDrawerOpen, setRemoveBulkUsersDrawerOpen] =
+    useState(false);
+  const [restoreBulkUsersDrawerOpen, setRestoreBulkUsersDrawerOpen] =
+    useState(false);
+  const [selectedUserIds, setSelectedUserIds] = useState<number[]>([]);
+  const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
+  const [selectedRows, setSelectedRows] = useState([]);
 
   const handleSelect = (label: string | null) => {
     console.log("Selected filter:", label);
@@ -30,7 +43,7 @@ const UserConnectionTab = ({ id, setActiveTab }: any) => {
   };
 
   const handleViewClick = () => {
-    setActiveTab(0); // Switch to the Profile Tab
+    setActiveTab(0);
   };
 
   const handleOpenRemoveDrawer = (data: any) => {
@@ -82,11 +95,7 @@ const UserConnectionTab = ({ id, setActiveTab }: any) => {
       headerName: "Actions",
       flex: 1,
       cellRenderer: ({ data }: any) => (
-        <Box
-          display="flex"
-          gap={1}
-          sx={{ marginTop: "8px", marginLeft: "-14px" }}
-        >
+        <Box display="flex" gap={1} sx={{ marginTop: "8px", marginLeft:"-14px" }}>
           <Button
             variant="text"
             color="primary"
@@ -94,14 +103,30 @@ const UserConnectionTab = ({ id, setActiveTab }: any) => {
           >
             View
           </Button>
-          <Button
-            variant="text"
-            color="error"
-            sx={{ color: "red" }}
-            onClick={() => handleOpenRemoveDrawer(data)}
-          >
-            Remove
-          </Button>
+          {data.is_deleted ? (
+            <Button
+              variant="text"
+              sx={{color:"green"}}
+              onClick={() => {
+                setSelectedUserId(data.id);
+                setRestoreUserDrawerOpen(true);
+              }}
+            >
+              Restore
+            </Button>
+          ) : (
+            <Button
+              variant="text"
+              color="error"
+              sx={{ color: "red" }}
+              onClick={() => {
+                setSelectedUserId(data.id);
+                setRemoveUserDrawerOpen(true);
+              }}
+            >
+              Remove
+            </Button>
+          )}
         </Box>
       ),
     },
@@ -182,6 +207,7 @@ const UserConnectionTab = ({ id, setActiveTab }: any) => {
           status: user.is_active ? "Active" : "Disabled",
           role: user.role.charAt(0).toUpperCase() + user.role.slice(1),
           allocated_licenses: user.allocated_licenses,
+          is_deleted:user.is_deleted
         }));
         setRowData(users);
         setFilteredRowData(users);
@@ -207,6 +233,12 @@ const UserConnectionTab = ({ id, setActiveTab }: any) => {
       fetchUsersOrConnections(previousPageUrl, viewMode === "connections");
       setCurrentPage((prev) => prev - 1);
     }
+  };
+
+  const handleRowSelection = (event) => {
+    const selected = event.api.getSelectedRows();
+    setSelectedRows(selected);
+    console.log("Selected Rows: ", selected);
   };
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -236,6 +268,96 @@ const UserConnectionTab = ({ id, setActiveTab }: any) => {
       );
     }
   }, [viewMode, id]);
+
+  const handleRemoveUser = async (userId: number) => {
+    try {
+      await apiCall(
+        `/admin-dashboard/remove-restore-user`,
+        "POST",
+        {
+          user_ids: [userId],
+          is_deleted: true,
+        },
+        null,
+        { successMessage: "User removed successfully!" }
+      );
+      fetchUsersOrConnections(`/admin-dashboard/customers/${id}/users`, false);
+      setRemoveUserDrawerOpen(false);
+    } catch (error) {
+      console.error("Failed to remove user:", error);
+    }
+  };
+
+  const handleRestoreUser = async (userId: number) => {
+    try {
+      await apiCall(
+        `/admin-dashboard/remove-restore-user`,
+        "POST",
+        {
+          user_ids: [userId],
+          is_deleted: false,
+        },
+        null,
+        { successMessage: "User restored successfully!" }
+      );
+      fetchUsersOrConnections(`/admin-dashboard/customers/${id}/users`, false);
+      setRestoreUserDrawerOpen(false);
+    } catch (error) {
+      console.error("Failed to restore user:", error);
+    }
+  };
+
+  const handleRemoveBulkUsers = async () => {
+    try {
+      const idsToRemove = selectedRows.map((row: any) => row.id); // Extract IDs from selected rows
+      if (idsToRemove.length === 0) {
+        console.warn("No users selected for bulk removal");
+        return;
+      }
+  
+      await apiCall(
+        `/admin-dashboard/remove-restore-user`,
+        "POST",
+        {
+          user_ids: idsToRemove,
+          is_deleted: true,
+        },
+        null,
+        { successMessage: "Users removed successfully!" }
+      );
+  
+      setRemoveBulkUsersDrawerOpen(false);
+      fetchUsersOrConnections(`/admin-dashboard/customers/${id}/users`, false);
+    } catch (error) {
+      console.error("Failed to remove users:", error);
+    }
+  };
+  
+  const handleRestoreBulkUsers = async () => {
+    try {
+      const idsToRestore = selectedRows.map((row: any) => row.id); // Extract IDs from selected rows
+      if (idsToRestore.length === 0) {
+        console.warn("No users selected for bulk restoration");
+        return;
+      }
+  
+      await apiCall(
+        `/admin-dashboard/remove-restore-user`,
+        "POST",
+        {
+          user_ids: idsToRestore,
+          is_deleted: false,
+        },
+        null,
+        { successMessage: "Users restored successfully!" }
+      );
+  
+      setRestoreBulkUsersDrawerOpen(false);
+      fetchUsersOrConnections(`/admin-dashboard/customers/${id}/users`, false);
+    } catch (error) {
+      console.error("Failed to restore users:", error);
+    }
+  };
 
   return (
     <>
@@ -277,7 +399,11 @@ const UserConnectionTab = ({ id, setActiveTab }: any) => {
 
         {viewMode === "internal" && (
           <Box mb={3}>
-            <Box display="flex" alignItems="center" justifyContent="space-between">
+            <Box
+              display="flex"
+              alignItems="center"
+              justifyContent="space-between"
+            >
               <ButtonGroup variant="outlined" aria-label="Basic button group">
                 <Button
                   startIcon={<Adduser />}
@@ -294,19 +420,20 @@ const UserConnectionTab = ({ id, setActiveTab }: any) => {
                 >
                   Add User
                 </Button>
+
                 <Button
                   startIcon={<BlockUser />}
-                  // onClick={() => setActivateBulkCustomersDrawerOpen(true)}
-                  // disabled={selectedRows.length === 0}
+                  onClick={() => setRemoveBulkUsersDrawerOpen(true)}
+                  disabled={selectedRows.length === 0}
                 >
-                  Restore Bulk Users
+                  Remove Bulk Users
                 </Button>
                 <Button
                   startIcon={<BlockUser />}
-                  // onClick={() => setBlockBulkCustomersDrawerOpen(true)}
-                  // disabled={selectedRows.length === 0}
+                  onClick={() => setRestoreBulkUsersDrawerOpen(true)}
+                  disabled={selectedRows.length === 0}
                 >
-                  Remove Bulk Users
+                  Restore Bulk Users
                 </Button>
               </ButtonGroup>
               <Box mr={4} display={"flex"} alignItems={"center"} gap={2}>
@@ -372,6 +499,8 @@ const UserConnectionTab = ({ id, setActiveTab }: any) => {
             totalPages={totalPages}
             onNextPage={handleNextPage}
             onPreviousPage={handlePreviousPage}
+            rowSelection={true}
+            handleRowSelection={handleRowSelection}
           />
         </Box>
       </Box>
@@ -382,6 +511,43 @@ const UserConnectionTab = ({ id, setActiveTab }: any) => {
           handleClose={handleCloseRemoveDrawer}
           handleRemoveConnection={handleRemoveConnection}
         />
+      )}
+      {removeUserDrawerOpen && (
+     <RemoveUserDrawer
+     open={removeUserDrawerOpen}
+     handleClose={() => setRemoveUserDrawerOpen(false)}
+     handleRemoveUser={() => handleRemoveUser(selectedUserId!)}
+   />
+      )}
+
+      {restoreUserDrawerOpen && (
+       <RestoreUserDrawer
+       open={restoreUserDrawerOpen}
+       handleClose={() => setRestoreUserDrawerOpen(false)}
+       handleRestoreUser={() => handleRestoreUser(selectedUserId!)}
+     />
+      )}
+      {removeBulkUsersDrawerOpen && (
+       <RemoveBulkUsersDrawer
+       open={removeBulkUsersDrawerOpen}
+       handleClose={() => setRemoveBulkUsersDrawerOpen(false)}
+       handleRemove={handleRemoveBulkUsers}
+       selectedUsers={selectedRows.map((row:any) => ({
+         id: row.id,
+         name: row.name || `User ID: ${row.id}`,
+       }))}
+     />
+      )}
+      {restoreBulkUsersDrawerOpen && (
+        <RestoreBulkUsersDrawer
+        open={restoreBulkUsersDrawerOpen}
+        handleClose={() => setRestoreBulkUsersDrawerOpen(false)}
+        handleRestore={handleRestoreBulkUsers}
+        selectedUsers={selectedRows.map((row:any) => ({
+          id: row.id,
+          name: row.name || `User ID: ${row.id}`,
+        }))}
+      />
       )}
     </>
   );

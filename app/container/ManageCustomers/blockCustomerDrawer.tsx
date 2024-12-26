@@ -40,10 +40,10 @@ const BlockCustomerDrawer: React.FC<any> = ({ open, handleClose, handleBlock }) 
         >
           <Stack gap={3}>
             <Typography variant="h3" letterSpacing={"0.4px"}>
-              Block User(s)?{" "}
+              Block Customer?
             </Typography>
             <Typography variant="caption" fontSize={14} color="#667185">
-              Do you want to block user XYZ?
+              Do you want to block customer?
             </Typography>
             <Box
               sx={{

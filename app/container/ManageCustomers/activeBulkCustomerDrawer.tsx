@@ -3,14 +3,14 @@ import CustomButton from "@/app/components/common/CustomButton";
 import { Box, Drawer, Stack, Typography } from "@mui/material";
 import React from "react";
 
-interface BlockBulkCustomerDrawerProps {
+interface ActiveBulkCustomerDrawerProps {
   open: boolean;
   handleClose: () => void;
   handleActivate: () => void;
   selectedUsers: { id: number; name: string }[]; // Pass selected user details
 }
 
-const BlockBulkCustomerDrawer: React.FC<BlockBulkCustomerDrawerProps> = ({
+const ActiveBulkCustomerDrawer: React.FC<ActiveBulkCustomerDrawerProps> = ({
   open,
   handleClose,
   handleActivate,
@@ -48,7 +48,7 @@ const BlockBulkCustomerDrawer: React.FC<BlockBulkCustomerDrawerProps> = ({
         >
           <Stack gap={3}>
             <Typography variant="h3" letterSpacing={"0.4px"}>
-              Block User(s)?
+              Active Bulk Customers?
             </Typography>
             <Typography variant="caption" fontSize={14} color="#667185">
               You are about to activate the following users:
@@ -110,4 +110,4 @@ const BlockBulkCustomerDrawer: React.FC<BlockBulkCustomerDrawerProps> = ({
   );
 };
 
-export default BlockBulkCustomerDrawer;
+export default ActiveBulkCustomerDrawer;
