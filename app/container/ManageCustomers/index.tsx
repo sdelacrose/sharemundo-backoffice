@@ -257,6 +257,7 @@ const ManageCustomers = ({ customerDetail }: any) => {
       setActiveDrawerOpen(true);
     },
   });
+
   if (loading) {
     return (
       <div>
@@ -264,6 +265,7 @@ const ManageCustomers = ({ customerDetail }: any) => {
       </div>
     );
   }
+
   return (
     <>
       <Box
@@ -317,14 +319,7 @@ const ManageCustomers = ({ customerDetail }: any) => {
             <Button
               startIcon={<Adduser />}
               onClick={handleAddDrawer}
-              sx={{
-                color: "inherit",
-                backgroundColor: "transparent",
-                "&.Mui-disabled": {
-                  color: "inherit",
-                  backgroundColor: "transparent",
-                },
-              }}
+          
             >
               Add Customers
             </Button>
@@ -332,6 +327,13 @@ const ManageCustomers = ({ customerDetail }: any) => {
               startIcon={<BlockUser />}
               onClick={() => setActivateBulkCustomersDrawerOpen(true)}
               disabled={selectedRows.length === 0}
+              sx={{
+                color: "inherit",
+                "&.Mui-disabled": {
+                  color: "inherit",
+                  backgroundColor: "#F0F2F5",
+                },
+              }}
             >
               Active Bulk Users
             </Button>
@@ -339,6 +341,13 @@ const ManageCustomers = ({ customerDetail }: any) => {
               startIcon={<BlockUser />}
               onClick={() => setBlockBulkCustomersDrawerOpen(true)}
               disabled={selectedRows.length === 0}
+              sx={{
+                color: "inherit",
+                "&.Mui-disabled": {
+                  color: "inherit",
+                  backgroundColor: "#F0F2F5",
+                },
+              }}
             >
               Block Bulk Users
             </Button>

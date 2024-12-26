@@ -64,7 +64,7 @@ const BlockBulkCustomerDrawer: React.FC<BlockBulkCustomerDrawerProps> = ({
             >
               {selectedUsers.map((user) => (
                 <Typography key={user.id} variant="body2" color="#667185">
-                  - {user.name || `User ID: ${user.id}`}
+                  - {user.name || `Customer ID: ${user.id}`}
                 </Typography>
               ))}
             </Box>
