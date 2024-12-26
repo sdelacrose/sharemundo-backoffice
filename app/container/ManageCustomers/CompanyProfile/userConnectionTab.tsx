@@ -13,6 +13,7 @@ import RemoveUserDrawer from "../Drawers/removeUserDrawer";
 import RestoreUserDrawer from "../Drawers/restoreUserDrawer";
 import RemoveBulkUsersDrawer from "../Drawers/removeBulkUsersDrawer";
 import RestoreBulkUsersDrawer from "../Drawers/restoreBulkUsersDrawer";
+import AddUserDrawer from "./addUserDrawer";
 
 const UserConnectionTab = ({ id, setActiveTab }: any) => {
   const [viewMode, setViewMode] = useState<"internal" | "connections">(
@@ -36,6 +37,7 @@ const UserConnectionTab = ({ id, setActiveTab }: any) => {
   const [selectedUserIds, setSelectedUserIds] = useState<number[]>([]);
   const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
   const [selectedRows, setSelectedRows] = useState([]);
+  const [addUserDrawerOpen, setAddUserDrawerOpen] = useState(false);
 
   const handleSelect = (label: string | null) => {
     console.log("Selected filter:", label);
@@ -411,6 +413,7 @@ const UserConnectionTab = ({ id, setActiveTab }: any) => {
               <ButtonGroup variant="outlined" aria-label="Basic button group">
                 <Button
                   startIcon={<Adduser />}
+                  onClick={() => setAddUserDrawerOpen(true)}
                 >
                   Add User
                 </Button>
@@ -420,14 +423,16 @@ const UserConnectionTab = ({ id, setActiveTab }: any) => {
                   onClick={() => setRemoveBulkUsersDrawerOpen(true)}
                   disabled={selectedRows.length === 0}
                   sx={
-                    selectedRows.length === 0 ? {
-                      color: "inherit",
-                      backgroundColor: "#F0F2F5",
-                      "&.Mui-disabled": {
-                        color: "inherit",
-                        backgroundColor: "#F0F2F5",
-                      },
-                    } : {}
+                    selectedRows.length === 0
+                      ? {
+                          color: "inherit",
+                          backgroundColor: "#F0F2F5",
+                          "&.Mui-disabled": {
+                            color: "inherit",
+                            backgroundColor: "#F0F2F5",
+                          },
+                        }
+                      : {}
                   }
                 >
                   Remove Bulk Users
@@ -437,14 +442,16 @@ const UserConnectionTab = ({ id, setActiveTab }: any) => {
                   onClick={() => setRestoreBulkUsersDrawerOpen(true)}
                   disabled={selectedRows.length === 0}
                   sx={
-                    selectedRows.length === 0 ? {
-                      color: "inherit",
-                      backgroundColor: "#F0F2F5",
-                      "&.Mui-disabled": {
-                        color: "inherit",
-                        backgroundColor: "#F0F2F5",
-                      },
-                    } : {}
+                    selectedRows.length === 0
+                      ? {
+                          color: "inherit",
+                          backgroundColor: "#F0F2F5",
+                          "&.Mui-disabled": {
+                            color: "inherit",
+                            backgroundColor: "#F0F2F5",
+                          },
+                        }
+                      : {}
                   }
                 >
                   Restore Bulk Users
@@ -519,11 +526,10 @@ const UserConnectionTab = ({ id, setActiveTab }: any) => {
         </Box>
       </Box>
 
-      {removeDrawerOpen && (
-        <RemoveConnectionDrawer
-          open={removeDrawerOpen}
-          handleClose={handleCloseRemoveDrawer}
-          handleRemoveConnection={handleRemoveConnection}
+      {addUserDrawerOpen && (
+        <AddUserDrawer
+          open={addUserDrawerOpen}
+          handleClose={() => setAddUserDrawerOpen(false)}
         />
       )}
       {removeUserDrawerOpen && (

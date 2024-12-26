@@ -85,16 +85,6 @@ const AddUserDrawer: React.FC<any> = ({
               />
             </Box>
             <Box ml={4}>
-              <CustomSelect
-                label="Preferred Language*"
-                value={selectedrole}
-                onChange={handleSelectChange}
-                options={Role}
-                required
-                placeholder="role"
-              />
-            </Box>
-            <Box ml={4}>
               <CustomCheckbox label="Automatically Create Password" />
             </Box>
             <Box>
