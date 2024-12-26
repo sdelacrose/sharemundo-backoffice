@@ -7,8 +7,8 @@ export const filterItems = [
   { label: "Year" },
 ];
 export const Role = [
-  { value: "1", label: "Freelancer" },
-  { value: "2", label: "Company" },
+  { value: "freelancer", label: "Freelancer" },
+  { value: "company_user", label: "Company" },
 ];
 
 export const filterByRoleItems = [

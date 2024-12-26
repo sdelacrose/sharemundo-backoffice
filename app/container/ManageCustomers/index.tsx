@@ -68,6 +68,10 @@ const ManageCustomers = ({ customerDetail }: any) => {
     setSelectedIds([]);
   };
 
+  const handleCloseCustomerDrawer = () => {
+    setAddDrawer(false);
+  };
+
   useEffect(() => {
     const fetchCustomerStats = async () => {
       try {
@@ -84,12 +88,6 @@ const ManageCustomers = ({ customerDetail }: any) => {
 
     fetchCustomerStats();
   }, []);
-
-  // const manageUserCol = useColumnManageUserDefs({
-  //   columns: manageCustomersColumnDefs,
-  //   onBlockClick: (id) => handleBlockUser(id), // For blocking users
-  //   onActivateClick: (id) => handleActivateUser(id), // For activating users
-  // });
 
   const fetchCustomers = async (url: string) => {
     try {
@@ -243,6 +241,11 @@ const ManageCustomers = ({ customerDetail }: any) => {
     setActiveDrawerOpen(false);
   };
 
+  const handleCustomerAdded = async () => {
+    await fetchCustomers("/admin-dashboard/customers");
+    setAddDrawer(false);
+  };
+
   const manageUserCol = useColumnManageUserDefs({
     columns: manageCustomersColumnDefs,
     onBlockClick: (id) => {
@@ -314,7 +317,6 @@ const ManageCustomers = ({ customerDetail }: any) => {
             <Button
               startIcon={<Adduser />}
               onClick={handleAddDrawer}
-              disabled={true}
               sx={{
                 color: "inherit",
                 backgroundColor: "transparent",
@@ -381,8 +383,10 @@ const ManageCustomers = ({ customerDetail }: any) => {
           />
         </Box>
         {addDrawer && (
-          // <AddCustomerDrawer open={addDrawer} handleClose={handleCloseDrawer} />
-          <></>
+          <AddCustomerDrawer open={addDrawer} 
+          handleClose={handleCloseCustomerDrawer}
+         onCustomerAdded={handleCustomerAdded}
+           />
         )}
         {blockDrawerOpen && (
           <BlockCustomerDrawer
