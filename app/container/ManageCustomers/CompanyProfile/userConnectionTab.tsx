@@ -95,7 +95,11 @@ const UserConnectionTab = ({ id, setActiveTab }: any) => {
       headerName: "Actions",
       flex: 1,
       cellRenderer: ({ data }: any) => (
-        <Box display="flex" gap={1} sx={{ marginTop: "8px", marginLeft:"-14px" }}>
+        <Box
+          display="flex"
+          gap={1}
+          sx={{ marginTop: "8px", marginLeft: "-14px" }}
+        >
           <Button
             variant="text"
             color="primary"
@@ -106,7 +110,7 @@ const UserConnectionTab = ({ id, setActiveTab }: any) => {
           {data.is_deleted ? (
             <Button
               variant="text"
-              sx={{color:"green"}}
+              sx={{ color: "green" }}
               onClick={() => {
                 setSelectedUserId(data.id);
                 setRestoreUserDrawerOpen(true);
@@ -207,7 +211,7 @@ const UserConnectionTab = ({ id, setActiveTab }: any) => {
           status: user.is_active ? "Active" : "Disabled",
           role: user.role.charAt(0).toUpperCase() + user.role.slice(1),
           allocated_licenses: user.allocated_licenses,
-          is_deleted:user.is_deleted
+          is_deleted: user.is_deleted,
         }));
         setRowData(users);
         setFilteredRowData(users);
@@ -314,7 +318,7 @@ const UserConnectionTab = ({ id, setActiveTab }: any) => {
         console.warn("No users selected for bulk removal");
         return;
       }
-  
+
       await apiCall(
         `/admin-dashboard/remove-restore-user`,
         "POST",
@@ -325,14 +329,14 @@ const UserConnectionTab = ({ id, setActiveTab }: any) => {
         null,
         { successMessage: "Users removed successfully!" }
       );
-  
+
       setRemoveBulkUsersDrawerOpen(false);
       fetchUsersOrConnections(`/admin-dashboard/customers/${id}/users`, false);
     } catch (error) {
       console.error("Failed to remove users:", error);
     }
   };
-  
+
   const handleRestoreBulkUsers = async () => {
     try {
       const idsToRestore = selectedRows.map((row: any) => row.id); // Extract IDs from selected rows
@@ -340,7 +344,7 @@ const UserConnectionTab = ({ id, setActiveTab }: any) => {
         console.warn("No users selected for bulk restoration");
         return;
       }
-  
+
       await apiCall(
         `/admin-dashboard/remove-restore-user`,
         "POST",
@@ -351,7 +355,7 @@ const UserConnectionTab = ({ id, setActiveTab }: any) => {
         null,
         { successMessage: "Users restored successfully!" }
       );
-  
+
       setRestoreBulkUsersDrawerOpen(false);
       fetchUsersOrConnections(`/admin-dashboard/customers/${id}/users`, false);
     } catch (error) {
@@ -407,16 +411,6 @@ const UserConnectionTab = ({ id, setActiveTab }: any) => {
               <ButtonGroup variant="outlined" aria-label="Basic button group">
                 <Button
                   startIcon={<Adduser />}
-                  // onClick={handleAddDrawer}
-                  // disabled={true}
-                  sx={{
-                    color: "inherit",
-                    backgroundColor: "transparent",
-                    "&.Mui-disabled": {
-                      color: "inherit",
-                      backgroundColor: "transparent",
-                    },
-                  }}
                 >
                   Add User
                 </Button>
@@ -425,6 +419,16 @@ const UserConnectionTab = ({ id, setActiveTab }: any) => {
                   startIcon={<BlockUser />}
                   onClick={() => setRemoveBulkUsersDrawerOpen(true)}
                   disabled={selectedRows.length === 0}
+                  sx={
+                    selectedRows.length === 0 ? {
+                      color: "inherit",
+                      backgroundColor: "#F0F2F5",
+                      "&.Mui-disabled": {
+                        color: "inherit",
+                        backgroundColor: "#F0F2F5",
+                      },
+                    } : {}
+                  }
                 >
                   Remove Bulk Users
                 </Button>
@@ -432,6 +436,16 @@ const UserConnectionTab = ({ id, setActiveTab }: any) => {
                   startIcon={<BlockUser />}
                   onClick={() => setRestoreBulkUsersDrawerOpen(true)}
                   disabled={selectedRows.length === 0}
+                  sx={
+                    selectedRows.length === 0 ? {
+                      color: "inherit",
+                      backgroundColor: "#F0F2F5",
+                      "&.Mui-disabled": {
+                        color: "inherit",
+                        backgroundColor: "#F0F2F5",
+                      },
+                    } : {}
+                  }
                 >
                   Restore Bulk Users
                 </Button>
@@ -513,41 +527,41 @@ const UserConnectionTab = ({ id, setActiveTab }: any) => {
         />
       )}
       {removeUserDrawerOpen && (
-     <RemoveUserDrawer
-     open={removeUserDrawerOpen}
-     handleClose={() => setRemoveUserDrawerOpen(false)}
-     handleRemoveUser={() => handleRemoveUser(selectedUserId!)}
-   />
+        <RemoveUserDrawer
+          open={removeUserDrawerOpen}
+          handleClose={() => setRemoveUserDrawerOpen(false)}
+          handleRemoveUser={() => handleRemoveUser(selectedUserId!)}
+        />
       )}
 
       {restoreUserDrawerOpen && (
-       <RestoreUserDrawer
-       open={restoreUserDrawerOpen}
-       handleClose={() => setRestoreUserDrawerOpen(false)}
-       handleRestoreUser={() => handleRestoreUser(selectedUserId!)}
-     />
+        <RestoreUserDrawer
+          open={restoreUserDrawerOpen}
+          handleClose={() => setRestoreUserDrawerOpen(false)}
+          handleRestoreUser={() => handleRestoreUser(selectedUserId!)}
+        />
       )}
       {removeBulkUsersDrawerOpen && (
-       <RemoveBulkUsersDrawer
-       open={removeBulkUsersDrawerOpen}
-       handleClose={() => setRemoveBulkUsersDrawerOpen(false)}
-       handleRemove={handleRemoveBulkUsers}
-       selectedUsers={selectedRows.map((row:any) => ({
-         id: row.id,
-         name: row.name || `User ID: ${row.id}`,
-       }))}
-     />
+        <RemoveBulkUsersDrawer
+          open={removeBulkUsersDrawerOpen}
+          handleClose={() => setRemoveBulkUsersDrawerOpen(false)}
+          handleRemove={handleRemoveBulkUsers}
+          selectedUsers={selectedRows.map((row: any) => ({
+            id: row.id,
+            name: row.name || `User ID: ${row.id}`,
+          }))}
+        />
       )}
       {restoreBulkUsersDrawerOpen && (
         <RestoreBulkUsersDrawer
-        open={restoreBulkUsersDrawerOpen}
-        handleClose={() => setRestoreBulkUsersDrawerOpen(false)}
-        handleRestore={handleRestoreBulkUsers}
-        selectedUsers={selectedRows.map((row:any) => ({
-          id: row.id,
-          name: row.name || `User ID: ${row.id}`,
-        }))}
-      />
+          open={restoreBulkUsersDrawerOpen}
+          handleClose={() => setRestoreBulkUsersDrawerOpen(false)}
+          handleRestore={handleRestoreBulkUsers}
+          selectedUsers={selectedRows.map((row: any) => ({
+            id: row.id,
+            name: row.name || `User ID: ${row.id}`,
+          }))}
+        />
       )}
     </>
   );

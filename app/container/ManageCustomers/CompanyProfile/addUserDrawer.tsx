@@ -13,12 +13,8 @@ import React, { useState } from "react";
 import CustomCheckbox from "@/app/components/common/CustomCheckBox";
 import PasswordField from "@/app/components/common/CustomPassword";
 import { Role } from "./solutionData";
-interface CreateNewDrawerProps {
-  open: boolean;
-  handleClose: () => void;
-}
 
-const AddUserDrawer: React.FC<CreateNewDrawerProps> = ({
+const AddUserDrawer: React.FC<any> = ({
   open,
   handleClose,
 }) => {
