@@ -53,7 +53,20 @@ const UserConnectionTab = ({ id, setActiveTab }: any) => {
       headerName: "Sharemundo Links ID",
       flex: 1,
     },
-    { field: "status", headerName: "Status", flex: 1 },
+    {
+      field: "status",
+      headerName: "Status",
+      flex: 1,
+      cellRenderer: ({ value }: any) => (
+        <Box
+          sx={{
+            color: value === "Active" ? "green" : "red",
+          }}
+        >
+          {value}
+        </Box>
+      ),
+    },
     { field: "role", headerName: "Role", flex: 1 },
     { field: "allocated_licenses", headerName: "Assigned Licenses", flex: 1 },
     {
@@ -174,7 +187,7 @@ const UserConnectionTab = ({ id, setActiveTab }: any) => {
           name: `${user.first_name} ${user.last_name}`,
           email: user.email,
           sharemundo_links_id: user.sharemundo_links_id,
-          status: user.is_active ? "Active" : "Disabled",
+          status: user.is_active ? "Active" : "Inactive",
           role: user.role.charAt(0).toUpperCase() + user.role.slice(1),
           allocated_licenses: user.allocated_licenses,
           is_deleted: user.is_deleted,

@@ -74,7 +74,7 @@ const useColumnSolutionMain = (
                 buttons.push({
                   label: "Resume",
                   actionType: "resume",
-                  color: "#34C759",
+                  color: "green",
                 });
               } else if (status === "Active") {
                 buttons.push({
