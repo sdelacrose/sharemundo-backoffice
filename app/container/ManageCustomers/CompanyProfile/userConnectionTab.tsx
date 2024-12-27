@@ -15,6 +15,7 @@ import RemoveBulkUsersDrawer from "../Drawers/removeBulkUsersDrawer";
 import RestoreBulkUsersDrawer from "../Drawers/restoreBulkUsersDrawer";
 import AddUserDrawer from "./addUserDrawer";
 import { filterByConnectionItems, filterByUserTypeItems } from "../manageData";
+import StatusBadge from "@/app/utils/StatusBadge";
 
 const UserConnectionTab = ({ id, setActiveTab, companyId }: any) => {
   const [viewMode, setViewMode] = useState<"internal" | "connections">(
@@ -55,12 +56,12 @@ const UserConnectionTab = ({ id, setActiveTab, companyId }: any) => {
       headerName: "Status",
       flex: 1,
       cellRenderer: ({ value }: any) => (
-        <Box
-          sx={{
-            color: value === "Active" ? "green" : "red",
-          }}
-        >
-          {value}
+        <Box>
+          {value === "Active" ? (
+            <StatusBadge color="#036B26" text="Active" background="#E7F6EC" />
+          ) : (
+            <StatusBadge color="#865503" text="Inactive" background="#FEF6E7" />
+          )}
         </Box>
       ),
     },
@@ -421,7 +422,6 @@ const UserConnectionTab = ({ id, setActiveTab, companyId }: any) => {
   const handleUserAdded = async () => {
     fetchUsersOrConnections(`/admin-dashboard/customers/${id}/users`, false);
   };
-
 
   return (
     <>

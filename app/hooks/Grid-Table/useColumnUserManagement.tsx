@@ -56,26 +56,6 @@ const useColumnUserManagement = (columns: Column[]) => {
             valueFormatter: (params: any) =>
               params.value ? DateFormat(params.value) : "N/A",
           };
-
-        // case "actions":
-        //   return {
-        //     field: "actions",
-        //     headerName: "Actions",
-        //     width: 120,
-        //     cellRenderer: Actions,
-        //     cellRendererParams: {
-        //       viewText: "View",
-        //       removeText: "",
-        //     },
-        //     headerStyle: {
-        //       justifyContent: "end",
-        //       display: "flex",
-        //       flex: 1,
-        //     },
-        //     cellStyle: { display: "flex" },
-        //     valueFormatter: (params: any) =>
-        //       params.value ? params.value : "N/A",
-        //   };
         case "actions":
           return {
             ...col,

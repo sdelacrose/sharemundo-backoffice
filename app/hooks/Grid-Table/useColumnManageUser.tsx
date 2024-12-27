@@ -1,8 +1,9 @@
 "use client";
 import { useMemo } from "react";
-import { Button } from "@mui/material";
+import { Box, Button } from "@mui/material";
 import LastColumnHeader from "@/app/components/common/LastColumnHeader";
 import { useRouter } from "next/navigation";
+import StatusBadge from "@/app/utils/StatusBadge";
 
 const useColumnManageUserDefs = ({
   columns,
@@ -57,9 +58,11 @@ const useColumnManageUserDefs = ({
             flex: 0.7,
             headerName: "Status",
             cellRenderer: (params) => (
-              <span style={{ color: params.data.is_active ? "green" : "red" }}>
-                {params.data.is_active ? "Active" : "Inactive"}
-              </span>
+              <StatusBadge
+                color={params.data.is_active ? "#036B26" : "#865503"}
+                text={params.data.is_active ? "Active" : "Inactive"}
+                background={params.data.is_active ? "#E7F6EC" : "#FEF6E7"}
+              />
             ),
           };
         case "number_of_admins":
