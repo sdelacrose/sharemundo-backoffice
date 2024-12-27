@@ -3,7 +3,6 @@ import {
   Box,
   Divider,
   Drawer,
-  SelectChangeEvent,
   Stack,
   Typography,
 } from "@mui/material";

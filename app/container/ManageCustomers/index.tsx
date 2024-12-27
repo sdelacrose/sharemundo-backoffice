@@ -27,7 +27,7 @@ import ActiveBulkCustomerDrawer from "./Drawers/activeBulkCustomerDrawer";
 import ActiveCustomerDrawer from "./Drawers/activeCustomerDrawer";
 import Loader from "@/app/components/common/Loader";
 
-const ManageCustomers = ({ customerDetail }: any) => {
+const ManageCustomers = () => {
   const context = useContext(SidebarContext);
   const [addDrawer, setAddDrawer] = useState(false);
   const [rowData, setRowData] = useState<any>([]);
@@ -35,8 +35,6 @@ const ManageCustomers = ({ customerDetail }: any) => {
   const [previousPageUrl, setPreviousPageUrl] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
-  const [openBlockDrawer, setBlockDrawer] = useState(false);
-  const [openBulkBlockDrawer, setBulkBlockDrawer] = useState(false);
   const [loading, setLoading] = useState(true);
 
   const [chartData, setChartData] = useState<{ name: string; value: number }[]>(

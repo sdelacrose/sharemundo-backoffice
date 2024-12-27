@@ -34,7 +34,6 @@ const UserConnectionTab = ({ id, setActiveTab, companyId }: any) => {
     useState(false);
   const [restoreBulkUsersDrawerOpen, setRestoreBulkUsersDrawerOpen] =
     useState(false);
-  const [selectedUserIds, setSelectedUserIds] = useState<number[]>([]);
   const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
   const [selectedRows, setSelectedRows] = useState([]);
   const [addUserDrawerOpen, setAddUserDrawerOpen] = useState(false);
