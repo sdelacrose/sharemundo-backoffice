@@ -28,17 +28,17 @@ export const sidebarItems: SidebarItem[] = [
     href: "/manage-customers",
   },
   {
-    label: "Manage Users ",
+    label: "Users Management",
     icon: ManageUsers,
-    href: "/user-management",
+    href: "/users-management",
   },
   {
     label: "Solutions and Licenses",
     icon: SolutionLicenses,
-    href: "/solution-license-main",
+    href: "/solutions-and-licenses",
   },
   {
-    label: "Billings",
+    label: "Billing",
     icon: Billings,
     href: "/billing",
   },
