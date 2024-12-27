@@ -24,13 +24,13 @@ export const filterbyInternalUsers = [
 ];
 
 export const filterByConnectionItems = [
-  { label: "All", key: "type", value: "all" },
-  { label: "Freelancer", key: "type", value: "freelancer" },
-  { label: "Company", key: "type", value: "company" },
+  { label: "all", value: "all" },
+  { label: "freelancer", value: "freelancer" },
+  { label: "company", value: "company" },
 ];
 
 export const filterByUserTypeItems = [
-  { label: "All", key: "user_type", value: "all" },
-  { label: "Admin", key: "user_type", value: "admin" },
-  { label: "Freelancer", key: "type", value: "freelancer" },
+  { label: "all",  value: "all" },
+  { label: "admin",  value: "admin" },
+  { label: "company_user", value: "company_user" },
 ];

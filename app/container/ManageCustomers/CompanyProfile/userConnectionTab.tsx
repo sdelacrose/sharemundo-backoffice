@@ -39,6 +39,8 @@ const UserConnectionTab = ({ id, setActiveTab, companyId }: any) => {
   const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
   const [selectedRows, setSelectedRows] = useState([]);
   const [addUserDrawerOpen, setAddUserDrawerOpen] = useState(false);
+  const [userType, setUserType] = useState<string | null>("all");
+  const [connectionType, setConnectionType] = useState<string | null>("all");
 
   const handleViewClick = () => {
     setActiveTab(0);
@@ -63,29 +65,29 @@ const UserConnectionTab = ({ id, setActiveTab, companyId }: any) => {
 
   const fetchUsersOrConnections = async (
     url: string,
-    isConnections: boolean
+    isConnections: boolean,
+    filters?: Record<string, string>
   ) => {
     try {
+      // Trim the URL for API call
       const trimmedUrl = url.includes("/admin-dashboard")
         ? url.substring(url.indexOf("/admin-dashboard"))
         : url;
-
-      const response = await apiCall(trimmedUrl);
-
+  
+      // Apply filters if provided
+      const params = new URLSearchParams(filters || {});
+      const fullUrl = `${trimmedUrl}?${params.toString()}`;
+  
+      const response = await apiCall(fullUrl);
+  
       if (isConnections) {
-        const connections = response.results.connections.map(
-          (connection: any) => ({
-            id: connection.id,
-            name: connection.name || "N/A",
-            sharemundo_links_id: connection.sharemundo_links_id,
-            type:
-              connection.type.charAt(0).toUpperCase() +
-              connection.type.slice(1),
-            connection_date: new Date(
-              connection.created_at
-            ).toLocaleDateString(),
-          })
-        );
+        const connections = response.results.connections.map((connection: any) => ({
+          id: connection.id,
+          name: connection.name || "N/A",
+          sharemundo_links_id: connection.sharemundo_links_id,
+          type: connection.type.charAt(0).toUpperCase() + connection.type.slice(1),
+          connection_date: new Date(connection.created_at).toLocaleDateString(),
+        }));
         setRowData(connections);
         setFilteredRowData(connections);
       } else {
@@ -102,7 +104,7 @@ const UserConnectionTab = ({ id, setActiveTab, companyId }: any) => {
         setRowData(users);
         setFilteredRowData(users);
       }
-
+  
       setNextPageUrl(response.next || null);
       setPreviousPageUrl(response.previous || null);
       setTotalPages(Math.ceil(response.count / 10));
@@ -110,6 +112,30 @@ const UserConnectionTab = ({ id, setActiveTab, companyId }: any) => {
       console.error("Failed to fetch data:", error);
     }
   };
+
+  const handleFilterChange = (value: string | null) => {
+    setUserType(value);
+    const filters = { user_type: value || "all" };
+  
+    fetchUsersOrConnections(
+      `/admin-dashboard/customers/${id}/users`,
+      false,
+      filters
+    );
+  };
+
+  const handleConnectionFilter = (value: string | null) => {
+    setConnectionType(value);
+    const filters = { type: value || "all" };
+  
+    fetchUsersOrConnections(
+      `/admin-dashboard/customers/${id}/connections`,
+      false,
+      filters
+    );
+  };
+  
+  
 
   const handleNextPage = () => {
     if (nextPageUrl) {
@@ -135,52 +161,39 @@ const UserConnectionTab = ({ id, setActiveTab, companyId }: any) => {
     async (event: React.ChangeEvent<HTMLInputElement>) => {
       const query = event.target.value.trim();
   
-      if (!query) {
-        // Reset table data if search query is cleared
-        if (viewMode === "internal") {
-          fetchUsersOrConnections(`/admin-dashboard/customers/${id}/users`, false);
-        } else {
-          fetchUsersOrConnections(`/admin-dashboard/customers/${id}/connections`, true);
-        }
-        return;
+      const filters: Record<string, string> = {
+        search: query,
+      };
+  
+      if (viewMode === "internal") {
+        filters.user_type = userType || "all";
       }
   
-      try {
-        let apiUrl = `/admin-dashboard/customers/${id}`;
-        if (viewMode === "internal") {
-          // Add search query for the users API
-          apiUrl += `/users?search=${query}`;
-        } else {
-          // Add search query for the connections API
-          apiUrl += `/connections?search=${query}`;
-        }
-  
-        // Use the existing fetch function to handle API call and state updates
-        fetchUsersOrConnections(apiUrl, viewMode === "connections");
-      } catch (error) {
-        console.error("Failed to fetch search results:", error);
-      }
+      fetchUsersOrConnections(
+        `/admin-dashboard/customers/${id}/${viewMode === "internal" ? "users" : "connections"}`,
+        viewMode === "connections",
+        filters
+      );
     },
-    500 // Debounce delay in milliseconds
+    500
   );
+  
 
   useEffect(() => {
-    setRowData([]); // Clear data when switching tabs
+    setRowData([]);
     setFilteredRowData([]);
     setNextPageUrl(null);
     setPreviousPageUrl(null);
     setCurrentPage(1);
     setTotalPages(0);
-
-    if (viewMode === "internal") {
-      fetchUsersOrConnections(`/admin-dashboard/customers/${id}/users`, false);
-    } else {
-      fetchUsersOrConnections(
-        `/admin-dashboard/customers/${id}/connections`,
-        true
-      );
-    }
-  }, [viewMode, id]);
+  
+    fetchUsersOrConnections(
+      `/admin-dashboard/customers/${id}/${viewMode === "internal" ? "users" : "connections"}`,
+      viewMode === "connections",
+      viewMode === "internal" ? { user_type: userType || "all" } : undefined
+    );
+  }, [viewMode, id, userType, connectionType]);
+  
 
   const handleSelect = async (filter: {
     key: string;
@@ -451,12 +464,10 @@ const UserConnectionTab = ({ id, setActiveTab, companyId }: any) => {
                   onChange={handleSearchChange}
                   width="340px"
                 />
-                <CustomFilterSelect
-                  items={filterByUserTypeItems}
-                  onSelect={(value) =>
-                    handleSelect({ key: "user_type", value })
-                  }
-                />
+               <CustomFilterSelect
+  items={filterByUserTypeItems}
+  onSelect={handleFilterChange}
+/>
               </Box>
             </Box>
           </Box>
@@ -473,7 +484,7 @@ const UserConnectionTab = ({ id, setActiveTab, companyId }: any) => {
               />
               <CustomFilterSelect
                 items={filterByConnectionItems}
-                onSelect={(value) => handleSelect({ key: "type", value })}
+                onSelect={handleConnectionFilter}
               />
             </Box>
           </Box>

@@ -1,7 +1,8 @@
 import { Filter } from "@/app/assets/icons";
 import React, { useState } from "react";
-import { Box, MenuItem, Typography, Select, InputBase } from "@mui/material";
+import { Box, MenuItem, Typography, Select, InputBase, capitalize } from "@mui/material";
 import { CheckCircle } from "@mui/icons-material";
+import { capitalizeFirstLetter } from "@/app/utils/CapitalizeFirstLetter";
 
 interface SelectItem {
   label: string;
@@ -80,7 +81,7 @@ const CustomFilterSelect: React.FC<CustomFilterSelectProps> = ({
         }}
         renderValue={(selected) => (
           <Typography variant="body2" mt={0.3} sx={{ marginRight: "-26px" }}>
-            {selected || "Filter"}
+            {capitalize(selected) || "Filter"}
           </Typography>
         )}
       >
@@ -105,7 +106,7 @@ const CustomFilterSelect: React.FC<CustomFilterSelectProps> = ({
           >
             <Box sx={{ display: "flex", alignItems: "center", gap: "8px" }}>
               {item.icon && <Box sx={{ color: "#0D47A1" }}>{item.icon}</Box>}
-              <Typography variant="body2">{item.label}</Typography>
+              <Typography variant="body2">{capitalizeFirstLetter(item.label)}</Typography>
             </Box>
 
             {(selectedItem === item.label || hoveredItem === item.label) && (
