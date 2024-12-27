@@ -7,8 +7,6 @@ import { useContext, useEffect, useState } from "react";
 import { Search } from "@/app/assets/icons";
 import SharpLineChart from "@/app/components/common/SharpLineChart";
 import { userManagementColumnDefs } from "@/app/const/GridTable/ColDef";
-import AgGridTable from "@/app/ag-grid";
-import { userManagementRow } from "@/app/const/GridTable/RowData";
 import { filterItems, userBreadcrumb } from "./userData";
 import CustomSearchField from "@/app/components/common/CustomSearch";
 import CustomFilterSelect from "@/app/components/common/CustomFilterSelect";
@@ -18,16 +16,15 @@ import AgGridServerSideTable from "@/app/ag-grid/AgGridServerSideTable";
 
 const UserManagement = () => {
   const context = useContext(SidebarContext);
-  const [, setSelectedFilter] = useState<string | null>(null);
   const [chartData, setChartData] = useState<any>(null);
   const [userData, setUserData] = useState<any>(null);
-  const [loading, setLoading] = useState<any>(false);
+  const [, setLoading] = useState<any>(false);
   const [nextPageUrl, setNextPageUrl] = useState<string | null>(null);
   const [previousPageUrl, setPreviousPageUrl] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(0);
   const UserManagementCol = useColumnUserManagement(userManagementColumnDefs);
-  const [originalUserData, setOriginalUserData] = useState<any>([]);
+  const [, setOriginalUserData] = useState<any>([]);
 
   const fetchUserData = async (url: string) => {
     try {
@@ -92,8 +89,6 @@ const UserManagement = () => {
         `/admin-dashboard/users?search=${query}`,
         "GET"
       );
-      const users = data?.results?.users || [];
-
       setUserData(data?.results?.users);
       setNextPageUrl(data?.next || null);
       setPreviousPageUrl(data?.previous || null);

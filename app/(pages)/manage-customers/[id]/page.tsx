@@ -5,11 +5,7 @@ import CompanyProfile from "@/app/container/ManageCustomers/CompanyProfile";
 import { apiCall } from "@/app/utils/APIUtils";
 import Loader from "@/app/components/common/Loader";
 
-interface CompanyProfilePageProps {
-  params: { id: string };
-}
-
-const Page = ({ params }: CompanyProfilePageProps) => {
+const Page = ({ params }: any) => {
   const { id } = params;
   const [customerDetail, setCustomerDetail] = useState(null);
   const [isLoading, setIsLoading] = useState(true);

@@ -4,14 +4,6 @@ import { Button } from "@mui/material";
 import LastColumnHeader from "@/app/components/common/LastColumnHeader";
 import { useRouter } from "next/navigation";
 
-interface Column {
-  field: string;
-  headerName?: string;
-  cellRenderer?: React.ComponentType<any>;
-  headerComponent?: React.ComponentType<any>;
-  flex?: number;
-}
-
 const useColumnManageUserDefs = ({
   columns,
   onBlockClick,

@@ -51,10 +51,10 @@ const CompanyProfile = ({ customerDetail, id }: any) => {
         field: "actions",
         headerName: "Actions",
         width: 120,
-        cellRenderer: ({ data }: any) => (
+        cellRenderer: () => (
           <span
             style={{ color: "#0057B7", cursor: "pointer" }}
-            onClick={() => handleViewDetails(data)}
+            onClick={() => handleViewDetails()}
           >
             View Details
           </span>
@@ -68,7 +68,7 @@ const CompanyProfile = ({ customerDetail, id }: any) => {
     setActiveTab(newValue);
   };
 
-  const handleViewDetails = (data: any) => {
+  const handleViewDetails = () => {
     setLicenseDetailOpen(true);
   };
 

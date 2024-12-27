@@ -37,10 +37,6 @@ const Billings = () => {
   const [selectedRows, setSelectedRows] = useState([]);
 
   const router = useRouter();
-  const endpoints = {
-    0: "/admin-dashboard/invoices/failed-stats",
-    1: "/admin-dashboard/invoices/revenue-stats",
-  };
   const handleAction = (actionType: string, rowData: any) => {
     if (actionType === "download") {
       if (rowData.invoice_pdf) {

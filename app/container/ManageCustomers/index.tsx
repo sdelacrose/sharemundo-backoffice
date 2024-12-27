@@ -52,6 +52,18 @@ const ManageCustomers = () => {
 
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
 
+  const manageUserCol = useColumnManageUserDefs({
+    columns: manageCustomersColumnDefs,
+    onBlockClick: (id) => {
+      setSelectedIds([id]);
+      setBlockDrawerOpen(true);
+    },
+    onActivateClick: (id) => {
+      setSelectedIds([id]);
+      setActiveDrawerOpen(true);
+    },
+  });
+
   const handleAddDrawer = () => {
     setAddDrawer(true);
   };
@@ -234,17 +246,7 @@ const ManageCustomers = () => {
     setAddDrawer(false);
   };
 
-  const manageUserCol = useColumnManageUserDefs({
-    columns: manageCustomersColumnDefs,
-    onBlockClick: (id) => {
-      setSelectedIds([id]);
-      setBlockDrawerOpen(true);
-    },
-    onActivateClick: (id) => {
-      setSelectedIds([id]);
-      setActiveDrawerOpen(true);
-    },
-  });
+ 
 
   if (loading) {
     return (

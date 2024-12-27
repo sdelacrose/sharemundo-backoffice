@@ -22,7 +22,6 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
 
   const solutionCol = useColumnSolutions(solutionColumnDefs);
-  const [, setSelectedFilter] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchDashboardData = async () => {

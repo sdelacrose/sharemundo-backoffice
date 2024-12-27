@@ -14,7 +14,6 @@ import { Search } from "@/app/assets/icons";
 import CustomButton from "@/app/components/common/CustomButton";
 import useColumnSolutionMain from "@/app/hooks/Grid-Table/useColumnSolutionMain";
 import { SolutionMainColumnDefs } from "@/app/const/GridTable/ColDef";
-import AgGridTable from "@/app/ag-grid";
 import ResumeDrawer from "./resumeDrawer";
 import EditDrawer from "./editDrawer";
 import StopDrawer from "./stopDrawer";
@@ -35,7 +34,6 @@ const SolutionLicenseMain = () => {
   const [previousPageUrl, setPreviousPageUrl] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
-  const [totalCount, setTotalCount] = useState<number>(0);
 
   const fetchSolutionData = async (url: string) => {
     try {
