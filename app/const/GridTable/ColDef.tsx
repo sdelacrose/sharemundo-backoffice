@@ -1,3 +1,6 @@
+import StatusBadge from "@/app/utils/StatusBadge";
+import { Box, Button } from "@mui/material";
+
 export const solutionColumnDefs = [
   { field: "product_name", headerName: "Name" },
   { field: "license_count", headerName: "Total Purchased Licenses" },
@@ -149,3 +152,105 @@ export const userManagementColumnDefs = [
   { field: "created_at", headerName: "Creation Date" },
   { field: "actions", headerName: "Actions" },
 ];
+
+export const internalColumnDefs = (handleViewClick, setSelectedUserId, setRestoreUserDrawerOpen, setRemoveUserDrawerOpen) => [
+  { field: "name", headerName: "Display Name", flex: 1 },
+  { field: "email", headerName: "Email", flex: 1 },
+  {
+    field: "sharemundo_links_id",
+    headerName: "Sharemundo Links ID",
+    flex: 1,
+  },
+  {
+    field: "status",
+    headerName: "Status",
+    flex: 1,
+    cellRenderer: ({ value }: any) => (
+      <Box>
+        {value === "Active" ? (
+          <StatusBadge color="#036B26" text="Active" background="#E7F6EC" />
+        ) : (
+          <StatusBadge color="#865503" text="Inactive" background="#FEF6E7" />
+        )}
+      </Box>
+    ),
+  },
+  { field: "role", headerName: "Role", flex: 1 },
+  { field: "allocated_licenses", headerName: "Assigned Licenses", flex: 1 },
+  {
+    field: "actions",
+    headerName: "Actions",
+    flex: 1,
+    cellRenderer: ({ data }: any) => (
+      <Box
+        display="flex"
+        gap={1}
+        sx={{ marginTop: "8px", marginLeft: "-14px" }}
+      >
+        <Button variant="text" color="primary" onClick={() => handleViewClick()}>
+          View
+        </Button>
+        {data.is_deleted ? (
+          <Button
+            variant="text"
+            sx={{ color: "green" }}
+            onClick={() => {
+              setSelectedUserId(data.id);
+              setRestoreUserDrawerOpen(true);
+            }}
+          >
+            Restore
+          </Button>
+        ) : (
+          <Button
+            variant="text"
+            color="error"
+            sx={{ color: "red" }}
+            onClick={() => {
+              setSelectedUserId(data.id);
+              setRemoveUserDrawerOpen(true);
+            }}
+          >
+            Remove
+          </Button>
+        )}
+      </Box>
+    ),
+  },
+];
+
+export const connectionColumnDefs = (handleViewClick, handleOpenRemoveDrawer) => [
+  { field: "name", headerName: "Name", flex: 2 },
+  {
+    field: "sharemundo_links_id",
+    headerName: "Sharemundo Links ID",
+    flex: 2,
+  },
+  { field: "type", headerName: "Type", flex: 1 },
+  { field: "connection_date", headerName: "Connection Date", flex: 1 },
+  {
+    field: "actions",
+    headerName: "Actions",
+    flex: 1,
+    cellRenderer: ({ data }: any) => (
+      <Box
+        display="flex"
+        gap={1}
+        sx={{ marginTop: "8px", marginLeft: "-14px" }}
+      >
+        <Button variant="text" color="primary" onClick={() => handleViewClick()}>
+          View
+        </Button>
+        <Button
+          variant="text"
+          color="error"
+          sx={{ color: "red" }}
+          onClick={() => handleOpenRemoveDrawer(data)}
+        >
+          Remove
+        </Button>
+      </Box>
+    ),
+  },
+];
+
