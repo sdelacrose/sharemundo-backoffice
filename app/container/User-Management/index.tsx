@@ -16,7 +16,6 @@ import AgGridServerSideTable from "@/app/ag-grid/AgGridServerSideTable";
 
 const UserManagement = () => {
   const context = useContext(SidebarContext);
-  const [, setSelectedFilter] = useState<string | null>(null);
   const [chartData, setChartData] = useState<any>(null);
   const [userData, setUserData] = useState<any>(null);
   const [, setLoading] = useState<any>(false);
