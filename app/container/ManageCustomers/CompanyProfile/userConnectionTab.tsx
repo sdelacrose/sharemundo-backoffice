@@ -15,7 +15,6 @@ import RemoveBulkUsersDrawer from "../Drawers/removeBulkUsersDrawer";
 import RestoreBulkUsersDrawer from "../Drawers/restoreBulkUsersDrawer";
 import AddUserDrawer from "./addUserDrawer";
 import { filterByConnectionItems, filterByUserTypeItems } from "../manageData";
-import StatusBadge from "@/app/utils/StatusBadge";
 import _debounce from "lodash/debounce";
 import { connectionColumnDefs, internalColumnDefs } from "@/app/const/GridTable/ColDef";
 
@@ -23,7 +22,7 @@ const UserConnectionTab = ({ id, setActiveTab, companyId }: any) => {
   const [viewMode, setViewMode] = useState<"internal" | "connections">(
     "internal"
   );
-  const [rowData, setRowData] = useState([]);
+  const [, setRowData] = useState([]);
   const [filteredRowData, setFilteredRowData] = useState([]);
   const [nextPageUrl, setNextPageUrl] = useState<string | null>(null);
   const [previousPageUrl, setPreviousPageUrl] = useState<string | null>(null);
