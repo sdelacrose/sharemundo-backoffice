@@ -282,9 +282,9 @@ const SolutionLicenseMain = () => {
           >
             <CustomSearchField
               startIcon={<Search />}
-              placeholder="Search Company..."
+              placeholder="Search here..."
               onChange={handleSearchChange}
-              height="36px"
+              width="340px"
             />
             <CustomButton variant="contained" onClick={handleOpenNewSolution}>
               Add Solution
