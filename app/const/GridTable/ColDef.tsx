@@ -27,8 +27,7 @@ export const manageCustomersColumnDefs = [
     field: "role",
     headerName: "Role",
     valueFormatter: (params: any) => {
-      const role = params.value;
-      return role.charAt(0).toUpperCase() + role.slice(1).toLowerCase();
+      return params.value;
     },
   },
   {

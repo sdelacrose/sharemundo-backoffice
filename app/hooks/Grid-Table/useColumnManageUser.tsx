@@ -1,6 +1,6 @@
 "use client";
 import { useMemo } from "react";
-import { Button } from "@mui/material";
+import { Box, Button } from "@mui/material";
 import LastColumnHeader from "@/app/components/common/LastColumnHeader";
 import { useRouter } from "next/navigation";
 import StatusBadge from "@/app/utils/StatusBadge";
@@ -35,7 +35,7 @@ const useColumnManageUserDefs = ({
               const fullName =
                 [formattedFirstName, formattedLastName]
                   .filter(Boolean)
-                  .join(" ") || "-";
+                  .join(" ") || "N/A";
 
               return <span>{fullName}</span>;
             },
@@ -51,6 +51,9 @@ const useColumnManageUserDefs = ({
             ...col,
             headerName: "Role",
             flex: 0.8,
+            cellRenderer: (params) => (
+              <Box>{params.data.role ? params.data.role : "N/A"}</Box>
+            ),
           };
         case "is_active":
           return {
@@ -113,7 +116,7 @@ const useColumnManageUserDefs = ({
           return col;
       }
     });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [columns, onBlockClick, onActivateClick]);
 };
 
