@@ -1,4 +1,5 @@
 import BlueText from "@/app/components/Data-Table/BlueText";
+import { DateFormat } from "@/app/utils/FormatDate";
 import { useMemo } from "react";
 
 interface Column {
@@ -35,12 +36,14 @@ const useColumnInternaluserLicense = (columns: Column[]) => {
             headerName: "Assigned Licenses",
             width: 120,
           };
-        case "renewal_date":
-          return {
-            field: "renewal_date",
-            headerName: "Renewal Date",
-            width: 120,
-          };
+          case 'renewal_date':
+            return {
+              field: 'renewal_date',
+              headerName: 'Renewal Date',
+              valueFormatter: (params: any) => {
+                return DateFormat(params.value);
+              },
+            };
 
         case "actions":
           return {

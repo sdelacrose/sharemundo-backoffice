@@ -518,7 +518,7 @@ const UserConnectionTab = ({ id, setActiveTab, companyId }: any) => {
               <Box mr={4} display={"flex"} alignItems={"center"} gap={2}>
                 <CustomSearchField
                   startIcon={<Search />}
-                  placeholder="Search by name or email..."
+                  placeholder="Search by name..."
                   onChange={handleSearchChange}
                   width="340px"
                 />
@@ -538,7 +538,7 @@ const UserConnectionTab = ({ id, setActiveTab, companyId }: any) => {
             <Box mr={4} display={"flex"} alignItems={"center"} gap={2}>
               <CustomSearchField
                 startIcon={<Search />}
-                placeholder="Search by name or email..."
+                placeholder="Search by name..."
                 onChange={handleSearchChange}
                 width="340px"
               />
