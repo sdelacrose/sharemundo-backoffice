@@ -193,36 +193,6 @@ const UserConnectionTab = ({ id, setActiveTab, companyId }: any) => {
       viewMode === "internal" ? { user_type: userType || "all" } : undefined
     );
   }, [viewMode, id, userType, connectionType]);
-  
-
-  const handleSelect = async (filter: {
-    key: string;
-    value: string | null;
-  }) => {
-    try {
-      let apiUrl = `/admin-dashboard/customers/${id}/connections`;
-      const params: Record<string, string> = {};
-
-      // Add filter to params
-      if (filter.key && filter.value && filter.value !== "all") {
-        params[filter.key] = filter.value;
-      }
-
-      // Convert params object to query string
-      const queryString = new URLSearchParams(params).toString();
-      if (queryString) {
-        apiUrl += `?${queryString}`;
-      }
-
-      const data = await apiCall(apiUrl);
-      setRowData(data?.results.connections);
-      setNextPageUrl(data?.next || null);
-      setPreviousPageUrl(data?.previous || null);
-      setTotalPages(Math.ceil(data?.count / 10));
-    } catch (err) {
-      console.error("Failed to fetch filtered connections:", err);
-    }
-  };
 
   useEffect(() => {
     const fetchConnections = async () => {

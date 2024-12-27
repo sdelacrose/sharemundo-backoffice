@@ -1,5 +1,5 @@
 import AgGridTable from "@/app/ag-grid";
-import SelectDatePicker from "@/app/components/common/DatePicker/DatePicker";
+// import SelectDatePicker from "@/app/components/common/DatePicker/DatePicker";
 import {
   InternaluserbillingColumnDefs,
 } from "@/app/const/GridTable/ColDef";
@@ -29,7 +29,7 @@ const BillingTab = () => {
         }}
       >
         <Box m={2} display={"flex"} justifyContent={"end"}>
-          <SelectDatePicker />
+          {/* <SelectDatePicker /> */}
         </Box>
         <AgGridTable
           rowData={InternaluserBillingRow}
