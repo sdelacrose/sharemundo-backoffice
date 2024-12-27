@@ -7,7 +7,7 @@ interface ActiveBulkCustomerDrawerProps {
   open: boolean;
   handleClose: () => void;
   handleActivate: () => void;
-  selectedUsers: { id: number; name: string }[]; // Pass selected user details
+  selectedUsers: { id: number; name: string }[];
 }
 
 const ActiveBulkCustomerDrawer: React.FC<ActiveBulkCustomerDrawerProps> = ({
@@ -16,6 +16,9 @@ const ActiveBulkCustomerDrawer: React.FC<ActiveBulkCustomerDrawerProps> = ({
   handleActivate,
   selectedUsers,
 }) => {
+  // Sort users by ID
+  const sortedUsers = [...selectedUsers].sort((a, b) => a.id - b.id);
+
   return (
     <>
       <Drawer
@@ -51,21 +54,43 @@ const ActiveBulkCustomerDrawer: React.FC<ActiveBulkCustomerDrawerProps> = ({
               Active Bulk Customers?
             </Typography>
             <Typography variant="caption" fontSize={14} color="#667185">
-              You are about to activate the following users:
+              List of Customers:
             </Typography>
             <Box
               sx={{
                 maxHeight: "300px",
                 overflowY: "auto",
-                border: "1px solid #E4E7EC",
-                borderRadius: "8px",
-                padding: "8px",
+                paddingLeft: "8px",
               }}
             >
-              {selectedUsers.map((user) => (
-                <Typography key={user.id} variant="body2" color="#667185">
-                  - {user.name || `User ID: ${user.id}`}
-                </Typography>
+              {sortedUsers.map((user) => (
+                <Box 
+                  key={user.id} 
+                  sx={{ 
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                    mb: 1
+                  }}
+                >
+                  <Typography
+                    variant="body2"
+                    color="#667185"
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      fontSize: '14px',
+
+                      '&::before': {
+                        content: '"•"',
+                        marginRight: '8px',
+                        fontSize: '12px',
+                      }
+                    }}
+                  >
+                    {user.name || `Customer ID: ${user.id}`}
+                  </Typography>
+                </Box>
               ))}
             </Box>
             <Box

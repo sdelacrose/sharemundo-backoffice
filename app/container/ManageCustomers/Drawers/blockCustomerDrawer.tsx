@@ -2,10 +2,6 @@ import { Cross } from "@/app/assets/icons";
 import CustomButton from "@/app/components/common/CustomButton";
 import { Box, Drawer, Stack, Typography } from "@mui/material";
 import React from "react";
-interface CreateNewDrawerProps {
-  open: boolean;
-  handleClose: () => void;
-}
 
 const BlockCustomerDrawer: React.FC<any> = ({ open, handleClose, handleBlock }) => {
   return (
@@ -43,7 +39,7 @@ const BlockCustomerDrawer: React.FC<any> = ({ open, handleClose, handleBlock }) 
               Block Customer?
             </Typography>
             <Typography variant="caption" fontSize={14} color="#667185">
-              Do you want to block customer?
+              Do you want to block this customer?
             </Typography>
             <Box
               sx={{

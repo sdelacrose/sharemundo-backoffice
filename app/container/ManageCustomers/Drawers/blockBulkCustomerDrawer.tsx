@@ -16,6 +16,9 @@ const BlockBulkCustomerDrawer: React.FC<BlockBulkCustomerDrawerProps> = ({
   handleBlock,
   selectedUsers,
 }) => {
+
+  const sortedUsers = [...selectedUsers].sort((a, b) => a.id - b.id);
+
   return (
     <>
       <Drawer
@@ -47,25 +50,47 @@ const BlockBulkCustomerDrawer: React.FC<BlockBulkCustomerDrawerProps> = ({
           }}
         >
           <Stack gap={3}>
-            <Typography variant="h3" letterSpacing={"0.4px"}>
+          <Typography variant="h3" letterSpacing={"0.4px"}>
               Block Bulk Customers?
             </Typography>
             <Typography variant="caption" fontSize={14} color="#667185">
-              You are about to block the following users:
+              List of Customers:
             </Typography>
             <Box
               sx={{
                 maxHeight: "300px",
                 overflowY: "auto",
-                border: "1px solid #E4E7EC",
-                borderRadius: "8px",
-                padding: "8px",
+                paddingLeft: "8px",
               }}
             >
-              {selectedUsers.map((user) => (
-                <Typography key={user.id} variant="body2" color="#667185">
-                  - {user.name || `User ID: ${user.id}`}
-                </Typography>
+              {sortedUsers.map((user) => (
+                <Box 
+                  key={user.id} 
+                  sx={{ 
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                    mb: 1
+                  }}
+                >
+                  <Typography
+                    variant="body2"
+                    color="#667185"
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      fontSize: '14px',
+
+                      '&::before': {
+                        content: '"•"',
+                        marginRight: '8px',
+                        fontSize: '12px',
+                      }
+                    }}
+                  >
+                    {user.name || `Customer ID: ${user.id}`}
+                  </Typography>
+                </Box>
               ))}
             </Box>
             <Box

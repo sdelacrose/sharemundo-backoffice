@@ -4,14 +4,6 @@ import { Button } from "@mui/material";
 import LastColumnHeader from "@/app/components/common/LastColumnHeader";
 import { useRouter } from "next/navigation";
 
-interface Column {
-  field: string;
-  headerName?: string;
-  cellRenderer?: React.ComponentType<any>;
-  headerComponent?: React.ComponentType<any>;
-  flex?: number;
-}
-
 const useColumnManageUserDefs = ({
   columns,
   onBlockClick,
@@ -27,15 +19,24 @@ const useColumnManageUserDefs = ({
             headerName: "Name",
             flex: 1,
             cellRenderer: (params) => {
-              const { first_name, last_name } = params.data;
-              const formattedName = `${
-                first_name.charAt(0).toUpperCase() +
-                first_name.slice(1).toLowerCase()
-              } ${
-                last_name.charAt(0).toUpperCase() +
-                last_name.slice(1).toLowerCase()
-              }`;
-              return <span>{formattedName}</span>;
+              const first_name = params.data?.first_name || "";
+              const last_name = params.data?.last_name || "";
+
+              const formatName = (name: string) => {
+                return name
+                  ? name.charAt(0).toUpperCase() + name.slice(1).toLowerCase()
+                  : "";
+              };
+
+              const formattedFirstName = formatName(first_name);
+              const formattedLastName = formatName(last_name);
+
+              const fullName =
+                [formattedFirstName, formattedLastName]
+                  .filter(Boolean)
+                  .join(" ") || "-";
+
+              return <span>{fullName}</span>;
             },
           };
         case "sharemundo_links_id":

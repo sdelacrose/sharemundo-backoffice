@@ -19,7 +19,7 @@ const Actions: React.FC<ActionsProps> = ({
       case "disconnect":
         return "#FF3B30";
       case "resume":
-        return "#34C759";
+        return "green";
       case "download":
         return "#32ADE6";
       default:

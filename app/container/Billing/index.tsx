@@ -37,10 +37,6 @@ const Billings = () => {
   const [selectedRows, setSelectedRows] = useState([]);
 
   const router = useRouter();
-  const endpoints = {
-    0: "/admin-dashboard/invoices/failed-stats",
-    1: "/admin-dashboard/invoices/revenue-stats",
-  };
   const handleAction = (actionType: string, rowData: any) => {
     if (actionType === "download") {
       if (rowData.invoice_pdf) {
@@ -75,15 +71,16 @@ const Billings = () => {
     setSelectedRows(selected);
     console.log("Selected Rows: ", selected);
   };
-  const fetchBillingData = async (url: string) => {
+  const fetchBillingData = async () => {
     try {
       const data = await apiCall("/admin-dashboard/invoices/failed", "GET");
-      const billingsData = data || [];
+      const billingsData = data?.results?.users || [];
+      // console.log("billingsData",billingsData)
 
       const extractedData = billingsData.map((user: any) => {
-        const invoice = user.invoices?.[0] || {};
+        const invoice = user?.invoices?.[0] || {};
         return {
-          id: user.id,
+          id: user?.id,
           first_name: user.first_name || "N/A",
           sharemundo_links_id: user.sharemundo_links_id || "N/A",
           user_type: user.user_type || "N/A",
@@ -105,7 +102,7 @@ const Billings = () => {
     }
   };
   useEffect(() => {
-    fetchBillingData("/admin-dashboard/invoices/failed");
+    fetchBillingData();
   }, []);
   useEffect(() => {
     const fetchTopUserDataData = async () => {
@@ -113,8 +110,8 @@ const Billings = () => {
         setLoading(true);
 
         const data = await apiCall("/admin-dashboard/invoices/paid", "GET");
-
-        const extractedData = data.map((user: any) => ({
+        const topCustomersData = data?.results?.users || [];
+        const extractedData = topCustomersData.map((user: any) => ({
           id: user.id || "N/a",
           first_name: user.first_name || "N/A",
           sharemundo_links_id: user.sharemundo_links_id || "N/A",
@@ -177,7 +174,7 @@ const Billings = () => {
   };
   const renderChart = () => {
     if (!chartData) {
-      return <div>Loadin....</div>;
+      return <div>Loading....</div>;
     }
     switch (activeTab) {
       case 0:
@@ -191,14 +188,14 @@ const Billings = () => {
   const handleNextPage = () => {
     if (nextPageUrl) {
       setCurrentPage((prev) => prev + 1);
-      fetchBillingData(nextPageUrl);
+      fetchBillingData();
     }
   };
 
   const handlePreviousPage = () => {
     if (previousPageUrl) {
       setCurrentPage((prev) => prev - 1);
-      fetchBillingData(previousPageUrl);
+      fetchBillingData();
     }
   };
   if (loading) {
@@ -252,7 +249,6 @@ const Billings = () => {
       console.error("Error exporting to Excel:", error);
     }
   };
-
   return (
     <>
       <Box

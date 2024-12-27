@@ -62,7 +62,7 @@ const PasswordField: React.FC<any> = ({
                   marginRight: '4px',
                   color:
                     passwordStrength === 'Strong'
-                      ? '#34C759'
+                      ? 'green'
                       : 'rgba(212, 38, 32, 1)',
                 }}
                 variant="subtitle1"

@@ -16,24 +16,6 @@ const StopDrawer: React.FC<CreateNewDrawerProps> = ({
   id,
   onUpdateStatus,
 }) => {
-  // const handleStop = async () => {
-  //   try {
-  //     const response = await apiCall(
-  //       `/admin-dashboard/products/${id}/stop`,
-  //       "POST",
-  //       null,
-  //       null,
-  //       {
-  //         successMessage: "Solution resumed successfully!",
-  //         errorMessage: "Failed to resume the solution. Please try again.",
-  //       }
-  //     );
-  //     console.log("Resume API Response:", response);
-  //     handleClose();
-  //   } catch (error) {
-  //     console.error("Error resuming solution:", error);
-  //   }
-  // };
   const handleStop = async () => {
     if (!id || !onUpdateStatus) return;
     try {

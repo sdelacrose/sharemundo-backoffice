@@ -92,8 +92,6 @@ const UserManagement = () => {
         `/admin-dashboard/users?search=${query}`,
         "GET"
       );
-      const users = data?.results?.users || [];
-
       setUserData(data?.results?.users);
       setNextPageUrl(data?.next || null);
       setPreviousPageUrl(data?.previous || null);

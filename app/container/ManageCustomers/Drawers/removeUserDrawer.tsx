@@ -2,10 +2,6 @@ import { Cross } from "@/app/assets/icons";
 import CustomButton from "@/app/components/common/CustomButton";
 import { Box, Drawer, Stack, Typography } from "@mui/material";
 import React from "react";
-interface CreateNewDrawerProps {
-  open: boolean;
-  handleClose: () => void;
-}
 
 const RemoveUserDrawer: React.FC<any> = ({ open, handleClose, handleRemoveUser }) => {
   return (
@@ -40,10 +36,10 @@ const RemoveUserDrawer: React.FC<any> = ({ open, handleClose, handleRemoveUser }
         >
           <Stack gap={3}>
             <Typography variant="h3" letterSpacing={"0.4px"}>
-              Remove Connection?
+              Remove User?
             </Typography>
             <Typography variant="caption" fontSize={14} color="#667185">
-              Do you want to remove this connection?
+              Do you want to remove this user?
             </Typography>
             <Box
               sx={{

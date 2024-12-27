@@ -1,5 +1,4 @@
 import ActionSolutions from "@/app/components/Data-Table/ActionSolutions";
-import Actions from "@/app/components/Data-Table/ActionSolutions";
 import StatusCheck from "@/app/components/Data-Table/StatusCheck";
 import { useMemo } from "react";
 interface Column {
@@ -74,7 +73,7 @@ const useColumnSolutionMain = (
                 buttons.push({
                   label: "Resume",
                   actionType: "resume",
-                  color: "#34C759",
+                  color: "green",
                 });
               } else if (status === "Active") {
                 buttons.push({
