@@ -1,25 +1,48 @@
-import { Box, Typography } from "@mui/material";
-import { CustomCellRendererProps } from "ag-grid-react";
 import React from "react";
+import { Box, Typography } from "@mui/material";
 
-const StatusCheck = (props: CustomCellRendererProps) => {
-  let background = "#FBEAE9";
-  let color = "#9E0A05";
-  let text = "Failed";
-  const normalizedStatus = props.value?.toLowerCase();
+interface StatusCheckProps {
+  value: string;
+}
 
-  if (normalizedStatus === "active") {
-    background = "#E7F6EC";
-    color = "#036B26";
-    text = "Active";
-  } else if (normalizedStatus === "stopped") {
-    background = "#FEF6E7";
-    color = "#865503";
-    text = "Stopped";
-  } else if (normalizedStatus === "disabled") {
-    color = "#344054";
-    background = "#F0F2F5";
-    text = "Disabled";
+const StatusCheck: React.FC<StatusCheckProps> = ({ value }) => {
+  let background = "#F4F5F7";
+  let color = "#6B7280";
+  let text = "Unknown";
+
+  const normalizedStatus = value?.toLowerCase();
+
+  switch (normalizedStatus) {
+    case "active":
+      background = "#E7F6EC";
+      color = "#036B26";
+      text = "Active";
+      break;
+    case "on hold":
+      background = "#FEF6E7";
+      color = "#865503";
+      text = "On Hold";
+      break;
+    case "disabled":
+      background = "#F0F2F5";
+      color = "#344054";
+      text = "Disabled";
+      break;
+    case "stopped":
+      background = "#FEF6E7";
+      color = "#865503";
+      text = "Stopped";
+      break;
+    case "failed":
+      background = "#FBEAE9";
+      color = "#9E0A05";
+      text = "Failed";
+      break;
+    default:
+      background = "#F4F5F7";
+      color = "#6B7280";
+      text = "Unknown";
+      break;
   }
 
   return (

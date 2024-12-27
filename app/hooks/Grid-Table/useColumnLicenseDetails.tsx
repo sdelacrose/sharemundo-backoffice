@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
-import { Chip } from '@mui/material';
 import LastColumnHeader from '@/app/components/common/LastColumnHeader';
 import { DateFormat } from '@/app/utils/FormatDate';
+import StatusCheck from '@/app/components/Data-Table/StatusCheck';
 
 interface Column {
   field: string;
@@ -47,27 +47,7 @@ const useColumnLicenseDetails = (columns: Column[]) => {
             headerComponent: LastColumnHeader,
             flex: 1,
             cellStyle: col.cellStyle,
-            cellRenderer: (params: any) => {
-              const status = params.value;
-              let color = 'default';
-
-              switch (status) {
-                case 'Active':
-                  color = 'success';
-                  break;
-                case 'On Hold':
-                  color = 'warning';
-                  break;
-                case 'Disabled':
-                  color = 'error';
-                  break;
-                default:
-                  color = 'default';
-                  break;
-              }
-
-              return <Chip label={status} size="small" color={color as any} />;
-            },
+            cellRenderer:StatusCheck
           };
         default:
           return col;
