@@ -79,6 +79,7 @@ const BillingTab = ({ id }: { id: string }) => {
 
   useEffect(() => {
     fetchBillingData(`/admin-dashboard/customers/${id}/billing`);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   return (

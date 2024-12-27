@@ -137,6 +137,7 @@ const SolutionLicenseMain = () => {
     };
 
     fetchData(endpoints[activeTab]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeTab]);
   const handleOpenDrawer = (actionType: string, id: string) => {
     setDrawerType(actionType);

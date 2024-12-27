@@ -50,6 +50,7 @@ const LicenseDetail: React.FC<LicenseDetailProps> = ({
     if (licenseId) {
       getLicensesData();
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [licenseId]);
 
   return (

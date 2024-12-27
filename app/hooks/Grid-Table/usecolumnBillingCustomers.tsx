@@ -93,6 +93,7 @@ const useColumnBillingCustomers = (columns: Column[]) => {
           return col;
       }
     });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [columns]);
 };
 
