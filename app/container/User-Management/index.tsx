@@ -42,14 +42,17 @@ const UserManagement = () => {
           user_type,
           created_at,
           id,
+          last_name,
         }: any) => ({
           first_name,
           sharemundo_links_id,
           user_type,
           created_at,
           id,
+          last_name,
         })
       );
+      console.log("data--------", extractedUsers);
       setOriginalUserData(extractedUsers);
       setUserData(extractedUsers);
       setNextPageUrl(data?.next || null);
@@ -160,7 +163,7 @@ const UserManagement = () => {
             User Management
           </Typography>
           <Typography variant="body2" color="#475367" mt={1} fontSize={16}>
-            Sharemundo Back Office
+            sharemundo Back Office
           </Typography>
           <Divider
             sx={{

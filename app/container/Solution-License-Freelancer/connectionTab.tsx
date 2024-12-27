@@ -1,11 +1,6 @@
 import AgGridTable from "@/app/ag-grid";
-import {
-  FreelancerconnectionColumnDefs,
-} from "@/app/const/GridTable/ColDef";
-import {
-  FreelancerConnectionRow,
-  
-} from "@/app/const/GridTable/RowData";
+import { FreelancerconnectionColumnDefs } from "@/app/const/GridTable/ColDef";
+import { FreelancerConnectionRow } from "@/app/const/GridTable/RowData";
 import useColumnFreelancerConnection from "@/app/hooks/Grid-Table/useColumnFreelancerConnection";
 import { Box } from "@mui/material";
 import React from "react";
