@@ -27,8 +27,6 @@ const UserConnectionTab = ({ id, setActiveTab, companyId }: any) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const [selectedRowId, setSelectedRowId] = useState<number | null>(null);
-  const [removeDrawerOpen, setRemoveDrawerOpen] = useState(false);
-  const [, setSelectedFilter] = useState<string | null>(null);
   const [removeUserDrawerOpen, setRemoveUserDrawerOpen] = useState(false);
   const [removeConnectionDrawer, setRemoveConnectionDrawer] = useState(false);
   const [restoreUserDrawerOpen, setRestoreUserDrawerOpen] = useState(false);
@@ -36,7 +34,6 @@ const UserConnectionTab = ({ id, setActiveTab, companyId }: any) => {
     useState(false);
   const [restoreBulkUsersDrawerOpen, setRestoreBulkUsersDrawerOpen] =
     useState(false);
-  const [selectedUserIds, setSelectedUserIds] = useState<number[]>([]);
   const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
   const [selectedRows, setSelectedRows] = useState([]);
   const [addUserDrawerOpen, setAddUserDrawerOpen] = useState(false);

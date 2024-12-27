@@ -1,8 +1,7 @@
 "use client";
 import { Box, Divider, Stack, Typography } from "@mui/material";
 import React, { useContext, useEffect, useState } from "react";
-import { filterItems, homeBreadcrumb } from "./data";
-import StatsContainer from "./StatsContainer";
+import { homeBreadcrumb } from "./data";
 import useColumnSolutions from "@/app/hooks/Grid-Table/useColumnSolutions";
 import { solutionColumnDefs } from "@/app/const/GridTable/ColDef";
 import AgGridTable from "@/app/ag-grid";
@@ -21,7 +20,6 @@ const Dashboard = () => {
   const context = useContext(SidebarContext);
   const [dashboardData, setDashboardData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
 
   const solutionCol = useColumnSolutions(solutionColumnDefs);
   const [, setSelectedFilter] = useState<string | null>(null);
@@ -46,11 +44,6 @@ const Dashboard = () => {
     return <div>Error: Sidebar context is undefined!</div>;
   }
 
-  const handleSelect = (label: string | null) => {
-    console.log("Selected filter:", label);
-    setSelectedFilter(label);
-  };
-
   if (loading) {
     return (
       <div>
@@ -59,12 +52,8 @@ const Dashboard = () => {
     );
   }
 
-  if (error) {
-    return <div>{error}</div>;
-  }
-
-  let userStats = dashboardData?.user_stats;
-  let billingStats = dashboardData?.revenue_stats;
+  const userStats = dashboardData?.user_stats;
+  const billingStats = dashboardData?.revenue_stats;
 
   const solutionRowData = dashboardData?.license_stats || [];
 

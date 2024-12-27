@@ -63,7 +63,7 @@ const BlockBulkCustomerDrawer: React.FC<BlockBulkCustomerDrawerProps> = ({
                 paddingLeft: "8px",
               }}
             >
-              {sortedUsers.map((user, index) => (
+              {sortedUsers.map((user) => (
                 <Box 
                   key={user.id} 
                   sx={{ 

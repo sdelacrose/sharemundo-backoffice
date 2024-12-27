@@ -75,7 +75,7 @@ const Billings = () => {
     setSelectedRows(selected);
     console.log("Selected Rows: ", selected);
   };
-  const fetchBillingData = async (url: string) => {
+  const fetchBillingData = async () => {
     try {
       const data = await apiCall("/admin-dashboard/invoices/failed", "GET");
       const billingsData = data?.results?.users || [];
@@ -107,7 +107,7 @@ const Billings = () => {
   };
 
   useEffect(() => {
-    fetchBillingData("/admin-dashboard/invoices/failed");
+    fetchBillingData();
   }, []);
 
   useEffect(() => {
@@ -194,14 +194,14 @@ const Billings = () => {
   const handleNextPage = () => {
     if (nextPageUrl) {
       setCurrentPage((prev) => prev + 1);
-      fetchBillingData(nextPageUrl);
+      fetchBillingData();
     }
   };
 
   const handlePreviousPage = () => {
     if (previousPageUrl) {
       setCurrentPage((prev) => prev - 1);
-      fetchBillingData(previousPageUrl);
+      fetchBillingData();
     }
   };
   if (loading) {

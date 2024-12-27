@@ -17,32 +17,20 @@ import ConnectionTab from "./connectionTab";
 const CompanyProfile = ({ customerDetail, id }: any) => {
   const context = useContext(SidebarContext);
   const [activeTab, setActiveTab] = useState(0);
-  const [selectedLicenseId, setSelectedLicenseId] = useState<string | null>(
-    null
-  );
   const [isLicenseDetailOpen, setLicenseDetailOpen] = useState(false);
-
-  if (!customerDetail) {
-    return <div>Loading customer details...</div>;
-  }
-
   const companyProfile = customerDetail.company_profile;
-
-  if (context === undefined) {
-    return <div>Error: Sidebar context is undefined!</div>;
-  }
-
-  const handleTabChange = (newValue: number) => {
-    setActiveTab(newValue);
-  };
-
-  console.log("customerDetail", customerDetail)
 
   const [nextPageUrl, setNextPageUrl] = useState<string | null>(null);
   const [previousPageUrl, setPreviousPageUrl] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const [rowData, setRowData] = useState([]);
+
+  useEffect(() => {
+    if (customerDetail) {
+      fetchLicenses(`/admin-dashboard/customers/${id}/licenses`);
+    }
+  }, [id, customerDetail]);
 
   const columnDefs = useMemo(
     () => [
@@ -76,8 +64,11 @@ const CompanyProfile = ({ customerDetail, id }: any) => {
     []
   );
 
+  const handleTabChange = (newValue: number) => {
+    setActiveTab(newValue);
+  };
+
   const handleViewDetails = (data: any) => {
-    setSelectedLicenseId(data.product_id);
     setLicenseDetailOpen(true);
   };
 
@@ -91,7 +82,7 @@ const CompanyProfile = ({ customerDetail, id }: any) => {
 
       const licenses = licenseDetail.results.licenses.map((license: any) => ({
         product_name: license.product.name,
-        product_id: license.product.id, // Include product_id for details API
+        product_id: license.product.id,
         total_license: license.product.license_count,
         available_licenses: license.product.license_count,
         assigned_licenses: license.is_active ? 1 : 0,
@@ -121,10 +112,6 @@ const CompanyProfile = ({ customerDetail, id }: any) => {
     }
   };
 
-  useEffect(() => {
-    fetchLicenses(`/admin-dashboard/customers/${id}/licenses`);
-  }, [id]);
-
   const isFreelancer = customerDetail?.user_type === "freelancer";
 
   const tabs = [
@@ -142,7 +129,11 @@ const CompanyProfile = ({ customerDetail, id }: any) => {
         return isFreelancer ? (
           <ConnectionTab id={id} setActiveTab={handleTabChange} />
         ) : (
-          <UserConnectionTab id={id} setActiveTab={handleTabChange} companyId={customerDetail?.company_profile?.id}/>
+          <UserConnectionTab
+            id={id}
+            setActiveTab={handleTabChange}
+            companyId={customerDetail?.company_profile?.id}
+          />
         );
       case 2:
         return <BillingTab id={id} />;
@@ -163,6 +154,15 @@ const CompanyProfile = ({ customerDetail, id }: any) => {
         return <div>Invalid Tab</div>;
     }
   };
+
+  if (!customerDetail) {
+    return <div>Loading customer details...</div>;
+  }
+
+  if (context === undefined) {
+    return <div>Error: Sidebar context is undefined!</div>;
+  }
+
   return (
     <>
       <Box
@@ -181,12 +181,10 @@ const CompanyProfile = ({ customerDetail, id }: any) => {
           <Typography variant="h2" paddingBottom={"8px"}>
             {customerDetail?.user_type === "company_user"
               ? `${
-                  companyProfile?.company_name || "Company Name Not Available"
-                }, ${companyProfile?.company_town || "Town Not Available"}, ${
-                  companyProfile?.company_country || "Country Not Available"
+                  companyProfile?.company_name || "N/A"
                 }`
-              : `${customerDetail?.first_name || "First Name Not Available"} ${
-                  customerDetail?.last_name || "Last Name Not Available"
+              : `${customerDetail?.first_name || " "} ${
+                  customerDetail?.last_name || "N/A"
                 }`}
           </Typography>
 
@@ -203,7 +201,7 @@ const CompanyProfile = ({ customerDetail, id }: any) => {
           />
 
           <Box mb={4}>
-            <CustomTabs tabs={tabs} onTabChange={handleTabChange} value={activeTab}/>
+            <CustomTabs tabs={tabs} onTabChange={handleTabChange} value={activeTab} />
           </Box>
           {renderTabContent()}
         </Box>
