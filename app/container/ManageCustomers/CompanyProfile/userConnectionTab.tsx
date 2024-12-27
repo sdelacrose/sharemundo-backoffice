@@ -16,7 +16,7 @@ import RestoreBulkUsersDrawer from "../Drawers/restoreBulkUsersDrawer";
 import AddUserDrawer from "./addUserDrawer";
 import { filterByConnectionItems, filterByUserTypeItems } from "../manageData";
 
-const UserConnectionTab = ({ id, setActiveTab }: any) => {
+const UserConnectionTab = ({ id, setActiveTab, companyId }: any) => {
   const [viewMode, setViewMode] = useState<"internal" | "connections">(
     "internal"
   );
@@ -421,6 +421,11 @@ const UserConnectionTab = ({ id, setActiveTab }: any) => {
     }
   };
 
+  const handleUserAdded = async () => {
+    fetchUsersOrConnections(`/admin-dashboard/customers/${id}/users`, false);
+  };
+
+
   return (
     <>
       <Box>
@@ -580,6 +585,8 @@ const UserConnectionTab = ({ id, setActiveTab }: any) => {
         <AddUserDrawer
           open={addUserDrawerOpen}
           handleClose={() => setAddUserDrawerOpen(false)}
+          companyId={companyId}
+          handleUserAdded={handleUserAdded}
         />
       )}
 

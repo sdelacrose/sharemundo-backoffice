@@ -36,6 +36,8 @@ const CompanyProfile = ({ customerDetail, id }: any) => {
     setActiveTab(newValue);
   };
 
+  console.log("customerDetail", customerDetail)
+
   const [nextPageUrl, setNextPageUrl] = useState<string | null>(null);
   const [previousPageUrl, setPreviousPageUrl] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
@@ -140,7 +142,7 @@ const CompanyProfile = ({ customerDetail, id }: any) => {
         return isFreelancer ? (
           <ConnectionTab id={id} setActiveTab={handleTabChange} />
         ) : (
-          <UserConnectionTab id={id} setActiveTab={handleTabChange}/>
+          <UserConnectionTab id={id} setActiveTab={handleTabChange} companyId={customerDetail?.company_profile?.id}/>
         );
       case 2:
         return <BillingTab id={id} />;
