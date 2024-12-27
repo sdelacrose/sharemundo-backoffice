@@ -85,7 +85,7 @@ const useColumnBillingCustomers = (columns: Column[]) => {
                   router.push(`/manage-customers/${params.data.id}`)
                 }
               >
-                View Details
+                View
               </Button>
             ),
           };

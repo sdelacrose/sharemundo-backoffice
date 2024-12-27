@@ -56,7 +56,7 @@ const CompanyProfile = ({ customerDetail, id }: any) => {
             style={{ color: "#0057B7", cursor: "pointer" }}
             onClick={() => handleViewDetails()}
           >
-            View Details
+            View
           </span>
         ),
       },

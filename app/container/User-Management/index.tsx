@@ -195,8 +195,8 @@ const UserManagement = () => {
               startIcon={<Search />}
               placeholder="Search here..."
               onChange={handleSearchChange}
-              height="36px"
-            />{" "}
+              width={"340px"}
+            />
             <CustomFilterSelect items={filterItems} onSelect={handleSelect} />
           </Box>
           <Box
