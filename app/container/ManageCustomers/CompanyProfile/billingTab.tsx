@@ -16,6 +16,7 @@ const BillingTab = ({ id }: { id: string }) => {
   const [previousPageUrl, setPreviousPageUrl] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
+  const [selectedDate, setSelectedDate] = useState<string | null>(null); // State for selected date
 
   const getTrimmedUrl = (url: string) => {
     return url.includes("/admin-dashboard")
@@ -23,10 +24,11 @@ const BillingTab = ({ id }: { id: string }) => {
       : url;
   };
 
-  const fetchBillingData = async (url: string) => {
+  const fetchBillingData = async (url: string, date: string | null = null) => {
     try {
       const trimmedUrl = getTrimmedUrl(url);
-      const billingData = await apiCall(trimmedUrl);
+      const finalUrl = date ? `${trimmedUrl}?date=${date}` : trimmedUrl; // Append date query parameter if available
+      const billingData = await apiCall(finalUrl);
 
       const formattedData = billingData.results.invoices.map(
         (invoice: any) => ({
@@ -65,16 +67,21 @@ const BillingTab = ({ id }: { id: string }) => {
 
   const handleNextPage = () => {
     if (nextPageUrl) {
-      fetchBillingData(nextPageUrl);
+      fetchBillingData(nextPageUrl, selectedDate);
       setCurrentPage((prev) => prev + 1);
     }
   };
 
   const handlePreviousPage = () => {
     if (previousPageUrl) {
-      fetchBillingData(previousPageUrl);
+      fetchBillingData(previousPageUrl, selectedDate);
       setCurrentPage((prev) => prev - 1);
     }
+  };
+
+  const handleDateChange = (newDate: string | null) => {
+    setSelectedDate(newDate); // Update the selected date
+    fetchBillingData(`/admin-dashboard/customers/${id}/billing`, newDate); // Fetch data with new date
   };
 
   useEffect(() => {
@@ -96,7 +103,7 @@ const BillingTab = ({ id }: { id: string }) => {
         }}
       >
         <Box m={2} display={"flex"} justifyContent={"end"}>
-          <SelectDatePicker />
+          <SelectDatePicker onDateChange={handleDateChange} /> {/* Pass the handleDateChange function */}
         </Box>
         <AgGridServerSideTable
           rowData={rowData}
