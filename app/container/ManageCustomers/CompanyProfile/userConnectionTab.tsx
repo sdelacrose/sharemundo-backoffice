@@ -16,6 +16,7 @@ import RestoreBulkUsersDrawer from "../Drawers/restoreBulkUsersDrawer";
 import AddUserDrawer from "./addUserDrawer";
 import { filterByConnectionItems, filterByUserTypeItems } from "../manageData";
 import StatusBadge from "@/app/utils/StatusBadge";
+import _debounce from "lodash/debounce";
 
 const UserConnectionTab = ({ id, setActiveTab, companyId }: any) => {
   const [viewMode, setViewMode] = useState<"internal" | "connections">(
@@ -222,15 +223,38 @@ const UserConnectionTab = ({ id, setActiveTab, companyId }: any) => {
     console.log("Selected Rows: ", selected);
   };
 
-  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const query = event.target.value.toLowerCase();
-    const filteredData = rowData.filter(
-      (item: any) =>
-        item.name.toLowerCase().includes(query) ||
-        (item.email && item.email.toLowerCase().includes(query))
-    );
-    setFilteredRowData(filteredData);
-  };
+  const handleSearchChange = _debounce(
+    async (event: React.ChangeEvent<HTMLInputElement>) => {
+      const query = event.target.value.trim();
+  
+      if (!query) {
+        // Reset table data if search query is cleared
+        if (viewMode === "internal") {
+          fetchUsersOrConnections(`/admin-dashboard/customers/${id}/users`, false);
+        } else {
+          fetchUsersOrConnections(`/admin-dashboard/customers/${id}/connections`, true);
+        }
+        return;
+      }
+  
+      try {
+        let apiUrl = `/admin-dashboard/customers/${id}`;
+        if (viewMode === "internal") {
+          // Add search query for the users API
+          apiUrl += `/users?search=${query}`;
+        } else {
+          // Add search query for the connections API
+          apiUrl += `/connections?search=${query}`;
+        }
+  
+        // Use the existing fetch function to handle API call and state updates
+        fetchUsersOrConnections(apiUrl, viewMode === "connections");
+      } catch (error) {
+        console.error("Failed to fetch search results:", error);
+      }
+    },
+    500 // Debounce delay in milliseconds
+  );
 
   useEffect(() => {
     setRowData([]); // Clear data when switching tabs
