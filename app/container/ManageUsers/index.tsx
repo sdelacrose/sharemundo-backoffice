@@ -34,7 +34,7 @@ const ManageUsers = () => {
         : url;
 
       const data = await apiCall(trimmedUrl, "GET");
-      console.log("data",data)
+      console.log("data", data);
       const users = data?.results || [];
       const extractedUsers = users.map(
         ({
@@ -88,13 +88,43 @@ const ManageUsers = () => {
   const handleSearchChange = async (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    const query = event.target.value;
+    const query = event.target.value.trim();
+    if (!query) {
+      // If query is empty, fetch the default data
+      fetchUserData("/admin-dashboard/users");
+      return;
+    }
+  
     try {
+      // Send the search query to the API
       const data = await apiCall(
         `/admin-dashboard/users?search=${query}`,
         "GET"
       );
-      setUserData(data?.results?.users);
+  
+      // Map the response to the table structure
+      const users = data?.results || [];
+      const extractedUsers = users.map(
+        ({
+          first_name,
+          sharemundo_links_id,
+          user_type,
+          email,
+          created_at,
+          id,
+          last_name,
+        }: any) => ({
+          first_name,
+          email,
+          sharemundo_links_id,
+          user_type,
+          created_at,
+          id,
+          last_name,
+        })
+      );
+  
+      setUserData(extractedUsers);
       setNextPageUrl(data?.next || null);
       setPreviousPageUrl(data?.previous || null);
       setTotalPages(Math.ceil((data?.count || 0) / 10));
@@ -102,6 +132,7 @@ const ManageUsers = () => {
       console.error("Error searching users:", err);
     }
   };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -134,16 +165,40 @@ const ManageUsers = () => {
         apiUrl += "?user_type=freelancer";
       } else if (label === "Company") {
         apiUrl += "?user_type=company";
+      } else if (label === "Internal User") {
+        apiUrl += "?user_type=internal_user";
+      } else if (label === "All") {
+        apiUrl;
       }
       const data = await apiCall(apiUrl, "GET");
-      const users = data?.results?.users || [];
-      setUserData(users);
-      setNextPageUrl(data?.next || null);
-      setPreviousPageUrl(data?.previous || null);
-      setTotalPages(Math.ceil((data?.count || 0) / 10));
-    } catch (err) {
-      console.error("Failed to fetch filtered users:", err);
-    }
+    const users = data?.results || []; // Fetch users from API response
+    const extractedUsers = users.map(
+      ({
+        first_name,
+        sharemundo_links_id,
+        user_type,
+        email,
+        created_at,
+        id,
+        last_name,
+      }: any) => ({
+        first_name,
+        email,
+        sharemundo_links_id,
+        user_type,
+        created_at,
+        id,
+        last_name,
+      })
+    );
+
+    setUserData(extractedUsers); // Update row data for AgGrid
+    setNextPageUrl(data?.next || null); // Set next page URL
+    setPreviousPageUrl(data?.previous || null); // Set previous page URL
+    setTotalPages(Math.ceil((data?.count || 0) / 10)); // Update total pages
+  } catch (err) {
+    console.error("Failed to fetch filtered users:", err);
+  }
   };
 
   return (
