@@ -8,21 +8,21 @@ export const solutionColumnDefs = [
 export const UserColumnDefs = [
   { field: "name", headerName: "Disaply Name" },
   { field: "email", headerName: "Email" },
-  { field: "sharemundo_link", headerName: "sharemundo Link" },
+  { field: "sharemundo_link", headerName: "sharemundo Links IDs" },
   { field: "status", headerName: "Status" },
   { field: "role", headerName: "Role" },
   { field: "assigned_license", headerName: "Assigned License" },
 ];
 export const UserConnectionColumnDefs = [
   { field: "name", headerName: "Disaply Name" },
-  { field: "sharemundo_link", headerName: "sharemundo Link" },
+  { field: "sharemundo_link", headerName: "sharemundo Links IDs" },
   { field: "type", headerName: "Type" },
   { field: "connection_date", headerName: "Connection Date" },
   { field: "actions", headerName: "Actions" },
 ];
 export const manageCustomersColumnDefs = [
   { field: "name", headerName: "Name" },
-  { field: "sharemundo_links_id", headerName: "sharemundo Link" },
+  { field: "sharemundo_links_id", headerName: "sharemundo Links IDs" },
   {
     field: "role",
     headerName: "Role",
@@ -73,7 +73,7 @@ export const LicenseColumnDefs = [
 ];
 export const FreelancerconnectionColumnDefs = [
   { field: "name", headerName: "Name" },
-  { field: "sharemundo_link", headerName: "sharemundo Link" },
+  { field: "sharemundo_link", headerName: "sharemundo Links IDs" },
   { field: "type", headerName: "Type" },
   { field: "connection_date", headerName: "Connection Date" },
   { field: "actions", headerName: "Actions" },
@@ -97,7 +97,7 @@ export const LicenseFreelancerDefs = [
 ];
 export const InternalUsersColumnDefs = [
   { field: "name", headerName: "Name" },
-  { field: "sharemundo_link", headerName: "sharemundo Link" },
+  { field: "sharemundo_link", headerName: "sharemundo Links IDs" },
   { field: "type", headerName: "Type" },
   { field: "connection_date", headerName: "Connection Date" },
   { field: "actions", headerName: "Actions" },
@@ -128,7 +128,7 @@ export const SolutionMainColumnDefs = [
 ];
 export const BillingPaymentColumnDefs = [
   { field: "first_name", headerName: "Customer Name" },
-  { field: "sharemundo_links_id", headerName: "sharemundo Links ID" },
+  { field: "sharemundo_links_id", headerName: "sharemundo Links IDs" },
   { field: "user_type", headerName: "Type" },
   { field: "status", headerName: "Issue" },
   { field: "amount", headerName: "Amount" },
@@ -137,7 +137,7 @@ export const BillingPaymentColumnDefs = [
 ];
 export const BillingCustomerColumnDefs = [
   { field: "first_name", headerName: "Name" },
-  { field: "sharemundo_links_id", headerName: "sharemundo Links ID" },
+  { field: "sharemundo_links_id", headerName: "sharemundo Links IDs" },
   { field: "user_type", headerName: "Role" },
   { field: "next_12_month_revenue", headerName: "Next 12 Month Revenue" },
   { field: "last_12_month_revenue", headerName: "Last 12 Month Revenue" },
@@ -146,7 +146,7 @@ export const BillingCustomerColumnDefs = [
 ];
 export const userManagementColumnDefs = [
   { field: "first_name", headerName: "Name" },
-  { field: "sharemundo_links_id", headerName: "sharemundo Links ID" },
+  { field: "sharemundo_links_id", headerName: "sharemundo Links IDs" },
   { field: "user_type", headerName: "Type" },
   { field: "created_at", headerName: "Creation Date" },
   { field: "actions", headerName: "Actions" },
@@ -157,7 +157,7 @@ export const internalColumnDefs = (handleViewClick, setSelectedUserId, setRestor
   { field: "email", headerName: "Email", flex: 1 },
   {
     field: "sharemundo_links_id",
-    headerName: "Sharemundo Links ID",
+    headerName: "sharemundo Links IDs",
     flex: 1,
   },
   {
@@ -222,7 +222,7 @@ export const connectionColumnDefs = (handleViewClick, handleOpenRemoveDrawer) =>
   { field: "name", headerName: "Name", flex: 2 },
   {
     field: "sharemundo_links_id",
-    headerName: "Sharemundo Links ID",
+    headerName: "sharemundo Links IDs",
     flex: 2,
   },
   { field: "type", headerName: "Type", flex: 1 },

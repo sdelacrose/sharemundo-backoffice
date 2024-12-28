@@ -30,7 +30,7 @@ const useColumnBillingPayment = (
         case "sharemundo_links_id":
           return {
             field: "sharemundo_links_id",
-            headerName: "sharemundo Links ID",
+            headerName: "sharemundo Links IDs",
             width: 120,
             flex: 1.8,
             valueFormatter: (params: any) =>

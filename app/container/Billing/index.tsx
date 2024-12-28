@@ -37,7 +37,6 @@ const Billings = () => {
   const [selectedRows, setSelectedRows] = useState([]);
 
   const [, setRevenueLoading] = useState<boolean>(false);
-  const [, setRevenueTab] = useState<number>(0);
   const [failedData, setFailedData] = useState<any>(null);
 
   const router = useRouter();
@@ -108,6 +107,7 @@ const Billings = () => {
   useEffect(() => {
     fetchBillingData();
   }, []);
+  
   useEffect(() => {
     const fetchTopUserDataData = async () => {
       try {
@@ -170,36 +170,30 @@ const Billings = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeTab]);
 
-  if (context === undefined) {
-    return <div>Error: Sidebar context is undefined!</div>;
-  }
-  const handleTabChange = (newValue: number) => {
-    setActiveTab(newValue);
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+      const data = await apiCall(
+        "/admin-dashboard/invoices/failed-stats",
+        "GET"
+      );
+      const transformedData = Object.entries(data).map(([key, value]) => ({
+        name: key,
+        value: value as number,
+      }));
+      console.log("Chart data-------", transformedData);
+      setFailedData(transformedData);
+      setLoading(false);
+    } catch (err) {
+      console.error(`Error fetching data `, err);
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        const data = await apiCall(
-          "/admin-dashboard/invoices/failed-stats",
-          "GET"
-        );
-        const transformedData = Object.entries(data).map(([key, value]) => ({
-          name: key,
-          value: value as number,
-        }));
-        console.log("Chart data-------", transformedData);
-        setFailedData(transformedData);
-        setLoading(false);
-      } catch (err) {
-        console.error(`Error fetching data `, err);
-        setLoading(false);
-      }
-    };
-
     fetchData();
   }, []);
+
   const renderFailedStatsChart = () => {
     if (!failedData) return <div>Loading...</div>;
 
@@ -219,6 +213,7 @@ const Billings = () => {
         return <div>Chart here</div>;
     }
   };
+
   const handleNextPage = () => {
     if (nextPageUrl) {
       setCurrentPage((prev) => prev + 1);
@@ -232,6 +227,7 @@ const Billings = () => {
       fetchBillingData();
     }
   };
+
   if (loading) {
     return (
       <div>
@@ -239,6 +235,14 @@ const Billings = () => {
       </div>
     );
   }
+
+  if (context === undefined) {
+    return <div>Error: Sidebar context is undefined!</div>;
+  }
+  const handleTabChange = (newValue: number) => {
+    setActiveTab(newValue);
+  };
+
   const handleExportToExcel = async (
     section: "paymentIssues" | "topCustomers"
   ) => {

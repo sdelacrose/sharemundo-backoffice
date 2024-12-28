@@ -6,7 +6,7 @@ import { sidebarItems } from "./sidebarData";
 import Image from "next/image";
 import { Box } from "@mui/material";
 import logoMin from "../../../assets/images/logoMin.png";
-import { Dropdown, HambergerIcon, Logo } from "@/app/assets/icons";
+import { Dropdown, HambergerIcon } from "@/app/assets/icons";
 import LogoPic from "../../../assets/images/SharemundoLinks.png";
 
 interface SideBarProps {

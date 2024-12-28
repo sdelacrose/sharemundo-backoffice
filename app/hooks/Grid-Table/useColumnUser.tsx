@@ -28,7 +28,7 @@ const useColumnUser = (columns: Column[]) => {
         case "sharemundo_links":
           return {
             field: "sharemundo_links",
-            headerName: "sharemundo Links ID",
+            headerName: "sharemundo Links IDs",
             width: 120,
           };
         case "status":
