@@ -34,17 +34,20 @@ const ManageUsers = () => {
         : url;
 
       const data = await apiCall(trimmedUrl, "GET");
-      const users = data?.results?.users || [];
+      console.log("data",data)
+      const users = data?.results || [];
       const extractedUsers = users.map(
         ({
           first_name,
           sharemundo_links_id,
           user_type,
+          email,
           created_at,
           id,
           last_name,
         }: any) => ({
           first_name,
+          email,
           sharemundo_links_id,
           user_type,
           created_at,
@@ -52,7 +55,6 @@ const ManageUsers = () => {
           last_name,
         })
       );
-      console.log("data--------", extractedUsers);
       setOriginalUserData(extractedUsers);
       setUserData(extractedUsers);
       setNextPageUrl(data?.next || null);
@@ -160,7 +162,7 @@ const ManageUsers = () => {
         </Box>
         <Box sx={{ margin: "24px 24px 24px 0" }}>
           <Typography variant="h2" paddingBottom={"8px"}>
-            User Management
+            Manage Users
           </Typography>
           <Typography variant="body2" color="#475367" mt={1} fontSize={16}>
             sharemundo Back Office
