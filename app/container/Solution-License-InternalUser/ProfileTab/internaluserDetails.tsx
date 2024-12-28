@@ -31,7 +31,7 @@ const InternalUserDetails = () => {
             </Stack>
             <Stack>
               <Typography variant="caption" color="#667185">
-                sharemundo Link ID
+                sharemundo Links IDs
               </Typography>
               <Typography variant="subtitle1" color="#101928">
                 8y39214ubu012huoo090

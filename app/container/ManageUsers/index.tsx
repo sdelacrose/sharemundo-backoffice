@@ -14,7 +14,7 @@ import useColumnUserManagement from "@/app/hooks/Grid-Table/useColumnUserManagem
 import { apiCall } from "@/app/utils/APIUtils";
 import AgGridServerSideTable from "@/app/ag-grid/AgGridServerSideTable";
 
-const UserManagement = () => {
+const ManageUsers = () => {
   const context = useContext(SidebarContext);
   const [chartData, setChartData] = useState<any>(null);
   const [userData, setUserData] = useState<any>(null);
@@ -230,4 +230,4 @@ const UserManagement = () => {
   );
 };
 
-export default UserManagement;
+export default ManageUsers;

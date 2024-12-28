@@ -28,9 +28,9 @@ export const sidebarItems: SidebarItem[] = [
     href: "/manage-customers",
   },
   {
-    label: "Users Management",
+    label: "Manage Users",
     icon: ManageUsers,
-    href: "/users-management",
+    href: "/manage-users",
   },
   {
     label: "Solutions and Licenses",
