@@ -14,7 +14,7 @@ import useColumnUserManagement from "@/app/hooks/Grid-Table/useColumnUserManagem
 import { apiCall } from "@/app/utils/APIUtils";
 import AgGridServerSideTable from "@/app/ag-grid/AgGridServerSideTable";
 
-const UserManagement = () => {
+const ManageUsers = () => {
   const context = useContext(SidebarContext);
   const [chartData, setChartData] = useState<any>(null);
   const [userData, setUserData] = useState<any>(null);
@@ -34,16 +34,19 @@ const UserManagement = () => {
         : url;
 
       const data = await apiCall(trimmedUrl, "GET");
-      const users = data?.results?.users || [];
+      console.log("data", data);
+      const users = data?.results || [];
       const extractedUsers = users.map(
         ({
           first_name,
           sharemundo_links_id,
           user_type,
+          email,
           created_at,
           id,
         }: any) => ({
           first_name,
+          email,
           sharemundo_links_id,
           user_type,
           created_at,
@@ -83,13 +86,43 @@ const UserManagement = () => {
   const handleSearchChange = async (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    const query = event.target.value;
+    const query = event.target.value.trim();
+    if (!query) {
+      // If query is empty, fetch the default data
+      fetchUserData("/admin-dashboard/users");
+      return;
+    }
+  
     try {
+      // Send the search query to the API
       const data = await apiCall(
         `/admin-dashboard/users?search=${query}`,
         "GET"
       );
-      setUserData(data?.results?.users);
+  
+      // Map the response to the table structure
+      const users = data?.results || [];
+      const extractedUsers = users.map(
+        ({
+          first_name,
+          sharemundo_links_id,
+          user_type,
+          email,
+          created_at,
+          id,
+          last_name,
+        }: any) => ({
+          first_name,
+          email,
+          sharemundo_links_id,
+          user_type,
+          created_at,
+          id,
+          last_name,
+        })
+      );
+  
+      setUserData(extractedUsers);
       setNextPageUrl(data?.next || null);
       setPreviousPageUrl(data?.previous || null);
       setTotalPages(Math.ceil((data?.count || 0) / 10));
@@ -97,6 +130,7 @@ const UserManagement = () => {
       console.error("Error searching users:", err);
     }
   };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -129,16 +163,40 @@ const UserManagement = () => {
         apiUrl += "?user_type=freelancer";
       } else if (label === "Company") {
         apiUrl += "?user_type=company";
+      } else if (label === "Internal User") {
+        apiUrl += "?user_type=internal_user";
+      } else if (label === "All") {
+        apiUrl = "/admin-dashboard/users";
       }
       const data = await apiCall(apiUrl, "GET");
-      const users = data?.results?.users || [];
-      setUserData(users);
-      setNextPageUrl(data?.next || null);
-      setPreviousPageUrl(data?.previous || null);
-      setTotalPages(Math.ceil((data?.count || 0) / 10));
-    } catch (err) {
-      console.error("Failed to fetch filtered users:", err);
-    }
+    const users = data?.results || []; // Fetch users from API response
+    const extractedUsers = users.map(
+      ({
+        first_name,
+        sharemundo_links_id,
+        user_type,
+        email,
+        created_at,
+        id,
+        last_name,
+      }: any) => ({
+        first_name,
+        email,
+        sharemundo_links_id,
+        user_type,
+        created_at,
+        id,
+        last_name,
+      })
+    );
+
+    setUserData(extractedUsers); // Update row data for AgGrid
+    setNextPageUrl(data?.next || null); // Set next page URL
+    setPreviousPageUrl(data?.previous || null); // Set previous page URL
+    setTotalPages(Math.ceil((data?.count || 0) / 10)); // Update total pages
+  } catch (err) {
+    console.error("Failed to fetch filtered users:", err);
+  }
   };
 
   return (
@@ -157,7 +215,7 @@ const UserManagement = () => {
         </Box>
         <Box sx={{ margin: "24px 24px 24px 0" }}>
           <Typography variant="h2" paddingBottom={"8px"}>
-            User Management
+            Manage Users
           </Typography>
           <Typography variant="body2" color="#475367" mt={1} fontSize={16}>
             Sharemundo Back Office
@@ -227,4 +285,4 @@ const UserManagement = () => {
   );
 };
 
-export default UserManagement;
+export default ManageUsers;

@@ -15,7 +15,7 @@ interface ProfileTabProps {
 const ProfileTab: React.FC<ProfileTabProps> = ({ profileData }) => {
   return (
     <Box display="flex" alignItems="start" gap={2.5} mr={4}>
-      {profileData?.user_type === "company_user" ? (
+      {profileData?.user_type === "internal_user" ? (
         <>
           <CompanyDetails profileDetail={profileData} />
           <ContactDetails profileDetail={profileData} />

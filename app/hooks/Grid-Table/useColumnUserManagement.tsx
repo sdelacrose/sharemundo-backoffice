@@ -75,7 +75,7 @@ const useColumnUserManagement = (columns: Column[]) => {
               <Button
                 style={{ color: "#0057b7" }}
                 onClick={() =>
-                  router.push(`/manage-customers/${params.data.id}`)
+                  router.push(`/manage-users/${params.data.id}`)
                 }
               >
                 View

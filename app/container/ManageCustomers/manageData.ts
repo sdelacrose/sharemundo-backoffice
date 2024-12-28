@@ -30,7 +30,7 @@ export const filterByConnectionItems = [
 ];
 
 export const filterByUserTypeItems = [
-  { label: "all",  value: "all" },
+  // { label: "all",  value: "all" },
   { label: "admin",  value: "admin" },
-  { label: "company_user", value: "company_user" },
+  { label: "user", value: "user" },
 ];

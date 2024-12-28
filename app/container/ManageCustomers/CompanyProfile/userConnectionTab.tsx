@@ -85,7 +85,7 @@ const UserConnectionTab = ({ id, setActiveTab, companyId }: any) => {
           id: connection.id,
           name: connection.name || "N/A",
           sharemundo_links_id: connection.sharemundo_links_id,
-          type: connection.type.charAt(0).toUpperCase() + connection.type.slice(1),
+          type: connection.type,
           connection_date: new Date(connection.created_at).toLocaleDateString(),
         }));
         setRowData(connections);
@@ -115,7 +115,7 @@ const UserConnectionTab = ({ id, setActiveTab, companyId }: any) => {
 
   const handleFilterChange = (value: string | null) => {
     setUserType(value);
-    const filters = { user_type: value || "all" };
+    const filters = { role: value || "all" };
   
     fetchUsersOrConnections(
       `/admin-dashboard/customers/${id}/users`,
@@ -166,7 +166,7 @@ const UserConnectionTab = ({ id, setActiveTab, companyId }: any) => {
       };
   
       if (viewMode === "internal") {
-        filters.user_type = userType || "all";
+        filters.role = userType || "all";
       }
   
       fetchUsersOrConnections(
@@ -190,7 +190,7 @@ const UserConnectionTab = ({ id, setActiveTab, companyId }: any) => {
     fetchUsersOrConnections(
       `/admin-dashboard/customers/${id}/${viewMode === "internal" ? "users" : "connections"}`,
       viewMode === "connections",
-      viewMode === "internal" ? { user_type: userType || "all" } : undefined
+      viewMode === "internal" ? { role: userType || "all" } : undefined
     );
   }, [viewMode, id, userType, connectionType]);
 

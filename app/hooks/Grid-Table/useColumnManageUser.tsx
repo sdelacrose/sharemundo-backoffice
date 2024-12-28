@@ -5,6 +5,11 @@ import LastColumnHeader from "@/app/components/common/LastColumnHeader";
 import { useRouter } from "next/navigation";
 import StatusBadge from "@/app/utils/StatusBadge";
 
+const capitalize = (str: string) =>
+  str.length > 0
+    ? `${str[0].toUpperCase()}${str.substring(1).toLowerCase()}`
+    : "";
+
 const useColumnManageUserDefs = ({
   columns,
   onBlockClick,
@@ -21,18 +26,8 @@ const useColumnManageUserDefs = ({
             flex: 1,
 
             valueFormatter: (params: any) => {
-              const capitalize = (str: string) =>
-                str.length > 0
-                  ? `${str[0].toUpperCase()}${str.substring(1).toLowerCase()}`
-                  : "";
-
-              const firstName = params.data?.first_name || "";
-              const lastName = params.data?.last_name || "";
-
-              const fullName = `${capitalize(firstName)} ${capitalize(
-                lastName
-              )}`.trim();
-              return fullName || "N/A";
+              const firstName = params.data?.name || "";
+              return firstName || "N/A";
             },
           };
         case "sharemundo_links_id":
@@ -47,11 +42,10 @@ const useColumnManageUserDefs = ({
 
             headerName: "Role",
             flex: 0.8,
-            valueFormatter: (params: any) =>
-              params.value
-                ? params.value.charAt(0).toUpperCase() +
-                  params.value.slice(1).toLowerCase()
-                : "N/A",
+            valueFormatter: (params: any) => {
+              const role = params.data?.user_type || "";
+              return capitalize(role) || "N/A";
+            },
           };
         case "is_active":
           return {

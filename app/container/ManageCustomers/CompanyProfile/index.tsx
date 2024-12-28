@@ -18,7 +18,7 @@ const CompanyProfile = ({ customerDetail, id }: any) => {
   const context = useContext(SidebarContext);
   const [activeTab, setActiveTab] = useState(0);
   const [isLicenseDetailOpen, setLicenseDetailOpen] = useState(false);
-  const companyProfile = customerDetail.company_profile;
+  const companyProfile = customerDetail?.company_profile;
 
   const [nextPageUrl, setNextPageUrl] = useState<string | null>(null);
   const [previousPageUrl, setPreviousPageUrl] = useState<string | null>(null);
@@ -26,11 +26,15 @@ const CompanyProfile = ({ customerDetail, id }: any) => {
   const [totalPages, setTotalPages] = useState(0);
   const [rowData, setRowData] = useState([]);
 
+  const isFreelancer = customerDetail?.user_type === "freelancer";
+  const isCompany = customerDetail?.user_type === "company";
+  const isInternalUser = customerDetail?.user_type === "internal_user";
+
   useEffect(() => {
-    if (customerDetail) {
+    if (customerDetail && !isInternalUser) {
       fetchLicenses(`/admin-dashboard/customers/${id}/licenses`);
     }
-  }, [id, customerDetail]);
+  }, [id, customerDetail, isInternalUser]);
 
   const columnDefs = useMemo(
     () => [
@@ -112,16 +116,23 @@ const CompanyProfile = ({ customerDetail, id }: any) => {
     }
   };
 
-  const isFreelancer = customerDetail?.user_type === "freelancer";
-
-  const tabs = [
-    { label: "Profile" },
-    { label: isFreelancer ? "Connection" : "User" },
-    { label: "Billing" },
-    { label: "Licenses" },
-  ];
+  const tabs = useMemo(() => {
+    if (isInternalUser) {
+      return [{ label: "Profile" }];
+    }
+    return [
+      { label: "Profile" },
+      { label: isFreelancer ? "Connection" : "User" },
+      { label: "Billing" },
+      { label: "Licenses" },
+    ];
+  }, [isInternalUser, isFreelancer]);
 
   const renderTabContent = () => {
+    if (isInternalUser) {
+      return <ProfileTab profileData={customerDetail} />;
+    }
+
     switch (activeTab) {
       case 0:
         return <ProfileTab profileData={customerDetail} />;
@@ -132,7 +143,7 @@ const CompanyProfile = ({ customerDetail, id }: any) => {
           <UserConnectionTab
             id={id}
             setActiveTab={handleTabChange}
-            companyId={customerDetail?.company_profile?.id}
+            companyId={companyProfile?.id}
           />
         );
       case 2:
@@ -179,30 +190,44 @@ const CompanyProfile = ({ customerDetail, id }: any) => {
         </Box>
         <Box sx={{ margin: "24px 24px 24px 0" }}>
           <Typography variant="h2" paddingBottom={"8px"}>
-            {customerDetail?.user_type === "company_user"
-              ? `${
-                  companyProfile?.company_name || "N/A"
-                }`
+            {customerDetail?.user_type === "internal_user"
+              ? `${companyProfile?.company_name || "N/A"}`
               : `${customerDetail?.first_name || " "} ${
                   customerDetail?.last_name || "N/A"
                 }`}
           </Typography>
 
-          <Typography variant="body2" color="#0057b7" mt={1} fontSize={16}>
-            {isFreelancer ? "Freelancer" : "Company"}
+          <Typography
+            variant="body2"
+            color="#0057b7"
+            mt={1}
+            fontSize={16}
+            sx={{ marginBottom: isInternalUser ? "24px" : "0px" }}
+          >
+            {isFreelancer && "Freelancer"}
+            {isCompany && "Company"}
+            {isInternalUser && "Internal User"}
           </Typography>
 
-          <Divider
-            sx={{
-              borderColor: "rgba(240, 242, 245, 1)",
-              marginTop: "24px",
-              marginBottom: "27px",
-            }}
-          />
+          {!isInternalUser && (
+            <Divider
+              sx={{
+                borderColor: "rgba(240, 242, 245, 1)",
+                marginTop: "24px",
+                marginBottom: "27px",
+              }}
+            />
+          )}
 
-          <Box mb={4}>
-            <CustomTabs tabs={tabs} onTabChange={handleTabChange} value={activeTab} />
-          </Box>
+          {!isInternalUser && (
+            <Box mb={4}>
+              <CustomTabs
+                tabs={tabs}
+                onTabChange={handleTabChange}
+                value={activeTab}
+              />
+            </Box>
+          )}
           {renderTabContent()}
         </Box>
       </Box>

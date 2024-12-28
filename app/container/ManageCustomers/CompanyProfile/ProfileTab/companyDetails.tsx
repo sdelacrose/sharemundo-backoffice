@@ -51,7 +51,7 @@ const CompanyDetails = ({ profileDetail }: { profileDetail: any }) => {
             <Box flex={2} display="flex" flexDirection="column" gap={"24px"}>
               <Stack>
                 <Typography variant="caption" color="#667185">
-                  Sharemundo Link ID
+                  sharemundo Links IDs
                 </Typography>
                 <Typography variant="subtitle1" color="#101928">
                   {companyProfile.sharemundo_links_id || "N/A"}
