@@ -1,9 +1,9 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import CompanyProfile from "@/app/container/ManageCustomers/CompanyProfile";
 import { apiCall } from "@/app/utils/APIUtils";
 import Loader from "@/app/components/common/Loader";
-import UserProfile from "@/app/container/ManageUsers/userProfile";
 
 const Page = ({ params }: any) => {
   const { id } = params;
@@ -14,7 +14,7 @@ const Page = ({ params }: any) => {
   useEffect(() => {
     const fetchUserDetail = async () => {
       try {
-        const response = await apiCall(`/admin-dashboard/users/${id}`);
+        const response = await apiCall(`/admin-dashboard/customers/${id}`);
         setUserDetail(response);
         setIsLoading(false);
       } catch (err) {
@@ -40,7 +40,8 @@ const Page = ({ params }: any) => {
     return <div>{error}</div>;
   }
 
-  return <UserProfile userDetail={userDetail} />;
+  return <CompanyProfile customerDetail={userDetail} id={id} />;
 };
 
 export default Page;
+

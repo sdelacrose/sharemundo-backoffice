@@ -26,6 +26,8 @@ const CompanyProfile = ({ customerDetail, id }: any) => {
   const [totalPages, setTotalPages] = useState(0);
   const [rowData, setRowData] = useState([]);
 
+  console.log("customerDetail",customerDetail)
+
   useEffect(() => {
     if (customerDetail) {
       fetchLicenses(`/admin-dashboard/customers/${id}/licenses`);
@@ -179,7 +181,7 @@ const CompanyProfile = ({ customerDetail, id }: any) => {
         </Box>
         <Box sx={{ margin: "24px 24px 24px 0" }}>
           <Typography variant="h2" paddingBottom={"8px"}>
-            {customerDetail?.user_type === "company_user"
+            {customerDetail?.user_type === "internal_user"
               ? `${
                   companyProfile?.company_name || "N/A"
                 }`
