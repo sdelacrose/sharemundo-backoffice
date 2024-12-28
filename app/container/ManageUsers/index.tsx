@@ -3,7 +3,7 @@
 import { SidebarContext } from "@/app/(pages)/layout";
 import Header from "@/app/components/common/Header";
 import { Box, Divider, Stack, Typography } from "@mui/material";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState, useCallback } from "react";
 import { Search } from "@/app/assets/icons";
 import SharpLineChart from "@/app/components/common/SharpLineChart";
 import { userManagementColumnDefs } from "@/app/const/GridTable/ColDef";
@@ -16,6 +16,7 @@ import AgGridServerSideTable from "@/app/ag-grid/AgGridServerSideTable";
 
 const ManageUsers = () => {
   const context = useContext(SidebarContext);
+
   const [chartData, setChartData] = useState<any>(null);
   const [userData, setUserData] = useState<any>(null);
   const [, setLoading] = useState<any>(false);
@@ -26,12 +27,7 @@ const ManageUsers = () => {
   const UserManagementCol = useColumnUserManagement(userManagementColumnDefs);
   const [, setOriginalUserData] = useState<any>([]);
 
-  if (context === undefined) {
-    return <div>Error: Sidebar context is undefined!</div>;
-  }
-
-  // Function to extract user data
-  const extractUsers = (users: any[]) =>
+  const extractUsers = useCallback((users: any[]) =>
     users.map((user: any) => {
       const firstName = user.first_name || "N/A";
       const lastName = user.last_name || "N/A";
@@ -39,9 +35,9 @@ const ManageUsers = () => {
       const sharemundoLinksId = user.sharemundo_links_id || "N/A";
       const userType = user.user_type
         ? user.user_type
-            .replace(/_/g, " ") // Replace underscores with spaces
-            .replace(/\b\w/g, (char) => char.toUpperCase()) // Capitalize each word
-        : "N/A"; // Default value if user_type is null or empty
+            .replace(/_/g, " ")
+            .replace(/\b\w/g, (char) => char.toUpperCase())
+        : "N/A";
       const createdAt = user.created_at || "N/A";
       const id = user.id || "N/A";
 
@@ -54,78 +50,82 @@ const ManageUsers = () => {
         created_at: createdAt,
         id,
       };
-    });
+    }), []
+  );
 
-  const fetchUserData = async (url: string) => {
-    try {
-      setLoading(true);
-      const trimmedUrl = url.includes("/admin-dashboard")
-        ? url.substring(url.indexOf("/admin-dashboard"))
-        : url;
+  const fetchUserData = useCallback(
+    async (url: string) => {
+      try {
+        setLoading(true);
+        const trimmedUrl = url.includes("/admin-dashboard")
+          ? url.substring(url.indexOf("/admin-dashboard"))
+          : url;
 
-      const data = await apiCall(trimmedUrl, "GET");
-      console.log("data", data);
-      const users = Array.isArray(data.results) ? data.results : [];
-      const extractedUsers = extractUsers(users);
+        const data = await apiCall(trimmedUrl, "GET");
+        const users = Array.isArray(data.results) ? data.results : [];
+        const extractedUsers = extractUsers(users);
 
-      setOriginalUserData(extractedUsers);
-      setUserData(extractedUsers);
-      setNextPageUrl(data.next || null);
-      setPreviousPageUrl(data.previous || null);
-      setTotalPages(Math.ceil((data.count || 0) / 10));
-      setLoading(false);
-    } catch (err) {
-      console.error("Error fetching user data:", err);
-      setLoading(false);
-    }
-  };
+        setOriginalUserData(extractedUsers);
+        setUserData(extractedUsers);
+        setNextPageUrl(data.next || null);
+        setPreviousPageUrl(data.previous || null);
+        setTotalPages(Math.ceil((data.count || 0) / 10));
+        setLoading(false);
+      } catch (err) {
+        console.error("Error fetching user data:", err);
+        setLoading(false);
+      }
+    },
+    [extractUsers]
+  );
 
   useEffect(() => {
     fetchUserData("/admin-dashboard/users");
-  }, []);
+  }, [fetchUserData]);
 
-  const handleNextPage = () => {
+  const handleNextPage = useCallback(() => {
     if (nextPageUrl) {
       setCurrentPage((prev) => prev + 1);
       fetchUserData(nextPageUrl);
     }
-  };
+  }, [nextPageUrl, fetchUserData]);
 
-  const handlePreviousPage = () => {
+  const handlePreviousPage = useCallback(() => {
     if (previousPageUrl) {
       setCurrentPage((prev) => prev - 1);
       fetchUserData(previousPageUrl);
     }
-  };
+  }, [previousPageUrl, fetchUserData]);
 
-  const handleSearchChange = async (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const query = event.target.value.trim();
-    if (!query) {
-      fetchUserData("/admin-dashboard/users");
-      return;
-    }
+  const handleSearchChange = useCallback(
+    async (event: React.ChangeEvent<HTMLInputElement>) => {
+      const query = event.target.value.trim();
+      if (!query) {
+        fetchUserData("/admin-dashboard/users");
+        return;
+      }
 
-    try {
-      const data = await apiCall(
-        `/admin-dashboard/users?search=${query}`,
-        "GET"
-      );
-      const users = Array.isArray(data.results) ? data.results : [];
-      const extractedUsers = extractUsers(users);
+      try {
+        const data = await apiCall(
+          `/admin-dashboard/users?search=${query}`,
+          "GET"
+        );
+        const users = Array.isArray(data.results) ? data.results : [];
+        const extractedUsers = extractUsers(users);
 
-      setUserData(extractedUsers);
-      setNextPageUrl(data.next || null);
-      setPreviousPageUrl(data.previous || null);
-      setTotalPages(Math.ceil((data.count || 0) / 10));
-    } catch (err) {
-      console.error("Error searching users:", err);
-    }
-  };
+        setUserData(extractedUsers);
+        setNextPageUrl(data.next || null);
+        setPreviousPageUrl(data.previous || null);
+        setTotalPages(Math.ceil((data.count || 0) / 10));
+      } catch (err) {
+        console.error("Error searching users:", err);
+      }
+    },
+    [fetchUserData, extractUsers]
+  );
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchChartData = async () => {
       try {
         setLoading(true);
         const data = await apiCall("/admin-dashboard/users/stats", "GET");
@@ -133,43 +133,49 @@ const ManageUsers = () => {
           name: key,
           value: value as number,
         }));
-        console.log("Chart data-------", transformedData);
         setChartData(transformedData);
         setLoading(false);
       } catch (err) {
-        console.error(`Error fetching data `, err);
+        console.error(`Error fetching data`, err);
         setLoading(false);
       }
     };
 
-    fetchData();
+    fetchChartData();
   }, []);
 
-  const handleSelect = async (label: string | null) => {
-    try {
-      let apiUrl = "/admin-dashboard/users";
+  const handleSelect = useCallback(
+    async (label: string | null) => {
+      try {
+        let apiUrl = "/admin-dashboard/users";
 
-      if (label === "Freelancer") {
-        apiUrl += "?user_type=freelancer";
-      } else if (label === "Company") {
-        apiUrl += "?user_type=company";
-      } else if (label === "Internal User") {
-        apiUrl += "?user_type=internal_user";
+        if (label === "Freelancer") {
+          apiUrl += "?user_type=freelancer";
+        } else if (label === "Company") {
+          apiUrl += "?user_type=company";
+        } else if (label === "Internal User") {
+          apiUrl += "?user_type=internal_user";
+        }
+
+        const data = await apiCall(apiUrl, "GET");
+        const users = Array.isArray(data.results) ? data.results : [];
+        const extractedUsers = extractUsers(users);
+
+        setUserData(extractedUsers);
+        setNextPageUrl(data.next || null);
+        setPreviousPageUrl(data.previous || null);
+        setTotalPages(Math.ceil((data.count || 0) / 10));
+      } catch (err) {
+        console.error("Failed to fetch filtered users:", err);
       }
+    },
+    [extractUsers]
+  );
 
-      const data = await apiCall(apiUrl, "GET");
-      const users = Array.isArray(data.results) ? data.results : [];
-      const extractedUsers = extractUsers(users);
-
-      setUserData(extractedUsers);
-      setNextPageUrl(data.next || null);
-      setPreviousPageUrl(data.previous || null);
-      setTotalPages(Math.ceil((data.count || 0) / 10));
-    } catch (err) {
-      console.error("Failed to fetch filtered users:", err);
-    }
-  };
-
+  if (context === undefined) {
+    return <div>Error: Sidebar context is undefined!</div>;
+  }
+  
   return (
     <>
       <Box

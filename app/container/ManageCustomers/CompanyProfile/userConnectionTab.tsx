@@ -134,8 +134,6 @@ const UserConnectionTab = ({ id, setActiveTab, companyId }: any) => {
       filters
     );
   };
-  
-  
 
   const handleNextPage = () => {
     if (nextPageUrl) {

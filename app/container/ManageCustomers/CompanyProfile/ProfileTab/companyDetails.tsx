@@ -1,9 +1,10 @@
+import Loader from "@/app/components/common/Loader";
 import { Box, Divider, Stack, Typography } from "@mui/material";
 import React from "react";
 
-const CompanyDetails = ({ profileDetail }: { profileDetail: any }) => {
+const CompanyDetails = ({ profileDetail, header, name }: any) => {
   if (!profileDetail || !profileDetail.company_profile) {
-    return <div>Loading company details...</div>;
+    return <Loader/>;
   }
 
   const companyProfile = profileDetail.company_profile;
@@ -11,8 +12,7 @@ const CompanyDetails = ({ profileDetail }: { profileDetail: any }) => {
   return (
     <>
       <Box width={"50%"}>
-        {/* Company Details */}
-        <Typography variant="h5">Company Details</Typography>
+        <Typography variant="h5">{header}</Typography>
         <Divider
           sx={{
             borderColor: "#F0F2F5",
@@ -25,7 +25,7 @@ const CompanyDetails = ({ profileDetail }: { profileDetail: any }) => {
             <Box flex={3} display="flex" flexDirection="column" gap={"24px"}>
               <Stack>
                 <Typography variant="caption" color="#667185">
-                  Company Name
+                  {name}
                 </Typography>
                 <Typography variant="subtitle1" color="#101928">
                   {companyProfile.company_name || "N/A"}

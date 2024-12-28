@@ -13,14 +13,33 @@ interface ProfileTabProps {
 }
 
 const ProfileTab: React.FC<ProfileTabProps> = ({ profileData }) => {
+  const internalUser = profileData?.user_type === "internal_user";
+  const company = profileData?.user_type === "company";
+  const freelancer = profileData?.user_type === "freelancer";
+
   return (
     <Box display="flex" alignItems="start" gap={2.5} mr={4}>
-      {profileData?.user_type === "internal_user" ? (
+      {internalUser && (
         <>
-          <CompanyDetails profileDetail={profileData} />
+          <CompanyDetails
+            profileDetail={profileData}
+            header="Internal User Details"
+            name="Internal User Name"
+          />
           <ContactDetails profileDetail={profileData} />
         </>
-      ) : (
+      )}
+      {company && (
+        <>
+          <CompanyDetails
+            profileDetail={profileData}
+            header="Company Details"
+            name="Company Name"
+          />
+          <ContactDetails profileDetail={profileData} />
+        </>
+      )}
+      {freelancer && (
         <>
           <FreelancerDetails freelancerDetail={profileData} />
           <FreelanceContactDetails freelanceContactDetail={profileData} />

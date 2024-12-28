@@ -190,7 +190,7 @@ const CompanyProfile = ({ customerDetail, id }: any) => {
         </Box>
         <Box sx={{ margin: "24px 24px 24px 0" }}>
           <Typography variant="h2" paddingBottom={"8px"}>
-            {customerDetail?.user_type === "internal_user"
+            {customerDetail?.user_type === "company"
               ? `${companyProfile?.company_name || "N/A"}`
               : `${customerDetail?.first_name || " "} ${
                   customerDetail?.last_name || "N/A"
