@@ -168,7 +168,7 @@ const ManageUsers = () => {
       } else if (label === "Internal User") {
         apiUrl += "?user_type=internal_user";
       } else if (label === "All") {
-        apiUrl;
+        apiUrl = "/admin-dashboard/users";
       }
       const data = await apiCall(apiUrl, "GET");
     const users = data?.results || []; // Fetch users from API response
