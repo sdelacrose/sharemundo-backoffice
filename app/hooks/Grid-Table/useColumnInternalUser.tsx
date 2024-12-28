@@ -22,7 +22,7 @@ const useColumnInternalUser = (columns: Column[]) => {
         case "sharemundo_links":
           return {
             field: "sharemundo_links",
-            headerName: "sharemundo Links ID",
+            headerName: "Sharemundo Links ID",
             width: 120,
             flex: 1,
           };

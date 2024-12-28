@@ -19,39 +19,41 @@ const useColumnManageUserDefs = ({
             ...col,
             headerName: "Name",
             flex: 1,
+            cellRenderer: (params) => {
+              const first_name = params.data?.first_name || "";
+              const last_name = params.data?.last_name || "";
 
-            valueFormatter: (params: any) => {
-              const capitalize = (str: string) =>
-                str.length > 0
-                  ? `${str[0].toUpperCase()}${str.substring(1).toLowerCase()}`
+              const formatName = (name: string) => {
+                return name
+                  ? name.charAt(0).toUpperCase() + name.slice(1).toLowerCase()
                   : "";
+              };
 
-              const firstName = params.data?.first_name || "";
-              const lastName = params.data?.last_name || "";
+              const formattedFirstName = formatName(first_name);
+              const formattedLastName = formatName(last_name);
 
-              const fullName = `${capitalize(firstName)} ${capitalize(
-                lastName
-              )}`.trim();
-              return fullName || "N/A";
+              const fullName =
+                [formattedFirstName, formattedLastName]
+                  .filter(Boolean)
+                  .join(" ") || "N/A";
+
+              return <span>{fullName}</span>;
             },
           };
         case "sharemundo_links_id":
           return {
-            field: "sharemundo_links_id",
-            headerName: "sharemundo Link",
+            ...col,
+            headerName: "Sharemundo Link",
             flex: 1.2,
           };
         case "role":
           return {
-            field: "role",
-
+            ...col,
             headerName: "Role",
             flex: 0.8,
-            valueFormatter: (params: any) =>
-              params.value
-                ? params.value.charAt(0).toUpperCase() +
-                  params.value.slice(1).toLowerCase()
-                : "N/A",
+            cellRenderer: (params) => (
+              <Box>{params.data.role ? params.data.role : "N/A"}</Box>
+            ),
           };
         case "is_active":
           return {
@@ -68,13 +70,13 @@ const useColumnManageUserDefs = ({
           };
         case "number_of_admins":
           return {
-            field: "number_of_admins",
+            ...col,
             headerName: "No of Admins",
             flex: 0.8,
           };
         case "number_of_internal_users":
           return {
-            field: "number_of_internal_users",
+            ...col,
             headerName: "No of Internal Users",
           };
         case "total_bought_license":

@@ -20,7 +20,7 @@ const ConnectionTab = ({ id, setActiveTab }: { id: string; setActiveTab: (tabInd
     { field: "name", headerName: "Name", flex: 2 },
     {
       field: "sharemundo_links_id",
-      headerName: "sharemundo Links ID",
+      headerName: "Sharemundo Links ID",
       flex: 2,
     },
     { field: "type", headerName: "Type", flex: 1 },

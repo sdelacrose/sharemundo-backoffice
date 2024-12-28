@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, {  useState } from "react";
 import Link from "next/link";
 import styles from "./index.module.scss";
 import { sidebarItems } from "./sidebarData";
@@ -7,7 +7,6 @@ import Image from "next/image";
 import { Box } from "@mui/material";
 import logoMin from "../../../assets/images/logoMin.png";
 import { Dropdown, HambergerIcon, Logo } from "@/app/assets/icons";
-import LogoPic from "../../../assets/images/SharemundoLinks.png";
 
 interface SideBarProps {
   isCollapsed: boolean;
@@ -45,14 +44,14 @@ const SideBar: React.FC<SideBarProps> = ({ isCollapsed, toggleSidebar }) => {
         {isCollapsed ? (
           <Image src={logoMin} alt="logo" className={styles.image} />
         ) : (
-          <Image
-            src={LogoPic}
-            alt="SharemundoLinks"
-            className={styles.iconLogo}
-            height={94}
-            width={200}
-          />
-          // <Logo className={styles.iconLogo} />
+          // <Image
+          //   src={SharemundoLinks}
+          //   alt="SharemundoLinks"
+          //   className={styles.iconLogo}
+          //   height={94}
+          //   width={200}
+          // />
+          <Logo className={styles.iconLogo} />
         )}
         <Box
           onClick={handleSidebarToggle}

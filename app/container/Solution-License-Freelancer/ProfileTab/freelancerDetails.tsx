@@ -41,7 +41,7 @@ const FreelancerDetails = ({ freelancerDetail }) => {
             <Box flex={2} display="flex" flexDirection="column" gap={"24px"}>
               <Stack>
                 <Typography variant="caption" color="#667185">
-                  sharemundo Link ID
+                  Sharemundo Link ID
                 </Typography>
                 <Typography variant="subtitle1" color="#101928">
                   {freelancerDetail?.sharemundo_links_id || "N/A"}
