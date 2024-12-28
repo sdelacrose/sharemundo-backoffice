@@ -16,7 +16,10 @@ import RestoreBulkUsersDrawer from "../Drawers/restoreBulkUsersDrawer";
 import AddUserDrawer from "./addUserDrawer";
 import { filterByConnectionItems, filterByUserTypeItems } from "../manageData";
 import _debounce from "lodash/debounce";
-import { connectionColumnDefs, internalColumnDefs } from "@/app/const/GridTable/ColDef";
+import {
+  connectionColumnDefs,
+  internalColumnDefs,
+} from "@/app/const/GridTable/ColDef";
 
 const UserConnectionTab = ({ id, setActiveTab, companyId }: any) => {
   const [viewMode, setViewMode] = useState<"internal" | "connections">(
@@ -73,21 +76,27 @@ const UserConnectionTab = ({ id, setActiveTab, companyId }: any) => {
       const trimmedUrl = url.includes("/admin-dashboard")
         ? url.substring(url.indexOf("/admin-dashboard"))
         : url;
-  
+
       // Apply filters if provided
       const params = new URLSearchParams(filters || {});
       const fullUrl = `${trimmedUrl}?${params.toString()}`;
-  
+
       const response = await apiCall(fullUrl);
-  
+
       if (isConnections) {
-        const connections = response.results.connections.map((connection: any) => ({
-          id: connection.id,
-          name: connection.name || "N/A",
-          sharemundo_links_id: connection.sharemundo_links_id,
-          type: connection.type.charAt(0).toUpperCase() + connection.type.slice(1),
-          connection_date: new Date(connection.created_at).toLocaleDateString(),
-        }));
+        const connections = response.results.connections.map(
+          (connection: any) => ({
+            id: connection.id,
+            name: connection.name || "N/A",
+            sharemundo_links_id: connection.sharemundo_links_id,
+            type:
+              connection.type.charAt(0).toUpperCase() +
+              connection.type.slice(1),
+            connection_date: new Date(
+              connection.created_at
+            ).toLocaleDateString(),
+          })
+        );
         setRowData(connections);
         setFilteredRowData(connections);
       } else {
@@ -104,7 +113,7 @@ const UserConnectionTab = ({ id, setActiveTab, companyId }: any) => {
         setRowData(users);
         setFilteredRowData(users);
       }
-  
+
       setNextPageUrl(response.next || null);
       setPreviousPageUrl(response.previous || null);
       setTotalPages(Math.ceil(response.count / 10));
@@ -116,7 +125,7 @@ const UserConnectionTab = ({ id, setActiveTab, companyId }: any) => {
   const handleFilterChange = (value: string | null) => {
     setUserType(value);
     const filters = { user_type: value || "all" };
-  
+
     fetchUsersOrConnections(
       `/admin-dashboard/customers/${id}/users`,
       false,
@@ -127,15 +136,13 @@ const UserConnectionTab = ({ id, setActiveTab, companyId }: any) => {
   const handleConnectionFilter = (value: string | null) => {
     setConnectionType(value);
     const filters = { type: value || "all" };
-  
+
     fetchUsersOrConnections(
       `/admin-dashboard/customers/${id}/connections`,
       false,
       filters
     );
   };
-  
-  
 
   const handleNextPage = () => {
     if (nextPageUrl) {
@@ -160,24 +167,25 @@ const UserConnectionTab = ({ id, setActiveTab, companyId }: any) => {
   const handleSearchChange = _debounce(
     async (event: React.ChangeEvent<HTMLInputElement>) => {
       const query = event.target.value.trim();
-  
+
       const filters: Record<string, string> = {
         search: query,
       };
-  
+
       if (viewMode === "internal") {
         filters.user_type = userType || "all";
       }
-  
+
       fetchUsersOrConnections(
-        `/admin-dashboard/customers/${id}/${viewMode === "internal" ? "users" : "connections"}`,
+        `/admin-dashboard/customers/${id}/${
+          viewMode === "internal" ? "users" : "connections"
+        }`,
         viewMode === "connections",
         filters
       );
     },
     500
   );
-  
 
   useEffect(() => {
     setRowData([]);
@@ -186,9 +194,11 @@ const UserConnectionTab = ({ id, setActiveTab, companyId }: any) => {
     setPreviousPageUrl(null);
     setCurrentPage(1);
     setTotalPages(0);
-  
+
     fetchUsersOrConnections(
-      `/admin-dashboard/customers/${id}/${viewMode === "internal" ? "users" : "connections"}`,
+      `/admin-dashboard/customers/${id}/${
+        viewMode === "internal" ? "users" : "connections"
+      }`,
       viewMode === "connections",
       viewMode === "internal" ? { user_type: userType || "all" } : undefined
     );
@@ -301,7 +311,6 @@ const UserConnectionTab = ({ id, setActiveTab, companyId }: any) => {
       console.error("Failed to restore users:", error);
     }
   };
-
 
   // Function to close the RemoveConnectionDrawer
   const handleCloseRemoveDrawer = () => {
@@ -434,10 +443,10 @@ const UserConnectionTab = ({ id, setActiveTab, companyId }: any) => {
                   onChange={handleSearchChange}
                   width="340px"
                 />
-               <CustomFilterSelect
-  items={filterByUserTypeItems}
-  onSelect={handleFilterChange}
-/>
+                <CustomFilterSelect
+                  items={filterByUserTypeItems}
+                  onSelect={handleFilterChange}
+                />
               </Box>
             </Box>
           </Box>

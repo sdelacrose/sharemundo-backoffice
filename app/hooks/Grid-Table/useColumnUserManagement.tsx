@@ -21,16 +21,26 @@ const useColumnUserManagement = (columns: Column[]) => {
             field: "first_name",
             headerName: "Name",
             flex: 1.4,
-            valueFormatter: (params: any) =>
-              params.value
-                ? params.value.charAt(0).toUpperCase() +
-                  params.value.slice(1).toLowerCase()
-                : "N/A",
+          
+            valueFormatter: (params: any) => {
+              const capitalize = (str: string) =>
+                str.length > 0
+                  ? `${str[0].toUpperCase()}${str.substring(1).toLowerCase()}`
+                  : "";
+
+              const firstName = params.data?.first_name || "";
+              const lastName = params.data?.last_name || "";
+
+              const fullName = `${capitalize(firstName)} ${capitalize(
+                lastName
+              )}`.trim();
+              return fullName || "N/A";
+            },
           };
         case "sharemundo_links_id":
           return {
             field: "sharemundo_links_id",
-            headerName: "Sharemundo Links ID",
+            headerName: "sharemundo Links IDs",
             width: 120,
             flex: 1.7,
             valueFormatter: (params: any) =>

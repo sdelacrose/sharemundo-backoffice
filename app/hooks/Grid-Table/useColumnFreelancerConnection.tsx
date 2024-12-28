@@ -22,7 +22,7 @@ const useColumnFreelancerConnection = (columns: Column[]) => {
         case "sharemundo_links":
           return {
             field: "sharemundo_links",
-            headerName: "Sharemundo Links ID",
+            headerName: "sharemundo Links IDs",
             width: 120,
             flex: 1,
           };

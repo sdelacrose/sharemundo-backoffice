@@ -29,7 +29,7 @@ const useColumnBillingCustomers = (columns: Column[]) => {
         case "sharemundo_links_id":
           return {
             field: "sharemundo_links_id",
-            headerName: "Sharemundo Links ID",
+            headerName: "sharemundo Links IDs",
             width: 120,
             flex: 1.7,
             valueFormatter: (params: any) =>

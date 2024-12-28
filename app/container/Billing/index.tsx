@@ -36,6 +36,9 @@ const Billings = () => {
   const [totalPages, setTotalPages] = useState<number>(0);
   const [selectedRows, setSelectedRows] = useState([]);
 
+  const [, setRevenueLoading] = useState<boolean>(false);
+  const [failedData, setFailedData] = useState<any>(null);
+
   const router = useRouter();
   const handleAction = (actionType: string, rowData: any) => {
     if (actionType === "download") {
@@ -104,6 +107,7 @@ const Billings = () => {
   useEffect(() => {
     fetchBillingData();
   }, []);
+  
   useEffect(() => {
     const fetchTopUserDataData = async () => {
       try {
@@ -134,12 +138,11 @@ const Billings = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        setLoading(true);
+        setRevenueLoading(true);
         const data = await apiCall(
           "/admin-dashboard/invoices/revenue-stats",
           "GET"
         );
-        // console.log("Chart data-------", data);
         const transformChartData = (data: any) => {
           return Object.entries(data).map(([month, value]) => ({
             name: month,
@@ -156,7 +159,7 @@ const Billings = () => {
         console.log("Chart data-------", chartData.past12Months);
         console.log("Chart data-------", chartData.past12Months);
 
-        setLoading(false);
+        setRevenueLoading(false);
       } catch (err) {
         console.error(`Error fetching data :`, err);
         setLoading(false);
@@ -164,18 +167,42 @@ const Billings = () => {
     };
 
     fetchData();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeTab]);
 
-  if (context === undefined) {
-    return <div>Error: Sidebar context is undefined!</div>;
-  }
-  const handleTabChange = (newValue: number) => {
-    setActiveTab(newValue);
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+      const data = await apiCall(
+        "/admin-dashboard/invoices/failed-stats",
+        "GET"
+      );
+      const transformedData = Object.entries(data).map(([key, value]) => ({
+        name: key,
+        value: value as number,
+      }));
+      console.log("Chart data-------", transformedData);
+      setFailedData(transformedData);
+      setLoading(false);
+    } catch (err) {
+      console.error(`Error fetching data `, err);
+      setLoading(false);
+    }
   };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const renderFailedStatsChart = () => {
+    if (!failedData) return <div>Loading...</div>;
+
+    return <BarChartComponent data={failedData} />;
+  };
+
   const renderChart = () => {
     if (!chartData) {
-      return <div>Loading....</div>;
+      return <div>Loadin....</div>;
     }
     switch (activeTab) {
       case 0:
@@ -186,6 +213,7 @@ const Billings = () => {
         return <div>Chart here</div>;
     }
   };
+
   const handleNextPage = () => {
     if (nextPageUrl) {
       setCurrentPage((prev) => prev + 1);
@@ -199,6 +227,7 @@ const Billings = () => {
       fetchBillingData();
     }
   };
+
   if (loading) {
     return (
       <div>
@@ -206,6 +235,14 @@ const Billings = () => {
       </div>
     );
   }
+
+  if (context === undefined) {
+    return <div>Error: Sidebar context is undefined!</div>;
+  }
+  const handleTabChange = (newValue: number) => {
+    setActiveTab(newValue);
+  };
+
   const handleExportToExcel = async (
     section: "paymentIssues" | "topCustomers"
   ) => {
@@ -275,7 +312,7 @@ const Billings = () => {
             </Typography>
           </Box>
           <Typography variant="body2" color="#475367" mt={1} fontSize={16}>
-            Sharemundo Back Office
+            sharemundo Back Office
           </Typography>
           <Divider
             sx={{
@@ -301,6 +338,21 @@ const Billings = () => {
                 value={activeTab}
               />
               {renderChart()}
+            </Stack>
+          </Box>
+          <Box
+            mb={3}
+            borderRadius={"10px"}
+            border={"1px solid #E4E7EC"}
+            padding={2}
+            bgcolor={"#fff"}
+          >
+            <Stack gap={3}>
+              <Typography variant="h5" color="#475367">
+                Payment Issues
+              </Typography>
+
+              {renderFailedStatsChart()}
             </Stack>
           </Box>
           <Box
