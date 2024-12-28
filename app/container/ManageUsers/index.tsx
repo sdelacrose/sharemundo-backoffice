@@ -26,6 +26,36 @@ const ManageUsers = () => {
   const UserManagementCol = useColumnUserManagement(userManagementColumnDefs);
   const [, setOriginalUserData] = useState<any>([]);
 
+  if (context === undefined) {
+    return <div>Error: Sidebar context is undefined!</div>;
+  }
+
+  // Function to extract user data
+  const extractUsers = (users: any[]) =>
+    users.map((user: any) => {
+      const firstName = user.first_name || "N/A";
+      const lastName = user.last_name || "N/A";
+      const email = user.email || "N/A";
+      const sharemundoLinksId = user.sharemundo_links_id || "N/A";
+      const userType = user.user_type
+        ? user.user_type
+            .replace(/_/g, " ") // Replace underscores with spaces
+            .replace(/\b\w/g, (char) => char.toUpperCase()) // Capitalize each word
+        : "N/A"; // Default value if user_type is null or empty
+      const createdAt = user.created_at || "N/A";
+      const id = user.id || "N/A";
+
+      return {
+        first_name: firstName,
+        last_name: lastName,
+        email,
+        sharemundo_links_id: sharemundoLinksId,
+        user_type: userType,
+        created_at: createdAt,
+        id,
+      };
+    });
+
   const fetchUserData = async (url: string) => {
     try {
       setLoading(true);
@@ -35,29 +65,14 @@ const ManageUsers = () => {
 
       const data = await apiCall(trimmedUrl, "GET");
       console.log("data", data);
-      const users = data?.results || [];
-      const extractedUsers = users.map(
-        ({
-          first_name,
-          sharemundo_links_id,
-          user_type,
-          email,
-          created_at,
-          id,
-        }: any) => ({
-          first_name,
-          email,
-          sharemundo_links_id,
-          user_type,
-          created_at,
-          id,
-        })
-      );
+      const users = Array.isArray(data.results) ? data.results : [];
+      const extractedUsers = extractUsers(users);
+
       setOriginalUserData(extractedUsers);
       setUserData(extractedUsers);
-      setNextPageUrl(data?.next || null);
-      setPreviousPageUrl(data?.previous || null);
-      setTotalPages(Math.ceil((data?.count || 0) / 10));
+      setNextPageUrl(data.next || null);
+      setPreviousPageUrl(data.previous || null);
+      setTotalPages(Math.ceil((data.count || 0) / 10));
       setLoading(false);
     } catch (err) {
       console.error("Error fetching user data:", err);
@@ -88,44 +103,22 @@ const ManageUsers = () => {
   ) => {
     const query = event.target.value.trim();
     if (!query) {
-      // If query is empty, fetch the default data
       fetchUserData("/admin-dashboard/users");
       return;
     }
-  
+
     try {
-      // Send the search query to the API
       const data = await apiCall(
         `/admin-dashboard/users?search=${query}`,
         "GET"
       );
-  
-      // Map the response to the table structure
-      const users = data?.results || [];
-      const extractedUsers = users.map(
-        ({
-          first_name,
-          sharemundo_links_id,
-          user_type,
-          email,
-          created_at,
-          id,
-          last_name,
-        }: any) => ({
-          first_name,
-          email,
-          sharemundo_links_id,
-          user_type,
-          created_at,
-          id,
-          last_name,
-        })
-      );
-  
+      const users = Array.isArray(data.results) ? data.results : [];
+      const extractedUsers = extractUsers(users);
+
       setUserData(extractedUsers);
-      setNextPageUrl(data?.next || null);
-      setPreviousPageUrl(data?.previous || null);
-      setTotalPages(Math.ceil((data?.count || 0) / 10));
+      setNextPageUrl(data.next || null);
+      setPreviousPageUrl(data.previous || null);
+      setTotalPages(Math.ceil((data.count || 0) / 10));
     } catch (err) {
       console.error("Error searching users:", err);
     }
@@ -151,9 +144,6 @@ const ManageUsers = () => {
 
     fetchData();
   }, []);
-  if (context === undefined) {
-    return <div>Error: Sidebar context is undefined!</div>;
-  }
 
   const handleSelect = async (label: string | null) => {
     try {
@@ -165,38 +155,19 @@ const ManageUsers = () => {
         apiUrl += "?user_type=company";
       } else if (label === "Internal User") {
         apiUrl += "?user_type=internal_user";
-      } else if (label === "All") {
-        apiUrl = "/admin-dashboard/users";
       }
-      const data = await apiCall(apiUrl, "GET");
-    const users = data?.results || []; // Fetch users from API response
-    const extractedUsers = users.map(
-      ({
-        first_name,
-        sharemundo_links_id,
-        user_type,
-        email,
-        created_at,
-        id,
-        last_name,
-      }: any) => ({
-        first_name,
-        email,
-        sharemundo_links_id,
-        user_type,
-        created_at,
-        id,
-        last_name,
-      })
-    );
 
-    setUserData(extractedUsers); // Update row data for AgGrid
-    setNextPageUrl(data?.next || null); // Set next page URL
-    setPreviousPageUrl(data?.previous || null); // Set previous page URL
-    setTotalPages(Math.ceil((data?.count || 0) / 10)); // Update total pages
-  } catch (err) {
-    console.error("Failed to fetch filtered users:", err);
-  }
+      const data = await apiCall(apiUrl, "GET");
+      const users = Array.isArray(data.results) ? data.results : [];
+      const extractedUsers = extractUsers(users);
+
+      setUserData(extractedUsers);
+      setNextPageUrl(data.next || null);
+      setPreviousPageUrl(data.previous || null);
+      setTotalPages(Math.ceil((data.count || 0) / 10));
+    } catch (err) {
+      console.error("Failed to fetch filtered users:", err);
+    }
   };
 
   return (
