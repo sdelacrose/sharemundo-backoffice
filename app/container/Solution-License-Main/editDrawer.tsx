@@ -19,26 +19,6 @@ interface CreateEditDrawerProps {
   };
 }
 
-// const EditDrawer: React.FC<CreateEditDrawerProps> = ({
-//   open,
-//   handleClose,
-//   id,
-//   onUpdateData,
-//   initialData,
-// }) => {
-//   const {
-//     control,
-//     handleSubmit,
-//     setValue,
-//     formState: { errors, isSubmitting },
-//   } = useForm({
-//     defaultValues: {
-//       solutionName: initialData?.name || "",
-//       price: initialData?.price || "",
-//       link: initialData?.link || "",
-//       description: initialData?.description || "",
-//     },
-//   });
 const EditDrawer: React.FC<CreateEditDrawerProps> = ({
   open,
   handleClose,
@@ -148,21 +128,32 @@ const EditDrawer: React.FC<CreateEditDrawerProps> = ({
                   )}
                 />
                 <Controller
-                  name="price"
+                  name="link"
                   control={control}
                   rules={{
-                    required: "Price is required",
-                    validate: (value) =>
-                      !isNaN(parseFloat(value)) || "Price must be a number",
+                    required: "Link is required",
+                    pattern: {
+                      value:
+                        /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/,
+                      message: "Invalid link format",
+                    },
                   }}
                   render={({ field }) => (
                     <CustomTextField
-                      label="Price"
-                      placeholder="$54.45"
+                      label="Link"
+                      placeholder="link.com"
                       fullWidth
-                      error={!!errors.price}
-                      helperText={errors.price?.message}
+                      error={!!errors.link}
+                      helperText={errors.link?.message}
                       {...field}
+                      onBlur={(e) => {
+                        const value = e.target.value.trim();
+                        if (value && !/^https?:\/\//i.test(value)) {
+                          field.onChange(`https://${value}`);
+                        } else {
+                          field.onChange(value);
+                        }
+                      }}
                     />
                   )}
                 />
@@ -184,18 +175,20 @@ const EditDrawer: React.FC<CreateEditDrawerProps> = ({
                   )}
                 />
                 <Controller
-                  name="link"
+                  name="price"
                   control={control}
                   rules={{
-                    required: "link is required",
+                    required: "Price is required",
+                    validate: (value) =>
+                      !isNaN(parseFloat(value)) || "Price must be a number",
                   }}
                   render={({ field }) => (
                     <CustomTextField
-                      label="link"
-                      placeholder="link.com"
+                      label="Price"
+                      placeholder="$54.45"
                       fullWidth
-                      error={!!errors.link}
-                      helperText={errors.link?.message}
+                      error={!!errors.price}
+                      helperText={errors.price?.message}
                       {...field}
                     />
                   )}

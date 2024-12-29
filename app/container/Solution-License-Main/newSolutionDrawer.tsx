@@ -47,7 +47,6 @@ const NewSolutionDrawer: React.FC<CreateNewDrawerProps> = ({
         null,
         {
           successMessage: "Solution created successfully!",
-          errorMessage: "Failed to create the solution. Please try again.",
         }
       );
 
@@ -136,6 +135,15 @@ const NewSolutionDrawer: React.FC<CreateNewDrawerProps> = ({
                       error={!!errors.link}
                       helperText={errors.link?.message}
                       {...field}
+                      onBlur={(e) => {
+                        const value = e.target.value.trim();
+                        // Check if the value does not start with "http://" or "https://"
+                        if (value && !/^https?:\/\//i.test(value)) {
+                          field.onChange(`https://${value}`); // Prepend "https://"
+                        } else {
+                          field.onChange(value); // Leave the value as-is
+                        }
+                      }}
                     />
                   )}
                 />
@@ -163,7 +171,7 @@ const NewSolutionDrawer: React.FC<CreateNewDrawerProps> = ({
                   render={({ field }) => (
                     <CustomTextField
                       label="Price"
-                      placeholder="$54.45"
+                      placeholder="Price"
                       fullWidth
                       error={!!errors.price}
                       helperText={errors.price?.message}
