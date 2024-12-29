@@ -15,8 +15,6 @@ export const apiCall = async (
 ) => {
   try {
     let authToken = await getAuthToken();
-    // let authToken =
-    //   "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Im55WFRJbGxyWVRuTlRSZHgtOUg1WiJ9.eyJpc3MiOiJodHRwczovL3NoYXJlbXVuZG8uZXUuYXV0aDAuY29tLyIsInN1YiI6ImF1dGgwfDY3NjkxNjE3NzJiNDU4MmY5N2NlZmY4MiIsImF1ZCI6WyJodHRwczovL3NoYXJlbXVuZG8uZXUuYXV0aDAuY29tL2FwaS92Mi8iLCJodHRwczovL3NoYXJlbXVuZG8uZXUuYXV0aDAuY29tL3VzZXJpbmZvIl0sImlhdCI6MTczNTQ5MzIzOSwiZXhwIjoxNzM1NTc5NjM5LCJzY29wZSI6Im9wZW5pZCBwcm9maWxlIGVtYWlsIiwiYXpwIjoiak9NYWxZRUhiUHg0RjlIR0lLOFdTcXVIV1FNU0lwbmkifQ.NdPr2cSCw-UbsQK_o3Zi1WBXuJUarA5FyYwmAFsEsQftS8vh9_BUvTWsGi8ijtlbuY3QWTnslTEnrvrgReUosCcybivBHwlzTSMbmy_xjoy1bfz0OsZjqta47C2gFkv7aL3WRRXIKHrlbI1LN5EDWO28eqlNI3rW_OnAQuJrV6Nf_Jn3W_kNhYPfv0zqgTKYDpLZuwI5DPiuM1HDX2CK2BNQxlI78C-aVFcFtqbP9OdW3WxrITaw_pC2i9qS6PTBLG5j-91e4YeED8WgGhJEB5hw62T0iRT6xpNc78L2dj3bBjnstAdVOPDDcdAkDolszT4uWi-dPceEFRQwSpiveA";
     if (token) {
       authToken = token;
     }
