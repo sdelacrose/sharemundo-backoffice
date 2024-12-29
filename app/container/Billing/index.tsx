@@ -280,12 +280,85 @@ const Billings = () => {
         exportData = selectedRows;
       } else {
         const data = await apiCall(`${apiUrl}?all=true`, "GET");
-        exportData = data || [];
+        exportData =
+          section === "paymentIssues" ? data : data.results?.users || [];
       }
 
-      const worksheet = XLSX.utils.json_to_sheet(exportData);
+      const headerMapping =
+        section === "paymentIssues"
+          ? {
+              id: "User ID",
+              email: "Email",
+              first_name: "First Name",
+              last_name: "Last Name",
+              is_active: "Active Status",
+              user_type: "User Type",
+              company: "Company",
+              preferred_language: "Preferred Language",
+              invoice_id: "Invoice ID",
+              invoice_no: "Invoice Number",
+              amount_due: "Amount Due (€)",
+              amount_paid: "Amount Paid (€)",
+              amount_remaining: "Amount Remaining (€)",
+              status: "Invoice Status",
+              currency: "Currency",
+              invoice_date: "Invoice Date",
+              payment_method: "Payment Method",
+              receipt_url: "Receipt URL",
+              description: "Plan Description",
+            }
+          : {
+              id: "User ID",
+              first_name: "First Name",
+              last_name: "Last Name",
+              sharemundo_links_id: "Sharemundo Links ID",
+              user_type: "User Type",
+              last_12_month_revenue: "Last 12 Months Revenue (€)",
+              next_12_month_revenue: "Next 12 Months Revenue (€)",
+              total_revenue: "Total Revenue (€)",
+            };
+
+      const formattedData =
+        section === "paymentIssues"
+          ? exportData.flatMap((item) => {
+              return item.invoices.map((invoice: any) => ({
+                "User ID": item.id,
+                Email: item.email,
+                "First Name": item.first_name,
+                "Last Name": item.last_name,
+                "Active Status": item.is_active,
+                "User Type": item.user_type,
+                Company: item.company || "N/A",
+                "Preferred Language": item.preferred_language,
+                "Invoice ID": invoice.invoice_id,
+                "Invoice Number": invoice.invoice_no,
+                "Amount Due (€)": invoice.amount_due,
+                "Amount Paid (€)": invoice.amount_paid,
+                "Amount Remaining (€)": invoice.amount_remaining,
+                "Invoice Status": invoice.status,
+                Currency: invoice.currency,
+                "Invoice Date": invoice.invoice_date,
+                "Payment Method": invoice.payment_method,
+                "Receipt URL": invoice.receipt_url,
+                "Plan Description":
+                  invoice.line_items.data[0]?.description || "N/A",
+              }));
+            })
+          : exportData.map((item) =>
+              Object.keys(headerMapping).reduce((acc, key) => {
+                acc[headerMapping[key]] = item[key];
+                return acc;
+              }, {})
+            );
+
+      const worksheet = XLSX.utils.json_to_sheet(formattedData);
+
       const workbook = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(workbook, worksheet, "Exported Data");
+      XLSX.utils.book_append_sheet(
+        workbook,
+        worksheet,
+        section === "paymentIssues" ? "Payment Issues" : "Top Customers"
+      );
 
       const excelBuffer = XLSX.write(workbook, {
         bookType: "xlsx",
@@ -307,6 +380,7 @@ const Billings = () => {
       console.error("Error exporting to Excel:", error);
     }
   };
+
   return (
     <>
       <Box
