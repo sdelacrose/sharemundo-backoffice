@@ -1,9 +1,10 @@
+import Loader from "@/app/components/common/Loader";
 import { Box, Divider, Stack, Typography } from "@mui/material";
 import React from "react";
 
 const FreelancerDetails = ({ freelancerDetail }) => {
   if (!freelancerDetail) {
-    return <div>Loading freelancer details...</div>;
+    return <Loader />;
   }
 
   return (
@@ -26,7 +27,9 @@ const FreelancerDetails = ({ freelancerDetail }) => {
                   Name
                 </Typography>
                 <Typography variant="subtitle1" color="#101928">
-                  {`${freelancerDetail?.first_name || ""} ${freelancerDetail?.last_name || ""}`}
+                  {`${freelancerDetail?.first_name || ""} ${
+                    freelancerDetail?.last_name || ""
+                  }`}
                 </Typography>
               </Stack>
               <Stack>

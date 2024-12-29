@@ -1,9 +1,10 @@
+import Loader from "@/app/components/common/Loader";
 import { Box, Divider, Stack, Typography } from "@mui/material";
 import React from "react";
 
 const ContactDetails = ({ profileDetail }: { profileDetail: any }) => {
   if (!profileDetail || !profileDetail.company_profile) {
-    return <div>Loading contact details...</div>;
+    return <Loader />;
   }
 
   const companyProfile = profileDetail.company_profile;

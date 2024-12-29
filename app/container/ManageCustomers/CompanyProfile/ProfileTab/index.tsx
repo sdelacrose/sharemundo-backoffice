@@ -2,8 +2,10 @@ import { Box } from "@mui/material";
 import React from "react";
 import CompanyDetails from "./companyDetails";
 import ContactDetails from "./contactDetails";
-import FreelancerDetails from "@/app/container/Solution-License-Freelancer/ProfileTab/freelancerDetails"; // Assuming you have a component for freelancer details
-import FreelanceContactDetails from "@/app/container/Solution-License-Freelancer/ProfileTab/contactDetails"; // Assuming you have a component for freelancer details
+import FreelancerDetails from "@/app/container/Solution-License-Freelancer/ProfileTab/freelancerDetails";
+import FreelanceContactDetails from "@/app/container/Solution-License-Freelancer/ProfileTab/contactDetails";
+import InternalUserDetails from "./internalUserDetails";
+import InternalUserContactDetails from "./internalUserContactDetails";
 
 interface ProfileTabProps {
   profileData: {
@@ -21,21 +23,13 @@ const ProfileTab: React.FC<ProfileTabProps> = ({ profileData }) => {
     <Box display="flex" alignItems="start" gap={2.5} mr={4}>
       {internalUser && (
         <>
-          <CompanyDetails
-            profileDetail={profileData}
-            header="Internal User Details"
-            name="Internal User Name"
-          />
-          <ContactDetails profileDetail={profileData} />
+          <InternalUserDetails profileDetail={profileData} />
+          <InternalUserContactDetails profileDetail={profileData} />
         </>
       )}
       {company && (
         <>
-          <CompanyDetails
-            profileDetail={profileData}
-            header="Company Details"
-            name="Company Name"
-          />
+          <CompanyDetails profileDetail={profileData} />
           <ContactDetails profileDetail={profileData} />
         </>
       )}
