@@ -107,7 +107,7 @@ const Billings = () => {
   useEffect(() => {
     fetchBillingData();
   }, []);
-  
+
   useEffect(() => {
     const fetchTopUserDataData = async () => {
       try {
@@ -136,19 +136,21 @@ const Billings = () => {
   }, []);
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchRevenueStats = async () => {
       try {
         setRevenueLoading(true);
         const data = await apiCall(
           "/admin-dashboard/invoices/revenue-stats",
           "GET"
         );
+
         const transformChartData = (data: any) => {
           return Object.entries(data).map(([month, value]) => ({
             name: month,
             value: value || 0,
           }));
         };
+
         const past12MonthsData = transformChartData(data.past_12_months);
         const next12MonthsData = transformChartData(data.next_12_months);
 
@@ -156,19 +158,16 @@ const Billings = () => {
           past12Months: past12MonthsData,
           next12Months: next12MonthsData,
         });
-        console.log("Chart data-------", chartData.past12Months);
-        console.log("Chart data-------", chartData.past12Months);
 
         setRevenueLoading(false);
       } catch (err) {
-        console.error(`Error fetching data :`, err);
-        setLoading(false);
+        console.error("Error fetching revenue stats:", err);
+        setRevenueLoading(false);
       }
     };
 
-    fetchData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeTab]);
+    fetchRevenueStats();
+  }, []);
 
   const fetchData = async () => {
     try {
@@ -190,27 +189,48 @@ const Billings = () => {
     }
   };
 
+  const customTooltipFormatter = (value: any) => [`Revenue: €${value}`];
+  const customTooltipPaymentIssueFormatter = (value: any) => [
+    `Issue: ${value}`,
+  ];
+
   useEffect(() => {
     fetchData();
   }, []);
 
   const renderFailedStatsChart = () => {
-    if (!failedData) return <div>Loading...</div>;
+    if (!failedData) return <Loader />;
 
-    return <BarChartComponent data={failedData} />;
+    return (
+      <BarChartComponent
+        data={failedData}
+        tooltipFormatter={customTooltipPaymentIssueFormatter}
+      />
+    );
   };
 
   const renderChart = () => {
     if (!chartData) {
-      return <div>Loadin....</div>;
+      return <Loader />;
     }
+
     switch (activeTab) {
       case 0:
-        return <SharpLineChart data={chartData.next12Months} />;
+        return (
+          <SharpLineChart
+            data={chartData.past12Months}
+            tooltipFormatter={customTooltipFormatter}
+          />
+        );
       case 1:
-        return <BarChartComponent data={chartData.past12Months} />;
+        return (
+          <BarChartComponent
+            data={chartData.next12Months}
+            tooltipFormatter={customTooltipFormatter}
+          />
+        );
       default:
-        return <div>Chart here</div>;
+        return <div>No Chart Data Available</div>;
     }
   };
 
@@ -337,6 +357,7 @@ const Billings = () => {
                 onTabChange={handleTabChange}
                 value={activeTab}
               />
+
               {renderChart()}
             </Stack>
           </Box>

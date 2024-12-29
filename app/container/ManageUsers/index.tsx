@@ -27,30 +27,32 @@ const ManageUsers = () => {
   const UserManagementCol = useColumnUserManagement(userManagementColumnDefs);
   const [, setOriginalUserData] = useState<any>([]);
 
-  const extractUsers = useCallback((users: any[]) =>
-    users.map((user: any) => {
-      const firstName = user.first_name || "N/A";
-      const lastName = user.last_name || "N/A";
-      const email = user.email || "N/A";
-      const sharemundoLinksId = user.sharemundo_links_id || "N/A";
-      const userType = user.user_type
-        ? user.user_type
-            .replace(/_/g, " ")
-            .replace(/\b\w/g, (char) => char.toUpperCase())
-        : "N/A";
-      const createdAt = user.created_at || "N/A";
-      const id = user.id || "N/A";
+  const extractUsers = useCallback(
+    (users: any[]) =>
+      users.map((user: any) => {
+        const firstName = user.first_name || "N/A";
+        const lastName = user.last_name || "N/A";
+        const email = user.email || "N/A";
+        const sharemundoLinksId = user.sharemundo_links_id || "N/A";
+        const userType = user.user_type
+          ? user.user_type
+              .replace(/_/g, " ")
+              .replace(/\b\w/g, (char) => char.toUpperCase())
+          : "N/A";
+        const createdAt = user.created_at || "N/A";
+        const id = user.id || "N/A";
 
-      return {
-        first_name: firstName,
-        last_name: lastName,
-        email,
-        sharemundo_links_id: sharemundoLinksId,
-        user_type: userType,
-        created_at: createdAt,
-        id,
-      };
-    }), []
+        return {
+          first_name: firstName,
+          last_name: lastName,
+          email,
+          sharemundo_links_id: sharemundoLinksId,
+          user_type: userType,
+          created_at: createdAt,
+          id,
+        };
+      }),
+    []
   );
 
   const fetchUserData = useCallback(
@@ -175,7 +177,9 @@ const ManageUsers = () => {
   if (context === undefined) {
     return <div>Error: Sidebar context is undefined!</div>;
   }
-  
+
+  const customTooltipUsersFormatter = (value: any) => [`Users: ${value}`];
+
   return (
     <>
       <Box
@@ -215,7 +219,10 @@ const ManageUsers = () => {
               <Typography variant="h5" color="#475367">
                 Number of Users per Month{" "}
               </Typography>
-              <SharpLineChart data={chartData} />
+              <SharpLineChart
+                data={chartData}
+                tooltipFormatter={customTooltipUsersFormatter}
+              />
             </Stack>
           </Box>
           <Box

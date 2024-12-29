@@ -246,6 +246,10 @@ const ManageCustomers = () => {
     setAddDrawer(false);
   };
 
+  const customTooltipCustomersFormatter = (value: any) => [
+    `Customers: ${value}`,
+  ];
+
   if (loading) {
     return (
       <div>
@@ -295,7 +299,10 @@ const ManageCustomers = () => {
           <Typography variant="h5" mb={2}>
             Number of customers per month
           </Typography>
-          <SharpLineChart data={chartData} />
+          <SharpLineChart
+            data={chartData}
+            tooltipFormatter={customTooltipCustomersFormatter}
+          />
         </Stack>
         <Box
           display={"flex"}
@@ -304,11 +311,7 @@ const ManageCustomers = () => {
           mb={3}
         >
           <ButtonGroup variant="outlined" aria-label="Basic button group">
-            <Button
-              startIcon={<Adduser />}
-              onClick={handleAddDrawer}
-          
-            >
+            <Button startIcon={<Adduser />} onClick={handleAddDrawer}>
               Add Customers
             </Button>
             <Button
@@ -380,10 +383,11 @@ const ManageCustomers = () => {
           />
         </Box>
         {addDrawer && (
-          <AddCustomerDrawer open={addDrawer} 
-          handleClose={handleCloseCustomerDrawer}
-         onCustomerAdded={handleCustomerAdded}
-           />
+          <AddCustomerDrawer
+            open={addDrawer}
+            handleClose={handleCloseCustomerDrawer}
+            onCustomerAdded={handleCustomerAdded}
+          />
         )}
         {blockDrawerOpen && (
           <BlockCustomerDrawer
