@@ -137,7 +137,7 @@ const SolutionLicenseMain = () => {
     };
 
     fetchData(endpoints[activeTab]);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeTab]);
   const handleOpenDrawer = (actionType: string, id: string) => {
     setDrawerType(actionType);
@@ -169,17 +169,40 @@ const SolutionLicenseMain = () => {
     setNewSolution(false);
   };
 
+  const customTooltipCustomersFormatter = (value: any) => [
+    `Customers: ${value}`,
+  ];
+
+  const customTooltipUsersFormatter = (value: any) => [`Users: ${value}`];
+
+  const customTooltipLicensesFormatter = (value: any) => [`Licenses: ${value}`];
+
   const renderChart = () => {
     if (loading) {
       return <Loader />;
     }
     switch (activeTab) {
       case 0:
-        return <BarChartComponent data={chartData} />;
+        return (
+          <BarChartComponent
+            data={chartData}
+            tooltipFormatter={customTooltipCustomersFormatter}
+          />
+        );
       case 1:
-        return <SmoothLineChart data={chartData} />;
+        return (
+          <SmoothLineChart
+            data={chartData}
+            tooltipFormatter={customTooltipUsersFormatter}
+          />
+        );
       case 2:
-        return <SharpLineChart data={chartData} />;
+        return (
+          <SharpLineChart
+            data={chartData}
+            tooltipFormatter={customTooltipLicensesFormatter}
+          />
+        );
       default:
         return <div>chart here</div>;
     }
