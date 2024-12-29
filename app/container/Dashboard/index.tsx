@@ -79,7 +79,7 @@ const Dashboard = () => {
           <Typography variant="h2">Hello, Admin!</Typography>
         </Box>
         <Typography variant="body2" color="#475367" mt={1.5}>
-          Sharemundo Back Office
+          sharemundo Back Office
         </Typography>
         <Divider
           sx={{
