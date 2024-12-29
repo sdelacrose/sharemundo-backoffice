@@ -6,13 +6,32 @@ export const filterItems = [
   { label: "2 Month" },
   { label: "Year" },
 ];
+
 export const Role = [
-  { value: "1", label: "Freelancer" },
-  { value: "2", label: "Company" },
+  { value: "freelancer", label: "Freelancer" },
+  { value: "company_user", label: "Company" },
 ];
 
 export const filterByRoleItems = [
   { label: "All", value: "all" },
   { label: "Freelancer", value: "freelancer" },
   { label: "Company", value: "company" },
+];
+
+export const filterbyInternalUsers = [
+  { value: "freelancer", label: "Freelancer" },
+  { value: "admin", label: "Admin" },
+];
+
+export const filterByConnectionItems = [
+  { label: "all", value: "all" },
+  { label: "freelancer", value: "freelancer" },
+  { label: "company", value: "company" },
+  { label: "internal_user", value: "internal_user" },
+];
+
+export const filterByUserTypeItems = [
+  // { label: "all",  value: "all" },
+  { label: "admin",  value: "admin" },
+  { label: "user", value: "user" },
 ];

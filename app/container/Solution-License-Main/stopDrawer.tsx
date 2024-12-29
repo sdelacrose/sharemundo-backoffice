@@ -5,9 +5,25 @@ import React from "react";
 interface CreateNewDrawerProps {
   open: boolean;
   handleClose: () => void;
+  id?: any;
+  onUpdateStatus?: any;
 }
 
-const StopDrawer: React.FC<CreateNewDrawerProps> = ({ open, handleClose }) => {
+const StopDrawer: React.FC<CreateNewDrawerProps> = ({
+  open,
+  handleClose,
+  id,
+  onUpdateStatus,
+}) => {
+  const handleStop = async () => {
+    if (!id || !onUpdateStatus) return;
+    try {
+      await onUpdateStatus(id, "stop");
+      handleClose();
+    } catch (error) {
+      console.error("Error stopping solution:", error);
+    }
+  };
   return (
     <>
       <Drawer
@@ -65,6 +81,7 @@ const StopDrawer: React.FC<CreateNewDrawerProps> = ({ open, handleClose }) => {
                 variant="contained"
                 fontSize="16px"
                 padding="16px 24px"
+                onClick={handleStop}
               >
                 Stop
               </CustomButton>

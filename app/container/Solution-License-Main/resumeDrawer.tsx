@@ -5,12 +5,25 @@ import React from "react";
 interface CreateNewDrawerProps {
   open: boolean;
   handleClose: () => void;
+  id?: any;
+  onUpdateStatus?: any;
 }
 
 const ResumeDrawer: React.FC<CreateNewDrawerProps> = ({
   open,
   handleClose,
+  id,
+  onUpdateStatus,
 }) => {
+  const handleResume = async () => {
+    if (!id || !onUpdateStatus) return;
+    try {
+      await onUpdateStatus(id, "resume");
+      handleClose();
+    } catch (error) {
+      console.error("Error resuming solution:", error);
+    }
+  };
   return (
     <>
       <Drawer
@@ -68,6 +81,7 @@ const ResumeDrawer: React.FC<CreateNewDrawerProps> = ({
                 variant="contained"
                 fontSize="16px"
                 padding="16px 24px"
+                onClick={handleResume}
               >
                 Resume
               </CustomButton>

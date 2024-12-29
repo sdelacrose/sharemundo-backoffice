@@ -1,5 +1,3 @@
-import Actions from "@/app/components/Data-Table/Actions";
-
 import { useMemo } from "react";
 
 interface Column {
@@ -24,7 +22,7 @@ const useColumnUserConnection = (columns: Column[]) => {
         case "sharemundo_links":
           return {
             field: "sharemundo_links",
-            headerName: "Sharemundo Links ID",
+            headerName: "sharemundo Links IDs",
             width: 120,
             flex: 1,
           };
@@ -42,23 +40,23 @@ const useColumnUserConnection = (columns: Column[]) => {
             width: 120,
             flex: 1,
           };
-        case "actions":
-          return {
-            field: "actions",
-            headerName: "Actions",
-            width: 180,
-            cellRenderer: Actions,
-            cellRendererParams: {
-              viewText: "View",
-              removeText: "Remove",
-            },
-            headerStyle: {
-              justifyContent: "start",
-              display: "flex",
-              flex: 1,
-            },
-            cellStyle: { display: "flex" },
-          };
+        // case "actions":
+        //   return {
+        //     field: "actions",
+        //     headerName: "Actions",
+        //     width: 180,
+        //     cellRenderer: Actions,
+        //     cellRendererParams: {
+        //       viewText: "View",
+        //       removeText: "Remove",
+        //     },
+        //     headerStyle: {
+        //       justifyContent: "start",
+        //       display: "flex",
+        //       flex: 1,
+        //     },
+        //     cellStyle: { display: "flex" },
+        //   };
 
         default:
           return col;

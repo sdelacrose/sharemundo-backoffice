@@ -5,8 +5,18 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { Dayjs } from "dayjs";
 
-const SelectDatePicker = () => {
+const SelectDatePicker = ({ onDateChange }: { onDateChange: (date: string | null) => void }) => {
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null);
+
+  const handleDateChange = (newValue: Dayjs | null) => {
+    setSelectedDate(newValue);
+    if (newValue) {
+      const formattedDate = newValue.format("YYYY-MM-DD"); // Format date as YYYY-MM-DD
+      onDateChange(formattedDate); // Pass formatted date to parent
+    } else {
+      onDateChange(null); // Pass null if date is cleared
+    }
+  };
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -19,12 +29,11 @@ const SelectDatePicker = () => {
       >
         <DatePicker
           value={selectedDate}
-          onChange={(newValue) => setSelectedDate(newValue)}
+          onChange={handleDateChange}
           slots={{ textField: TextField }}
           slotProps={{
             textField: {
               placeholder: "Select dates",
-
               sx: {
                 width: "160px",
                 borderRadius: "6px",
@@ -33,7 +42,6 @@ const SelectDatePicker = () => {
                 color: "#344054",
                 fontSize: "14px",
                 fontWeight: "400",
-                // boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
                 "& .MuiOutlinedInput-root": {
                   height: "40px",
                   paddingLeft: "10px",

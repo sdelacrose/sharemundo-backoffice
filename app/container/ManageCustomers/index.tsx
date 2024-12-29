@@ -16,14 +16,18 @@ import { Adduser, BlockUser, Search } from "@/app/assets/icons";
 import CustomSearchField from "@/app/components/common/CustomSearch";
 import CustomFilterSelect from "@/app/components/common/CustomFilterSelect";
 import useColumnManageUserDefs from "@/app/hooks/Grid-Table/useColumnManageUser";
-import AddCustomerDrawer from "./addCustomerDrawer";
-import BlockDrawer from "./addBlockDrawer";
+import AddCustomerDrawer from "./Drawers/addCustomerDrawer";
+import BlockCustomerDrawer from "./Drawers/blockCustomerDrawer";
 import SharpLineChart from "@/app/components/common/SharpLineChart";
 import { apiCall } from "@/app/utils/APIUtils";
 import _debounce from "lodash/debounce";
 import AgGridServerSideTable from "@/app/ag-grid/AgGridServerSideTable";
+import BlockBulkCustomerDrawer from "./Drawers/blockBulkCustomerDrawer";
+import ActiveBulkCustomerDrawer from "./Drawers/activeBulkCustomerDrawer";
+import ActiveCustomerDrawer from "./Drawers/activeCustomerDrawer";
+import Loader from "@/app/components/common/Loader";
 
-const ManageCustomers = ({customerDetail}:any) => {
+const ManageCustomers = () => {
   const context = useContext(SidebarContext);
   const [addDrawer, setAddDrawer] = useState(false);
   const [rowData, setRowData] = useState<any>([]);
@@ -31,17 +35,40 @@ const ManageCustomers = ({customerDetail}:any) => {
   const [previousPageUrl, setPreviousPageUrl] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
-  const [openBlockDrawer, setBlockDrawer] = useState(false);
+  const [loading, setLoading] = useState(true);
+
   const [chartData, setChartData] = useState<{ name: string; value: number }[]>(
     []
   );
-  const manageUserCol = useColumnManageUserDefs(manageCustomersColumnDefs);
+  const [selectedRows, setSelectedRows] = useState([]);
+
+  const [blockDrawerOpen, setBlockDrawerOpen] = useState(false);
+  const [activeDrawerOpen, setActiveDrawerOpen] = useState(false);
+
+  const [blockBulkCustomersDrawerOpen, setBlockBulkCustomersDrawerOpen] =
+    useState(false);
+  const [activateBulkCustomersDrawerOpen, setActivateBulkCustomersDrawerOpen] =
+    useState(false);
+
+  const [selectedIds, setSelectedIds] = useState<number[]>([]);
+
+  const manageUserCol = useColumnManageUserDefs({
+    columns: manageCustomersColumnDefs,
+    onBlockClick: (id) => {
+      setSelectedIds([id]);
+      setBlockDrawerOpen(true);
+    },
+    onActivateClick: (id) => {
+      setSelectedIds([id]);
+      setActiveDrawerOpen(true);
+    },
+  });
 
   const handleAddDrawer = () => {
     setAddDrawer(true);
   };
 
-  const handleCloseDrawer = () => {
+  const handleCloseCustomerDrawer = () => {
     setAddDrawer(false);
   };
 
@@ -67,8 +94,10 @@ const ManageCustomers = ({customerDetail}:any) => {
       const trimmedUrl = url.includes("/admin-dashboard")
         ? url.substring(url.indexOf("/admin-dashboard"))
         : url;
-  
+
       const data = await apiCall(trimmedUrl);
+      setLoading(false);
+
       setRowData(data?.results || []);
       setNextPageUrl(data?.next ? data.next : null);
       setPreviousPageUrl(data?.previous ? data.previous : null);
@@ -77,21 +106,21 @@ const ManageCustomers = ({customerDetail}:any) => {
       console.error("Failed to fetch customers:", err);
     }
   };
-  
+
   const handleNextPage = () => {
     if (nextPageUrl) {
       fetchCustomers(nextPageUrl);
       setCurrentPage((prev) => prev + 1);
     }
   };
-  
+
   const handlePreviousPage = () => {
     if (previousPageUrl) {
       fetchCustomers(previousPageUrl);
       setCurrentPage((prev) => prev - 1);
     }
   };
-  
+
   useEffect(() => {
     fetchCustomers("/admin-dashboard/customers");
   }, []);
@@ -132,16 +161,97 @@ const ManageCustomers = ({customerDetail}:any) => {
     }
   };
 
-  const handleBlockDrawer = () => {
-    setBlockDrawer(true);
-  };
-
-  const handleCloseBlockDrawer = () => {
-    setBlockDrawer(false);
+  const handleRowSelection = (event) => {
+    const selected = event.api.getSelectedRows();
+    setSelectedRows(selected);
+    console.log("Selected Rows: ", selected);
   };
 
   if (context === undefined) {
     return <div>Error: Sidebar context is undefined!</div>;
+  }
+
+  const handleBlockBulkUsers = async () => {
+    try {
+      const idsToBlock = selectedRows.map((row: any) => row.id); // Extract IDs from selected rows
+      if (idsToBlock.length === 0) {
+        console.warn("No users selected for bulk block");
+        return;
+      }
+
+      await apiCall(
+        `/admin-dashboard/update-customer-status`,
+        "POST",
+        {
+          user_ids: idsToBlock,
+          is_active: false,
+        },
+        undefined,
+        { successMessage: "Users blocked successfully!" }
+      );
+
+      setBlockBulkCustomersDrawerOpen(false);
+      fetchCustomers("/admin-dashboard/customers");
+    } catch (err) {
+      console.error("Failed to block users:", err);
+    }
+  };
+
+  const handleActivateBulkUsers = async () => {
+    try {
+      const idsToActivate = selectedRows.map((row: any) => row.id); // Extract IDs from selected rows
+      if (idsToActivate.length === 0) {
+        console.warn("No users selected for bulk block");
+        return;
+      }
+
+      await apiCall(
+        `/admin-dashboard/update-customer-status`,
+        "POST",
+        {
+          user_ids: idsToActivate,
+          is_active: true,
+        },
+        undefined,
+        { successMessage: "Users activated successfully!" }
+      );
+
+      setActivateBulkCustomersDrawerOpen(false);
+      fetchCustomers("/admin-dashboard/customers");
+    } catch (err) {
+      console.error("Failed to activate users:", err);
+    }
+  };
+
+  const handleBlockUser = async (id: number) => {
+    await apiCall(`/admin-dashboard/update-customer-status`, "POST", {
+      user_ids: [id],
+      is_active: false,
+    });
+    fetchCustomers("/admin-dashboard/customers");
+    setBlockDrawerOpen(false);
+  };
+
+  const handleActivateUser = async (id: number) => {
+    await apiCall(`/admin-dashboard/update-customer-status`, "POST", {
+      user_ids: [id],
+      is_active: true,
+    });
+    fetchCustomers("/admin-dashboard/customers");
+    setActiveDrawerOpen(false);
+  };
+
+  const handleCustomerAdded = async () => {
+    await fetchCustomers("/admin-dashboard/customers");
+    setAddDrawer(false);
+  };
+
+  if (loading) {
+    return (
+      <div>
+        <Loader />
+      </div>
+    );
   }
 
   return (
@@ -197,20 +307,37 @@ const ManageCustomers = ({customerDetail}:any) => {
             <Button
               startIcon={<Adduser />}
               onClick={handleAddDrawer}
-              disabled={true}
-              sx={{
-                color: "inherit",
-                backgroundColor: "transparent",
-                "&.Mui-disabled": {
-                  color: "inherit",
-                  backgroundColor: "transparent",
-                },
-              }}
+          
             >
               Add Customers
             </Button>
-            <Button startIcon={<BlockUser />} onClick={handleBlockDrawer}>
-              Block User
+            <Button
+              startIcon={<BlockUser />}
+              onClick={() => setActivateBulkCustomersDrawerOpen(true)}
+              disabled={selectedRows.length === 0}
+              sx={{
+                color: "inherit",
+                "&.Mui-disabled": {
+                  color: "inherit",
+                  backgroundColor: "#F0F2F5",
+                },
+              }}
+            >
+              Active Bulk Users
+            </Button>
+            <Button
+              startIcon={<BlockUser />}
+              onClick={() => setBlockBulkCustomersDrawerOpen(true)}
+              disabled={selectedRows.length === 0}
+              sx={{
+                color: "inherit",
+                "&.Mui-disabled": {
+                  color: "inherit",
+                  backgroundColor: "#F0F2F5",
+                },
+              }}
+            >
+              Block Bulk Users
             </Button>
           </ButtonGroup>
           <Box mr={4} display={"flex"} alignItems={"center"} gap={2}>
@@ -248,16 +375,51 @@ const ManageCustomers = ({customerDetail}:any) => {
             previousPageUrl={previousPageUrl}
             onNextPage={handleNextPage}
             onPreviousPage={handlePreviousPage}
+            handleRowSelection={handleRowSelection}
             height={580}
           />
         </Box>
         {addDrawer && (
-          <AddCustomerDrawer open={addDrawer} handleClose={handleCloseDrawer} />
+          <AddCustomerDrawer open={addDrawer} 
+          handleClose={handleCloseCustomerDrawer}
+         onCustomerAdded={handleCustomerAdded}
+           />
         )}
-        {openBlockDrawer && (
-          <BlockDrawer
-            open={openBlockDrawer}
-            handleClose={handleCloseBlockDrawer}
+        {blockDrawerOpen && (
+          <BlockCustomerDrawer
+            open={blockDrawerOpen}
+            handleClose={() => setBlockDrawerOpen(false)}
+            handleBlock={() => handleBlockUser(selectedIds[0])}
+          />
+        )}
+
+        {activeDrawerOpen && (
+          <ActiveCustomerDrawer
+            open={activeDrawerOpen}
+            handleClose={() => setActiveDrawerOpen(false)}
+            handleActivate={() => handleActivateUser(selectedIds[0])}
+          />
+        )}
+        {blockBulkCustomersDrawerOpen && (
+          <BlockBulkCustomerDrawer
+            open={blockBulkCustomersDrawerOpen}
+            handleClose={() => setBlockBulkCustomersDrawerOpen(false)}
+            handleBlock={handleBlockBulkUsers}
+            selectedUsers={selectedRows.map((row: any) => ({
+              id: row.id,
+              name: row.name || `User ID: ${row.id}`,
+            }))}
+          />
+        )}
+        {activateBulkCustomersDrawerOpen && (
+          <ActiveBulkCustomerDrawer
+            open={activateBulkCustomersDrawerOpen}
+            handleClose={() => setActivateBulkCustomersDrawerOpen(false)}
+            handleActivate={handleActivateBulkUsers}
+            selectedUsers={selectedRows.map((row: any) => ({
+              id: row.id,
+              name: row.name || `User ID: ${row.id}`,
+            }))}
           />
         )}
       </Box>

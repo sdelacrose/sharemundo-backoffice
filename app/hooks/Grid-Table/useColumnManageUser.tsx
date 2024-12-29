@@ -1,19 +1,21 @@
-"use client"
+"use client";
 import { useMemo } from "react";
 import { Button } from "@mui/material";
 import LastColumnHeader from "@/app/components/common/LastColumnHeader";
 import { useRouter } from "next/navigation";
+import StatusBadge from "@/app/utils/StatusBadge";
 
-interface Column {
-  field: string;
-  headerName?: string;
-  cellRenderer?: React.ComponentType<any>;
-  headerComponent?: React.ComponentType<any>;
-  flex?: number;
-}
+const capitalize = (str: string) =>
+  str.length > 0
+    ? `${str[0].toUpperCase()}${str.substring(1).toLowerCase()}`
+    : "";
 
-const useColumnManageUserDefs = (columns: Column[]) => {
-  const router = useRouter()
+const useColumnManageUserDefs = ({
+  columns,
+  onBlockClick,
+  onActivateClick,
+}) => {
+  const router = useRouter();
   return useMemo(() => {
     return columns.map((col) => {
       switch (col.field) {
@@ -21,34 +23,52 @@ const useColumnManageUserDefs = (columns: Column[]) => {
           return {
             ...col,
             headerName: "Name",
-            flex: 1.4,
-            cellRenderer: (params) => {
-              const { first_name, last_name } = params.data;
-              const formattedName = `${first_name.charAt(0).toUpperCase() + first_name.slice(1).toLowerCase()} ${
-                last_name.charAt(0).toUpperCase() + last_name.slice(1).toLowerCase()
-              }`;
-              return <span>{formattedName}</span>;
+            flex: 1,
+
+            valueFormatter: (params: any) => {
+              const firstName = params.data?.name || "";
+              return firstName || "N/A";
             },
           };
         case "sharemundo_links_id":
           return {
-            ...col,
-            headerName: "Sharemundo Link",
-            flex: 1.4,
+            field: "sharemundo_links_id",
+            headerName: "sharemundo Link",
+            flex: 1.2,
           };
         case "role":
           return {
-            ...col,
+            field: "role",
+
             headerName: "Role",
+            flex: 0.8,
+            valueFormatter: (params: any) => {
+              const role = params.data?.user_type || "";
+              return capitalize(role) || "N/A";
+            },
+          };
+        case "is_active":
+          return {
+            ...col,
+            flex: 0.7,
+            headerName: "Status",
+            cellRenderer: (params) => (
+              <StatusBadge
+                color={params.data.is_active ? "#036B26" : "#865503"}
+                text={params.data.is_active ? "Active" : "Inactive"}
+                background={params.data.is_active ? "#E7F6EC" : "#FEF6E7"}
+              />
+            ),
           };
         case "number_of_admins":
           return {
-            ...col,
+            field: "number_of_admins",
             headerName: "No of Admins",
+            flex: 0.8,
           };
         case "number_of_internal_users":
           return {
-            ...col,
+            field: "number_of_internal_users",
             headerName: "No of Internal Users",
           };
         case "total_bought_license":
@@ -62,18 +82,34 @@ const useColumnManageUserDefs = (columns: Column[]) => {
             headerName: "Actions",
             headerComponent: LastColumnHeader,
             cellRenderer: (params) => (
-              <Button style={{ color: "#0057b7" }}
-              onClick={() => router.push(`/manage-customers/${params.data.id}`)}
-              >
-                View Details
-              </Button>
+              <>
+                <Button
+                  style={{ color: "#0057b7" }}
+                  onClick={() =>
+                    router.push(`/manage-customers/${params.data.id}`)
+                  }
+                >
+                  View
+                </Button>
+                <Button
+                  style={{ color: params.data.is_active ? "red" : "green" }}
+                  onClick={() =>
+                    params.data.is_active
+                      ? onBlockClick(params.data.id)
+                      : onActivateClick(params.data.id)
+                  }
+                >
+                  {params.data.is_active ? "Block" : "Activate"}
+                </Button>
+              </>
             ),
           };
         default:
           return col;
       }
     });
-  }, [columns]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [columns, onBlockClick, onActivateClick]);
 };
 
 export default useColumnManageUserDefs;

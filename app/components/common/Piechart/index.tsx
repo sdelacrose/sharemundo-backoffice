@@ -12,8 +12,7 @@ const renderCustomizedLabel = ({
   innerRadius,
   outerRadius,
   percent,
-  name,
-  value,
+ 
 }: any) => {
   const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
   const x = cx + radius * Math.cos(-midAngle * RADIAN);
@@ -36,9 +35,6 @@ const PieChartComponent = ({ totalUsers, totalCustomers, licenseCount }: any) =>
   // Prepare data for the pie chart
   const total = totalUsers + totalCustomers + licenseCount;
 
-  console.log(totalUsers , totalCustomers , licenseCount)
-
-  // Normalize values to prevent percentages > 100
   const data = [
     { name: "Total Users", value: totalUsers },
     { name: "Total Customers", value: totalCustomers },

@@ -1,4 +1,4 @@
-import Actions from "@/app/components/Data-Table/Actions";
+import Actions from "@/app/components/Data-Table/ActionSolutions";
 import { useMemo } from "react";
 interface Column {
   field: string;
@@ -22,7 +22,7 @@ const useColumnInternalUser = (columns: Column[]) => {
         case "sharemundo_links":
           return {
             field: "sharemundo_links",
-            headerName: "Sharemundo Links ID",
+            headerName: "sharemundo Links IDs",
             width: 120,
             flex: 1,
           };

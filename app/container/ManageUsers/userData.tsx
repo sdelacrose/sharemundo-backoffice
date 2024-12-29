@@ -5,9 +5,10 @@ export const tabs = [
   { label: "Next 12 Months Forecast" },
 ];
 export const filterItems = [
-  { label: "1 Month" },
-  { label: "2 Month" },
-  { label: "Year" },
+  { value: "1", label: "All" },
+  { value: "2", label: "Freelancer" },
+  { value: "3", label: "Company" },
+  { value: "4", label: "Internal User" },
 ];
 export const Role = [
   { value: "1", label: "Freelancer" },

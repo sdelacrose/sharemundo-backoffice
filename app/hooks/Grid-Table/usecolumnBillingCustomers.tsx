@@ -1,4 +1,6 @@
-import Actions from "@/app/components/Data-Table/Actions";
+import LastColumnHeader from "@/app/components/common/LastColumnHeader";
+import { Button } from "@mui/material";
+import { useRouter } from "next/navigation";
 import { useMemo } from "react";
 
 interface Column {
@@ -9,27 +11,40 @@ interface Column {
 }
 
 const useColumnBillingCustomers = (columns: Column[]) => {
+  const router = useRouter();
   return useMemo(() => {
     return columns.map((col: any) => {
       switch (col.field) {
-        case "name":
+        case "first_name":
           return {
-            field: "name",
+            field: "first_name",
             headerName: "Name",
             flex: 1.4,
+            valueFormatter: (params: any) =>
+              params.value
+                ? params.value.charAt(0).toUpperCase() +
+                  params.value.slice(1).toLowerCase()
+                : "N/A",
           };
         case "sharemundo_links_id":
           return {
             field: "sharemundo_links_id",
-            headerName: "Sharemundo Links ID",
+            headerName: "sharemundo Links IDs",
             width: 120,
             flex: 1.7,
+            valueFormatter: (params: any) =>
+              params.value ? params.value : "N/A",
           };
-        case "role":
+        case "user_type":
           return {
-            field: "role",
+            field: "user_type",
             headerName: "Role",
             width: 120,
+            valueFormatter: (params: any) =>
+              params.value
+                ? params.value.charAt(0).toUpperCase() +
+                  params.value.slice(1).toLowerCase()
+                : "N/A",
           };
         case "next_12_month_revenue":
           return {
@@ -37,6 +52,8 @@ const useColumnBillingCustomers = (columns: Column[]) => {
             headerName: "Next 12 Month Revenue",
             width: 120,
             flex: 1.5,
+            valueFormatter: (params: any) =>
+              params.value ? `€${params.value}` : "N/A",
           };
         case "last_12_month_revenue":
           return {
@@ -44,34 +61,39 @@ const useColumnBillingCustomers = (columns: Column[]) => {
             headerName: "Last 12 Month Revenue",
             width: 120,
             flex: 1.6,
+            valueFormatter: (params: any) =>
+              params.value ? `€${params.value}` : "N/A",
           };
         case "total_revenue":
           return {
             field: "total_revenue",
             headerName: "Total Revenue",
             width: 120,
+            valueFormatter: (params: any) =>
+              params.value ? `€${params.value}` : "N/A",
           };
+
         case "actions":
           return {
-            field: "actions",
+            ...col,
             headerName: "Actions",
-            width: 120,
-            cellRenderer: Actions,
-            cellRendererParams: {
-              viewText: "View",
-              removeText: "Details",
-            },
-            headerStyle: {
-              justifyContent: "end",
-              display: "flex",
-              flex: 1,
-            },
-            cellStyle: { display: "flex" },
+            headerComponent: LastColumnHeader,
+            cellRenderer: (params) => (
+              <Button
+                style={{ color: "#0057b7" }}
+                onClick={() =>
+                  router.push(`/manage-customers/${params.data.id}`)
+                }
+              >
+                View
+              </Button>
+            ),
           };
         default:
           return col;
       }
     });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [columns]);
 };
 

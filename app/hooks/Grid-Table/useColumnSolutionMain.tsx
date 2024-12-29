@@ -1,4 +1,4 @@
-import Actions from "@/app/components/Data-Table/Actions";
+import ActionSolutions from "@/app/components/Data-Table/ActionSolutions";
 import StatusCheck from "@/app/components/Data-Table/StatusCheck";
 import { useMemo } from "react";
 interface Column {
@@ -10,32 +10,38 @@ interface Column {
 
 const useColumnSolutionMain = (
   columns: Column[],
-  handleOpenDrawer: (action: string) => void
+  handleOpenDrawer: (action: string, id: string) => void
 ) => {
   return useMemo(() => {
     return columns.map((col: any) => {
       switch (col.field) {
-        case "solution_name":
+        case "name":
           return {
-            field: "solution_name",
+            field: "name",
             headerName: "Solution Name",
             width: 580,
             flex: 1.5,
+            valueFormatter: (params: any) =>
+              params.value ? params.value : "N/A",
           };
 
-        case "total_bought_license":
+        case "license_count":
           return {
-            field: "total_bought_license",
+            field: "license_count",
             headerName: "Total Bought License",
             width: 120,
             flex: 1,
+            valueFormatter: (params: any) =>
+              params.value ? params.value : "N/A",
           };
-        case "price_per_month":
+        case "price":
           return {
-            field: "price_per_month",
+            field: "price",
             headerName: "Price Per Month",
             width: 120,
             flex: 1,
+            valueFormatter: (params: any) =>
+              params.value ? `€${params.value}` : "N/A",
           };
         case "status":
           return {
@@ -44,25 +50,45 @@ const useColumnSolutionMain = (
             width: 120,
             flex: 1,
             cellRenderer: StatusCheck,
+            valueFormatter: (params: any) =>
+              params.value ? params.value : "N/A",
           };
         case "actions":
           return {
             field: "actions",
             headerName: "Actions",
             width: 180,
-            cellRenderer: Actions,
+            cellRenderer: ActionSolutions,
+            cellRendererParams: (params: any) => {
+              const { status, id } = params.data;
+              const buttons = [
+                {
+                  label: "Edit",
+                  actionType: "edit",
+                  color: "#0057b7",
+                },
+              ];
 
-            cellRendererParams: {
-              viewText: "Edit",
-              removeText: "resume",
-              handleOpenDrawer,
+              if (status === "Stopped") {
+                buttons.push({
+                  label: "Resume",
+                  actionType: "resume",
+                  color: "green",
+                });
+              } else if (status === "Active") {
+                buttons.push({
+                  label: "Stop",
+                  actionType: "stop",
+                  color: "#FF3B30",
+                });
+              }
+
+              return {
+                buttons,
+                handleOpenDrawer: (actionType: string) =>
+                  handleOpenDrawer(actionType, id),
+              };
             },
-            headerStyle: {
-              justifyContent: "end",
-              display: "flex",
-              flex: 1,
-            },
-            cellStyle: { display: "flex" },
           };
 
         default:

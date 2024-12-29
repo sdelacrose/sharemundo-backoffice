@@ -9,22 +9,12 @@ import {
   CartesianGrid,
 } from "recharts";
 
-const data = [
-  { name: "Jan", value: 400 },
-  { name: "Feb", value: 300 },
-  { name: "Mar", value: 500 },
-  { name: "Apr", value: 200 },
-  { name: "May", value: 400 },
-  { name: "Jun", value: 300 },
-  { name: "Jul", value: 700 },
-  { name: "Aug", value: 1000 },
-  { name: "Sep", value: 600 },
-  { name: "Oct", value: 400 },
-  { name: "Nov", value: 500 },
-  { name: "Dec", value: 300 },
-];
 
-const BarChartComponent: React.FC = () => {
+interface BarChartComponentProps {
+  data: { name: string; value: number }[];
+}
+
+const BarChartComponent: React.FC<BarChartComponentProps> = ({ data }) => {
   return (
     <div style={{ width: "100%", height: 400, margin: "20px auto" }}>
       <ResponsiveContainer width="100%" height="100%">
@@ -36,7 +26,7 @@ const BarChartComponent: React.FC = () => {
           <XAxis dataKey="name" />
           <YAxis />
           <Tooltip />
-          <Bar dataKey="value" fill="#007bff" barSize={50} />
+          <Bar dataKey="value" fill="#0057b7" barSize={50} />
         </BarChart>
       </ResponsiveContainer>
     </div>
