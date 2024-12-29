@@ -35,7 +35,7 @@ export const apiCall = async (
     );
 
     if (
-      response.status === 401 &&
+      (response.status === 401 || response.status === 403) &&
       !endpoint.includes("fetch-details?sharemundo_links_id")
     ) {
       window.location.href = "/api/auth/logout";
