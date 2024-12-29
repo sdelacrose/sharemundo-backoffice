@@ -43,7 +43,7 @@ const UserConnectionTab = ({ id, setActiveTab, companyId }: any) => {
   const [selectedRows, setSelectedRows] = useState([]);
   const [addUserDrawerOpen, setAddUserDrawerOpen] = useState(false);
   const [userType, setUserType] = useState<string | null>("all");
-  const [connectionType, setConnectionType] = useState<string | null>("all");
+  const [, setConnectionType] = useState<string | null>("all");
 
   const handleViewClick = () => {
     setActiveTab(0);
@@ -133,12 +133,19 @@ const UserConnectionTab = ({ id, setActiveTab, companyId }: any) => {
 
   const handleConnectionFilter = (value: string | null) => {
     setConnectionType(value);
-  
+
     if (value === "all" || !value) {
-      fetchUsersOrConnections(`/admin-dashboard/customers/${id}/connections`, true);
+      fetchUsersOrConnections(
+        `/admin-dashboard/customers/${id}/connections`,
+        true
+      );
     } else {
       const filters = { type: value };
-      fetchUsersOrConnections(`/admin-dashboard/customers/${id}/connections`, true, filters);
+      fetchUsersOrConnections(
+        `/admin-dashboard/customers/${id}/connections`,
+        true,
+        filters
+      );
     }
   };
   const handleNextPage = () => {
@@ -199,6 +206,7 @@ const UserConnectionTab = ({ id, setActiveTab, companyId }: any) => {
       viewMode === "connections",
       viewMode === "internal" ? { role: userType || "all" } : undefined
     );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [viewMode, id]);
 
   useEffect(() => {
