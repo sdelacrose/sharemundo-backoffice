@@ -133,15 +133,14 @@ const UserConnectionTab = ({ id, setActiveTab, companyId }: any) => {
 
   const handleConnectionFilter = (value: string | null) => {
     setConnectionType(value);
-    const filters = { type: value || "all" };
-
-    fetchUsersOrConnections(
-      `/admin-dashboard/customers/${id}/connections`,
-      false,
-      filters
-    );
+  
+    if (value === "all" || !value) {
+      fetchUsersOrConnections(`/admin-dashboard/customers/${id}/connections`, true);
+    } else {
+      const filters = { type: value };
+      fetchUsersOrConnections(`/admin-dashboard/customers/${id}/connections`, true, filters);
+    }
   };
-
   const handleNextPage = () => {
     if (nextPageUrl) {
       fetchUsersOrConnections(nextPageUrl, viewMode === "connections");
@@ -200,7 +199,7 @@ const UserConnectionTab = ({ id, setActiveTab, companyId }: any) => {
       viewMode === "connections",
       viewMode === "internal" ? { role: userType || "all" } : undefined
     );
-  }, [viewMode, id, userType, connectionType]);
+  }, [viewMode, id]);
 
   useEffect(() => {
     const fetchConnections = async () => {

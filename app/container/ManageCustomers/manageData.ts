@@ -26,7 +26,7 @@ export const filterbyInternalUsers = [
 export const filterByConnectionItems = [
   { label: "all", value: "all" },
   { label: "freelancer", value: "freelancer" },
-  { label: "company", value: "company" },
+  { label: "company_user", value: "company_user" },
 ];
 
 export const filterByUserTypeItems = [
