@@ -277,7 +277,7 @@ const ManageCustomers = () => {
             Manage Customers
           </Typography>
           <Typography variant="body2" color="#475367" mt={1.5}>
-            Sharemundo Back Office
+            sharemundo Back Office
           </Typography>
           <Divider
             sx={{
