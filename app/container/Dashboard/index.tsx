@@ -146,7 +146,7 @@ const Dashboard = () => {
                   fontSize: "18px",
                 }}
               >
-                Solutions & Licenses{" "}
+                Energy Consultant Solution
               </Typography>
               <Divider
                 sx={{

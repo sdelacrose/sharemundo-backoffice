@@ -1,5 +1,5 @@
 import React from "react";
-import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
 
 const COLORS = ["#00C1D4", "#004FA7", "#F3A218"];
 
@@ -12,7 +12,6 @@ const renderCustomizedLabel = ({
   innerRadius,
   outerRadius,
   percent,
- 
 }: any) => {
   const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
   const x = cx + radius * Math.cos(-midAngle * RADIAN);
@@ -32,18 +31,27 @@ const renderCustomizedLabel = ({
 };
 
 const PieChartComponent = ({ totalUsers, totalCustomers, licenseCount }: any) => {
-  // Prepare data for the pie chart
   const total = totalUsers + totalCustomers + licenseCount;
 
   const data = [
-    { name: "Total Users", value: totalUsers },
-    { name: "Total Customers", value: totalCustomers },
-    { name: "License Count", value: licenseCount },
+    { name: "Solution with the amount of Users", value: totalUsers },
+    { name: "Solution with the amount of Customers", value: totalCustomers },
+    { name: "Solution with the amount of Licenses", value: licenseCount },
   ].map((item) => ({ ...item, value: (item.value / total) * 100 }));
 
   return (
     <ResponsiveContainer width="100%" height={500}>
       <PieChart>
+        <Tooltip
+          formatter={(value: any, name: any) => [`${value.toFixed(2)}%`, name]}
+          contentStyle={{
+            backgroundColor: "#fff",
+            border: "1px solid #ccc",
+            borderRadius: "8px",
+            padding: "8px",
+            cursor:"pointer"
+          }}
+        />
         <Pie
           data={data}
           cx="50%"
