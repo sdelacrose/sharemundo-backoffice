@@ -139,8 +139,8 @@ export const BillingCustomerColumnDefs = [
   { field: "first_name", headerName: "Name" },
   { field: "sharemundo_links_id", headerName: "sharemundo Links IDs" },
   { field: "user_type", headerName: "Role" },
-  { field: "next_12_month_revenue", headerName: "Next 12 Month Revenue" },
-  { field: "last_12_month_revenue", headerName: "Last 12 Month Revenue" },
+  // { field: "next_12_month_revenue", headerName: "Next 12 Month Revenue" },
+  // { field: "last_12_month_revenue", headerName: "Last 12 Month Revenue" },
   { field: "total_revenue", headerName: "Total Revenue" },
   { field: "actions", headerName: "Actions" },
 ];

@@ -46,24 +46,24 @@ const useColumnBillingCustomers = (columns: Column[]) => {
                   params.value.slice(1).toLowerCase()
                 : "N/A",
           };
-        case "next_12_month_revenue":
-          return {
-            field: "next_12_month_revenue",
-            headerName: "Next 12 Month Revenue",
-            width: 120,
-            flex: 1.5,
-            valueFormatter: (params: any) =>
-              params.value ? `€${params.value}` : "N/A",
-          };
-        case "last_12_month_revenue":
-          return {
-            field: "last_12_month_revenue",
-            headerName: "Last 12 Month Revenue",
-            width: 120,
-            flex: 1.6,
-            valueFormatter: (params: any) =>
-              params.value ? `€${params.value}` : "N/A",
-          };
+        // case "next_12_month_revenue":
+        //   return {
+        //     field: "next_12_month_revenue",
+        //     headerName: "Next 12 Month Revenue",
+        //     width: 120,
+        //     flex: 1.5,
+        //     valueFormatter: (params: any) =>
+        //       params.value ? `€${params.value}` : "N/A",
+        //   };
+        // case "last_12_month_revenue":
+        //   return {
+        //     field: "last_12_month_revenue",
+        //     headerName: "Last 12 Month Revenue",
+        //     width: 120,
+        //     flex: 1.6,
+        //     valueFormatter: (params: any) =>
+        //       params.value ? `€${params.value}` : "N/A",
+        //   };
         case "total_revenue":
           return {
             field: "total_revenue",

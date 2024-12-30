@@ -33,7 +33,7 @@ const useColumnManageUserDefs = ({
         case "sharemundo_links_id":
           return {
             field: "sharemundo_links_id",
-            headerName: "sharemundo Link",
+            headerName: "sharemundo Links IDs",
             flex: 1.2,
           };
         case "role":
