@@ -279,7 +279,10 @@ const Billings = () => {
       if (selectedRows.length > 0) {
         exportData = selectedRows;
       } else {
-        const data = await apiCall(`${apiUrl}?all=true`, "GET");
+        const data = await apiCall(`${apiUrl}?all=true`, "GET", null, null, {
+          successMessage: "Exported File Successfully",
+          errorMessage: "Error in export",
+        });
         exportData =
           section === "paymentIssues" ? data : data.results?.users || [];
       }

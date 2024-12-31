@@ -184,14 +184,14 @@ const SolutionLicenseMain = () => {
     switch (activeTab) {
       case 0:
         return (
-          <BarChartComponent
+          <SharpLineChart
             data={chartData}
             tooltipFormatter={customTooltipCustomersFormatter}
           />
         );
       case 1:
         return (
-          <SmoothLineChart
+          <SharpLineChart
             data={chartData}
             tooltipFormatter={customTooltipUsersFormatter}
           />
