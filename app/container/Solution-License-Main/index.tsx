@@ -6,8 +6,6 @@ import { Box, Divider, Stack, Typography } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
 import CustomTabs from "@/app/components/common/CustomTab";
 import { solutionsBreadcrumb, tabs } from "./data";
-import BarChartComponent from "@/app/components/common/Barchart";
-import SmoothLineChart from "@/app/components/common/SmoothLineChart";
 import SharpLineChart from "@/app/components/common/SharpLineChart";
 import CustomSearchField from "@/app/components/common/CustomSearch";
 import { Search } from "@/app/assets/icons";
@@ -346,22 +344,6 @@ const SolutionLicenseMain = () => {
                 />
               )}
               {drawerType === "edit" && selectedId && (
-                // <EditDrawer
-                //   open={drawerType === "edit"}
-                //   handleClose={handleCloseDrawer}
-                //   id={selectedId}
-                //   initialData={solutionData.find(
-                //     (item) => item.id === selectedId
-                //   )}
-                //   onUpdateData={(updatedItem) => {
-                //     setSolutionData((prevData) =>
-                //       prevData.map((item) =>
-                //         item.id === updatedItem.id ? updatedItem : item
-                //       )
-                //     );
-                //   }}
-                // />
-
                 <EditDrawer
                   open={drawerType === "edit"}
                   handleClose={handleCloseDrawer}
