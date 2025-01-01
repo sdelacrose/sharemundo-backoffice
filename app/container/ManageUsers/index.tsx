@@ -19,7 +19,7 @@ const ManageUsers = () => {
 
   const [chartData, setChartData] = useState<any>(null);
   const [userData, setUserData] = useState<any>(null);
-  const [, setLoading] = useState<any>(false);
+  const [loading, setLoading] = useState<any>(false);
   const [nextPageUrl, setNextPageUrl] = useState<string | null>(null);
   const [previousPageUrl, setPreviousPageUrl] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -75,7 +75,8 @@ const ManageUsers = () => {
         setLoading(false);
       } catch (err) {
         console.error("Error fetching user data:", err);
-        setLoading(false);
+      } finally {
+        setLoading(false); 
       }
     },
     [extractUsers]
@@ -86,18 +87,18 @@ const ManageUsers = () => {
   }, [fetchUserData]);
 
   const handleNextPage = useCallback(() => {
-    if (nextPageUrl) {
+    if (!loading && nextPageUrl) {
       setCurrentPage((prev) => prev + 1);
       fetchUserData(nextPageUrl);
     }
-  }, [nextPageUrl, fetchUserData]);
+  }, [nextPageUrl, fetchUserData, loading]);
 
   const handlePreviousPage = useCallback(() => {
-    if (previousPageUrl) {
+    if (!loading && previousPageUrl && currentPage > 1) {
       setCurrentPage((prev) => prev - 1);
       fetchUserData(previousPageUrl);
     }
-  }, [previousPageUrl, fetchUserData]);
+  }, [previousPageUrl, fetchUserData, currentPage, loading]);
 
   const handleSearchChange = useCallback(
     async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -261,6 +262,7 @@ const ManageUsers = () => {
               onNextPage={handleNextPage}
               onPreviousPage={handlePreviousPage}
               height={580}
+              loading={loading}
             />
           </Box>
         </Box>

@@ -1,9 +1,9 @@
-import React, { useMemo, useRef } from 'react';
-import { AgGridReact } from 'ag-grid-react';
-import './index.css';
-import { Box, Typography } from '@mui/material';
-import NavButton from './NavButton';
-import { RowSelectionOptions } from 'ag-grid-community';
+import React, { useMemo, useRef } from "react";
+import { AgGridReact } from "ag-grid-react";
+import "./index.css";
+import { Box, Typography } from "@mui/material";
+import NavButton from "./NavButton";
+import { RowSelectionOptions } from "ag-grid-community";
 
 const AgGridServerSideTable: React.FC<any> = ({
   rowData,
@@ -22,24 +22,25 @@ const AgGridServerSideTable: React.FC<any> = ({
   previousPageUrl,
   onNextPage,
   onPreviousPage,
+  loading,
 }) => {
   const gridRef = useRef<any>(null);
 
   const rowSelectionMemo = useMemo<
-    RowSelectionOptions | 'single' | 'multiple'
+    RowSelectionOptions | "single" | "multiple"
   >(() => {
     return {
-      mode: 'multiRow',
+      mode: "multiRow",
     };
   }, []);
 
   return (
-    <Box sx={{ width: width || '100%' }}>
+    <Box sx={{ width: width || "100%" }}>
       <div
         className="ag-theme-material"
         style={{
           height: height,
-          width: width || '100%',
+          width: width || "100%",
         }}
       >
         <AgGridReact
@@ -61,25 +62,27 @@ const AgGridServerSideTable: React.FC<any> = ({
       {!disablePagination && (
         <Box
           sx={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            margin: '12px',
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            margin: "12px",
           }}
         >
-          <Typography variant="body2" sx={{ fontSize: '12px' }}>
+          <Typography variant="body2" sx={{ fontSize: "12px" }}>
             Page {currentPage} of {totalPages}
           </Typography>
           <Box>
             <NavButton
               text="Back"
               onClick={onPreviousPage}
-              disabled={!previousPageUrl}
+              // disabled={!previousPageUrl}
+              disabled={loading || !previousPageUrl || currentPage <= 1}
             />
             <NavButton
               text="Next"
               onClick={onNextPage}
-              disabled={!nextPageUrl}
+              // disabled={!nextPageUrl}
+              disabled={loading || !nextPageUrl}
             />
           </Box>
         </Box>

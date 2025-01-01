@@ -3,7 +3,7 @@
 import { SidebarContext } from "@/app/(pages)/layout";
 import Header from "@/app/components/common/Header";
 import { Box, Divider, Stack, Typography } from "@mui/material";
-import { useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import CustomTabs from "@/app/components/common/CustomTab";
 import { solutionsBreadcrumb, tabs } from "./data";
 import SharpLineChart from "@/app/components/common/SharpLineChart";
@@ -68,6 +68,7 @@ const SolutionLicenseMain = () => {
       setLoading(false);
     } catch (err) {
       console.error("Error fetching solution data:", err);
+    } finally {
       setLoading(false);
     }
   };
@@ -76,19 +77,20 @@ const SolutionLicenseMain = () => {
     fetchSolutionData("/admin-dashboard/products");
   }, []);
 
-  const handleNextPage = () => {
-    if (nextPageUrl) {
-      fetchSolutionData(nextPageUrl);
+  const handleNextPage = useCallback(() => {
+    if (!loading && nextPageUrl) {
       setCurrentPage((prev) => prev + 1);
+      fetchSolutionData(nextPageUrl);
     }
-  };
+  }, [nextPageUrl, fetchSolutionData, loading]);
 
-  const handlePreviousPage = () => {
-    if (previousPageUrl) {
-      fetchSolutionData(previousPageUrl);
+  const handlePreviousPage = useCallback(() => {
+    if (!loading && previousPageUrl && currentPage > 1) {
       setCurrentPage((prev) => prev - 1);
+      fetchSolutionData(previousPageUrl);
     }
-  };
+  }, [previousPageUrl, fetchSolutionData, currentPage, loading]);
+ 
 
   const handleSearchChange = _debounce(
     async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -332,6 +334,7 @@ const SolutionLicenseMain = () => {
               onNextPage={handleNextPage}
               onPreviousPage={handlePreviousPage}
               height={580}
+              loading={loading}
             />
 
             <Box>
