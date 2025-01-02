@@ -11,7 +11,6 @@ const AgGridServerSideTable: React.FC<any> = ({
   height = 328,
   width,
   rowHeight = 60,
-  // paginationPageSize = 10,
   onRowClicked,
   disablePagination = false,
   rowSelection = false,
@@ -75,13 +74,11 @@ const AgGridServerSideTable: React.FC<any> = ({
             <NavButton
               text="Back"
               onClick={onPreviousPage}
-              // disabled={!previousPageUrl}
               disabled={loading || !previousPageUrl || currentPage <= 1}
             />
             <NavButton
               text="Next"
               onClick={onNextPage}
-              // disabled={!nextPageUrl}
               disabled={loading || !nextPageUrl}
             />
           </Box>

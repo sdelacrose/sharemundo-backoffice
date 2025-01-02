@@ -13,19 +13,27 @@ import CustomFilterSelect from "@/app/components/common/CustomFilterSelect";
 import useColumnUserManagement from "@/app/hooks/Grid-Table/useColumnUserManagement";
 import { apiCall } from "@/app/utils/APIUtils";
 import AgGridServerSideTable from "@/app/ag-grid/AgGridServerSideTable";
-
+type ChartDataType = { name: string; value: number }[];
+type UserType = {
+  first_name: string;
+  last_name: string;
+  email: string;
+  sharemundo_links_id: string;
+  user_type: string;
+  created_at: string;
+  id: string;
+};
 const ManageUsers = () => {
   const context = useContext(SidebarContext);
-
-  const [chartData, setChartData] = useState<any>(null);
-  const [userData, setUserData] = useState<any>(null);
-  const [loading, setLoading] = useState<any>(false);
+  const [chartData, setChartData] = useState<ChartDataType | null>(null);
+  const [userData, setUserData] = useState<UserType[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
   const [nextPageUrl, setNextPageUrl] = useState<string | null>(null);
   const [previousPageUrl, setPreviousPageUrl] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(0);
+  const [, setOriginalUserData] = useState<UserType[]>([]);
   const UserManagementCol = useColumnUserManagement(userManagementColumnDefs);
-  const [, setOriginalUserData] = useState<any>([]);
 
   const extractUsers = useCallback(
     (users: any[]) =>
@@ -76,7 +84,7 @@ const ManageUsers = () => {
       } catch (err) {
         console.error("Error fetching user data:", err);
       } finally {
-        setLoading(false); 
+        setLoading(false);
       }
     },
     [extractUsers]

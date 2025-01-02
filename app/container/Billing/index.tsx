@@ -74,7 +74,7 @@ const Billings = () => {
     setSelectedRows(selected);
     console.log("Selected Rows: ", selected);
   };
-  const fetchBillingData = async (url: any) => {
+  const fetchBillingData = async (url: string) => {
     try {
       const data = await apiCall(url, "GET");
       const billingsData = data?.results?.users || [];
@@ -290,23 +290,23 @@ const Billings = () => {
           ? {
               id: "User ID",
               email: "Email",
-              first_name: "First Name ",
-              last_name: "Last Name ",
-              is_active: "Active Status ",
-              user_type: "User Type ",
+              first_name: "First Name",
+              last_name: "Last Name",
+              is_active: "Active Status",
+              user_type: "User Type",
               company: "Company",
-              preferred_language: "Preferred Language ",
-              invoice_id: "Invoice ID ",
-              invoice_no: "Invoice Number ",
-              amount_due: "Amount Due (€) ",
-              amount_paid: "Amount Paid (€) ",
-              amount_remaining: "Amount Remaining (€) ",
-              status: "Invoice Status ",
-              currency: "Currency ",
-              invoice_date: "Invoice Date ",
-              payment_method: "Payment Method ",
-              receipt_url: "Receipt URL ",
-              description: "Plan Description ",
+              preferred_language: "Preferred Language",
+              invoice_id: "Invoice ID",
+              invoice_no: "Invoice Number",
+              amount_due: "Amount Due (€)",
+              amount_paid: "Amount Paid (€)",
+              amount_remaining: "Amount Remaining (€)",
+              status: "Invoice Status",
+              currency: "Currency",
+              invoice_date: "Invoice Date",
+              payment_method: "Payment Method",
+              receipt_url: "Receipt URL",
+              description: "Plan Description",
             }
           : {
               id: "User ID",
