@@ -7,7 +7,7 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState, useEffect, useCallback } from "react";
 import { manageCustomersColumnDefs } from "@/app/const/GridTable/ColDef";
 import Header from "@/app/components/common/Header";
 import { customersBreadcrumb, filterByRoleItems } from "./manageData";
@@ -89,42 +89,43 @@ const ManageCustomers = () => {
     fetchCustomerStats();
   }, []);
 
-  const fetchCustomers = async (url: string) => {
+  
+
+  const fetchCustomers = useCallback(async (url: string) => {
     try {
+      setLoading(true);
       const trimmedUrl = url.includes("/admin-dashboard")
         ? url.substring(url.indexOf("/admin-dashboard"))
         : url;
 
-      const data = await apiCall(trimmedUrl);
-      setLoading(false);
-
+      const data = await apiCall(trimmedUrl, "GET");
       setRowData(data?.results || []);
-      setNextPageUrl(data?.next ? data.next : null);
-      setPreviousPageUrl(data?.previous ? data.previous : null);
-      setTotalPages(Math.ceil(data?.count / 10));
+      setNextPageUrl(data?.next || null);
+      setPreviousPageUrl(data?.previous || null);
+      setTotalPages(Math.ceil((data?.count || 0) / 10));
     } catch (err) {
       console.error("Failed to fetch customers:", err);
+    } finally {
+      setLoading(false);
     }
-  };
-
-  const handleNextPage = () => {
-    if (nextPageUrl) {
-      fetchCustomers(nextPageUrl);
+  }, []);
+  const handleNextPage = useCallback(() => {
+    if (!loading && nextPageUrl) {
       setCurrentPage((prev) => prev + 1);
+      fetchCustomers(nextPageUrl);
     }
-  };
+  }, [loading, nextPageUrl, fetchCustomers]);
 
-  const handlePreviousPage = () => {
-    if (previousPageUrl) {
-      fetchCustomers(previousPageUrl);
+  const handlePreviousPage = useCallback(() => {
+    if (!loading && previousPageUrl && currentPage > 1) {
       setCurrentPage((prev) => prev - 1);
+      fetchCustomers(previousPageUrl);
     }
-  };
-
+  }, [loading, previousPageUrl, currentPage, fetchCustomers]);
+ 
   useEffect(() => {
     fetchCustomers("/admin-dashboard/customers");
-  }, []);
-
+  }, [fetchCustomers]);
   const handleSearchChange = _debounce(
     async (event: React.ChangeEvent<HTMLInputElement>) => {
       const query = event.target.value;
@@ -250,14 +251,20 @@ const ManageCustomers = () => {
     `Customers: ${value}`,
   ];
 
-  if (loading) {
+  // if (loading) {
+  //   return (
+  //     <div>
+  //       <Loader />
+  //     </div>
+  //   );
+  // }
+  if (loading && rowData.length === 0) {
     return (
       <div>
         <Loader />
       </div>
     );
   }
-
   return (
     <>
       <Box
@@ -372,14 +379,15 @@ const ManageCustomers = () => {
             rowData={rowData}
             columnDefs={manageUserCol}
             rowSelection={true}
+            handleRowSelection={handleRowSelection}
+            height={580}
             currentPage={currentPage}
             totalPages={totalPages}
             nextPageUrl={nextPageUrl}
             previousPageUrl={previousPageUrl}
             onNextPage={handleNextPage}
             onPreviousPage={handlePreviousPage}
-            handleRowSelection={handleRowSelection}
-            height={580}
+            loading={loading}
           />
         </Box>
         {addDrawer && (
