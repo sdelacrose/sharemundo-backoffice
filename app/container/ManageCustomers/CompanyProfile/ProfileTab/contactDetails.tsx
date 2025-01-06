@@ -8,8 +8,7 @@ const ContactDetails = ({ profileDetail }: { profileDetail: any }) => {
   }
 
   const companyProfile = profileDetail.company_profile;
-  console.log("Company profile", companyProfile);
-  console.log("profile Details", profileDetail);
+ 
 
   return (
     <>

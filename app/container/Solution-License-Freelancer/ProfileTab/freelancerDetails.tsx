@@ -7,7 +7,6 @@ const FreelancerDetails = ({ freelancerDetail }) => {
     return <Loader />;
   }
   ;
-  console.log("profile Details", freelancerDetail);
   return (
     <>
       <Box width={"50%"}>

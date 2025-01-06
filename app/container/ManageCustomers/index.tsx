@@ -251,13 +251,7 @@ const ManageCustomers = () => {
     `Customers: ${value}`,
   ];
 
-  // if (loading) {
-  //   return (
-  //     <div>
-  //       <Loader />
-  //     </div>
-  //   );
-  // }
+ 
   if (loading && rowData.length === 0) {
     return (
       <div>
