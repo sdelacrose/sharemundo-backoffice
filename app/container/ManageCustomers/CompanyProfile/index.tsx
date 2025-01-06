@@ -13,7 +13,7 @@ import ProfileTab from "./ProfileTab";
 import LicenseDetail from "../../LicenseDetail";
 import { apiCall } from "@/app/utils/APIUtils";
 import ConnectionTab from "./connectionTab";
-
+import { useSearchParams } from "next/navigation";
 const CompanyProfile = ({ customerDetail, id }: any) => {
   const context = useContext(SidebarContext);
   const [activeTab, setActiveTab] = useState(0);
@@ -29,7 +29,9 @@ const CompanyProfile = ({ customerDetail, id }: any) => {
   const isFreelancer = customerDetail?.user_type === "freelancer";
   const isCompany = customerDetail?.user_type === "company";
   const isInternalUser = customerDetail?.user_type === "internal_user";
+  const searchParams = useSearchParams();
 
+  const hideTabs = searchParams.get("hideTabs") === "1";
   useEffect(() => {
     if (customerDetail && !isInternalUser) {
       fetchLicenses(`/admin-dashboard/customers/${id}/licenses`);
@@ -202,14 +204,15 @@ const CompanyProfile = ({ customerDetail, id }: any) => {
             color="#0057b7"
             mt={1}
             fontSize={16}
-            sx={{ marginBottom: isInternalUser ? "24px" : "0px" }}
+            sx={{ marginBottom: isInternalUser || hideTabs ? "24px" : "0px" }}
           >
             {isFreelancer && "Freelancer"}
-            {isCompany && "Company"}
+            {isCompany && (hideTabs ? "Company Owner" : "Company")}
+
             {isInternalUser && "Internal User"}
           </Typography>
 
-          {!isInternalUser && (
+          {!isInternalUser && !hideTabs && (
             <Divider
               sx={{
                 borderColor: "rgba(240, 242, 245, 1)",
@@ -219,7 +222,7 @@ const CompanyProfile = ({ customerDetail, id }: any) => {
             />
           )}
 
-          {!isInternalUser && (
+          {!isInternalUser && !hideTabs && (
             <Box mb={4}>
               <CustomTabs
                 tabs={tabs}

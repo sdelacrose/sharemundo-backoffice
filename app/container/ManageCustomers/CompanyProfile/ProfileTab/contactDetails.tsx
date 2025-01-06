@@ -8,6 +8,7 @@ const ContactDetails = ({ profileDetail }: { profileDetail: any }) => {
   }
 
   const companyProfile = profileDetail.company_profile;
+ 
 
   return (
     <>
@@ -152,7 +153,7 @@ const ContactDetails = ({ profileDetail }: { profileDetail: any }) => {
                   Mobile Number
                 </Typography>
                 <Typography variant="subtitle1" color="#101928">
-                  {profileDetail.mobile_phone || "N/A"}
+                  {companyProfile.company_mob_no || "N/A"}
                 </Typography>
               </Stack>
             </Box>

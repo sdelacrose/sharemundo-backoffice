@@ -21,7 +21,7 @@ const useColumnUserManagement = (columns: Column[]) => {
             field: "first_name",
             headerName: "Name",
             flex: 1.4,
-          
+
             valueFormatter: (params: any) => {
               const capitalize = (str: string) =>
                 str.length > 0
@@ -46,17 +46,23 @@ const useColumnUserManagement = (columns: Column[]) => {
             valueFormatter: (params: any) =>
               params.value ? params.value : "N/A",
           };
+
         case "user_type":
           return {
             field: "user_type",
             headerName: "Type",
             width: 120,
-            valueFormatter: (params: any) =>
-              params.value
-                ? params.value.charAt(0).toUpperCase() +
-                  params.value.slice(1).toLowerCase()
-                : "N/A",
+            valueFormatter: (params: any) => {
+              if (!params.value) return "N/A"; // Handle missing values
+              if (params.value.toLowerCase() === "company")
+                return "Company Owner"; // Special case for "company"
+              return (
+                params.value.charAt(0).toUpperCase() +
+                params.value.slice(1).toLowerCase()
+              ); // Capitalize other values
+            },
           };
+
         case "created_at":
           return {
             field: "created_at",
@@ -68,25 +74,33 @@ const useColumnUserManagement = (columns: Column[]) => {
           };
         case "actions":
           return {
-            ...col,
+            field: "actions",
             headerName: "Actions",
             headerComponent: LastColumnHeader,
-            cellRenderer: (params) => (
-              <Button
-                style={{ color: "#0057b7" }}
-                onClick={() =>
-                  router.push(`/manage-users/${params.data.id}`)
-                }
-              >
-                View
-              </Button>
-            ),
+            cellRenderer: (params) => {
+              const userType = params.data?.user_type?.toLowerCase() || "";
+
+              let routePath = `/manage-users/${params.data.id}`;
+
+              if (userType === "company" || userType === "internal_user") {
+                routePath += "?hideTabs=1";
+              }
+
+              return (
+                <Button
+                  style={{ color: "#0057b7" }}
+                  onClick={() => router.push(routePath)}
+                >
+                  View
+                </Button>
+              );
+            },
           };
+
         default:
           return col;
       }
     });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [columns]);
 };
 
