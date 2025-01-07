@@ -12,6 +12,9 @@ interface Column {
 
 const useColumnBillingCustomers = (columns: Column[]) => {
   const router = useRouter();
+  const handleClick = (params) => {
+    console.log("params", params);
+  };
   return useMemo(() => {
     return columns.map((col: any) => {
       switch (col.field) {
@@ -73,28 +76,66 @@ const useColumnBillingCustomers = (columns: Column[]) => {
               params.value ? `€${params.value}` : "N/A",
           };
 
+        // case "actions":
+        //   return {
+        //     ...col,
+        //     headerName: "Actions",
+        //     headerComponent: LastColumnHeader,
+        //     cellRenderer: (params) => (
+        //       <Button
+        //         style={{ color: "#0057b7" }}
+        //         onClick={
+        //           () => router.push(`/manage-customers/${params.data.topId}`)
+        //           // handleClick
+        //         }
+        //       >
+        //         View
+        //       </Button>
+        //     ),
+        //   };
         case "actions":
           return {
             ...col,
             headerName: "Actions",
             headerComponent: LastColumnHeader,
-            cellRenderer: (params) => (
-              <Button
-                style={{ color: "#0057b7" }}
-                onClick={() =>
-                  router.push(`/manage-customers/${params.data.id}`)
+            cellRenderer: ({ data }) => {
+              const userType = data?.user_type?.toLowerCase();
+              console.log("userType", userType);
+
+              // Check if user_type is "company"
+              const isCompany = userType === "company";
+
+              const handleClick = () => {
+                if (isCompany) {
+                  debugger
+                  router.push(`/manage-customers/${data.topId}`);
+                } else {
+                  console.error(
+                    `Navigation blocked: Unsupported user type "${userType}"`
+                  );
+                  alert("This action is available for company users only.");
                 }
-              >
-                View
-              </Button>
-            ),
+              };
+
+              return (
+                <Button
+                  style={{
+                    color: isCompany ? "#0057b7" : "gray",
+                    cursor: isCompany ? "pointer" : "not-allowed",
+                  }}
+                  onClick={handleClick}
+                >
+                  View
+                </Button>
+              );
+            },
           };
         default:
           return col;
       }
     });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [columns]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [columns, router]);
 };
 
 export default useColumnBillingCustomers;

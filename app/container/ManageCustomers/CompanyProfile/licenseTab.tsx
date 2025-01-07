@@ -12,6 +12,7 @@ const LicenseTab = ({
   onNextPage,
   onPreviousPage,
 }: any) => {
+  console.log("row data", rowData);
   return (
     <Box
       sx={{

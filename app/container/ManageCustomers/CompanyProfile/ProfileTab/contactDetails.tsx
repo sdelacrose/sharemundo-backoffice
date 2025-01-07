@@ -2,13 +2,12 @@ import Loader from "@/app/components/common/Loader";
 import { Box, Divider, Stack, Typography } from "@mui/material";
 import React from "react";
 
-const ContactDetails = ({ profileDetail }: { profileDetail: any }) => {
+const ContactDetails = ({ profileDetail, licenses }: any) => {
   if (!profileDetail || !profileDetail.company_profile) {
     return <Loader />;
   }
 
   const companyProfile = profileDetail.company_profile;
- 
 
   return (
     <>
@@ -117,7 +116,8 @@ const ContactDetails = ({ profileDetail }: { profileDetail: any }) => {
                   License
                 </Typography>
                 <Typography variant="subtitle1" color="#101928">
-                  {profileDetail.licenses?.length || 0}
+                  {/* {profileDetail.licenses?.length || 0} */}
+                  {licenses || 0}
                 </Typography>
               </Stack>
               <Stack>

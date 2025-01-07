@@ -20,6 +20,7 @@ import {
   connectionColumnDefs,
   internalColumnDefs,
 } from "@/app/const/GridTable/ColDef";
+import { useRouter } from "next/navigation";
 
 const UserConnectionTab = ({ id, setActiveTab, companyId }: any) => {
   const [viewMode, setViewMode] = useState<"internal" | "connections">(
@@ -45,9 +46,15 @@ const UserConnectionTab = ({ id, setActiveTab, companyId }: any) => {
   const [userType, setUserType] = useState<string | null>("all");
   const [, setConnectionType] = useState<string | null>("all");
 
-  const handleViewClick = () => {
+  const handleViewClick = (id) => {
+
     setActiveTab(0);
   };
+  // const router = useRouter();
+  // const handleViewClick = (userId) => {
+  //   // Navigate to the user details page
+  //   router.push(`/manage-users/${userId}`);
+  // };
 
   const handleOpenRemoveDrawer = (data: any) => {
     setSelectedRowId(data.id);

@@ -12,9 +12,10 @@ interface ProfileTabProps {
     user_type: string;
     [key: string]: any;
   };
+  licenses?:number
 }
 
-const ProfileTab: React.FC<ProfileTabProps> = ({ profileData }) => {
+const ProfileTab: React.FC<ProfileTabProps> = ({ profileData ,licenses}) => {
   const internalUser = profileData?.user_type === "internal_user";
   const company = profileData?.user_type === "company";
   const freelancer = profileData?.user_type === "freelancer";
@@ -30,7 +31,7 @@ const ProfileTab: React.FC<ProfileTabProps> = ({ profileData }) => {
       {company && (
         <>
           <CompanyDetails profileDetail={profileData} />
-          <ContactDetails profileDetail={profileData} />
+          <ContactDetails profileDetail={profileData} licenses={licenses}/>
         </>
       )}
       {freelancer && (
