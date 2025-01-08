@@ -6,7 +6,7 @@ const FreelancerDetails = ({ freelancerDetail }) => {
   if (!freelancerDetail) {
     return <Loader />;
   }
-  ;
+  
   return (
     <>
       <Box width={"50%"}>

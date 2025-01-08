@@ -20,9 +20,12 @@ import {
   connectionColumnDefs,
   internalColumnDefs,
 } from "@/app/const/GridTable/ColDef";
-import { useRouter } from "next/navigation";
-
-const UserConnectionTab = ({ id, setActiveTab, companyId }: any) => {
+import ProfileDrawer from "../../Solution-License-InternalUser/ProfileTab";
+const UserConnectionTab = ({
+  id,
+  
+  companyId,
+}: any) => {
   const [viewMode, setViewMode] = useState<"internal" | "connections">(
     "internal"
   );
@@ -45,16 +48,17 @@ const UserConnectionTab = ({ id, setActiveTab, companyId }: any) => {
   const [addUserDrawerOpen, setAddUserDrawerOpen] = useState(false);
   const [userType, setUserType] = useState<string | null>("all");
   const [, setConnectionType] = useState<string | null>("all");
-
-  const handleViewClick = (id) => {
-
-    setActiveTab(0);
-  };
-  // const router = useRouter();
-  // const handleViewClick = (userId) => {
-  //   // Navigate to the user details page
-  //   router.push(`/manage-users/${userId}`);
+  // const [openDrawer, setOpenDrawer] = useState(false);
+  // const handleViewClick = () => {
+  //   setOpenDrawer(true);
+  //   // setActiveTab(0);
   // };
+  const [openDrawer, setOpenDrawer] = useState(false);
+  const [drawerData, setDrawerData] = useState(null);
+  const handleViewClick = (rowData: any) => {
+    setDrawerData(rowData);
+    setOpenDrawer(true);
+  };
 
   const handleOpenRemoveDrawer = (data: any) => {
     setSelectedRowId(data.id);
@@ -62,7 +66,8 @@ const UserConnectionTab = ({ id, setActiveTab, companyId }: any) => {
   };
 
   const internalDefs = internalColumnDefs(
-    handleViewClick,
+    // handleViewClick,
+    (rowData) => handleViewClick(rowData),
     setSelectedUserId,
     setRestoreUserDrawerOpen,
     setRemoveUserDrawerOpen
@@ -114,7 +119,13 @@ const UserConnectionTab = ({ id, setActiveTab, companyId }: any) => {
           role: user.role.charAt(0).toUpperCase() + user.role.slice(1),
           allocated_licenses: user.allocated_licenses,
           is_deleted: user.is_deleted,
+          country: user.country,
+          post_code: user.post_code,
+          street_address: user.street_address,
+          mobile_phone: user.mobile_phone,
+          state: user.state,
         }));
+
         setRowData(users);
         setFilteredRowData(users);
       }
@@ -504,7 +515,6 @@ const UserConnectionTab = ({ id, setActiveTab, companyId }: any) => {
           />
         </Box>
       </Box>
-
       {addUserDrawerOpen && (
         <AddUserDrawer
           open={addUserDrawerOpen}
@@ -513,7 +523,6 @@ const UserConnectionTab = ({ id, setActiveTab, companyId }: any) => {
           handleUserAdded={handleUserAdded}
         />
       )}
-
       {removeConnectionDrawer && (
         <RemoveConnectionDrawer
           open={removeConnectionDrawer}
@@ -528,7 +537,6 @@ const UserConnectionTab = ({ id, setActiveTab, companyId }: any) => {
           handleRemoveUser={() => handleRemoveUser(selectedUserId!)}
         />
       )}
-
       {restoreUserDrawerOpen && (
         <RestoreUserDrawer
           open={restoreUserDrawerOpen}
@@ -558,6 +566,13 @@ const UserConnectionTab = ({ id, setActiveTab, companyId }: any) => {
           }))}
         />
       )}
+      {openDrawer && (
+        <ProfileDrawer
+          isOpen={openDrawer}
+          onClose={() => setOpenDrawer(false)}
+          profileData={drawerData}
+        />
+      )}{" "}
     </>
   );
 };

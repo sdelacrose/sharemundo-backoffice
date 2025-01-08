@@ -12,9 +12,7 @@ interface Column {
 
 const useColumnBillingCustomers = (columns: Column[]) => {
   const router = useRouter();
-  const handleClick = (params) => {
-    console.log("params", params);
-  };
+
   return useMemo(() => {
     return columns.map((col: any) => {
       switch (col.field) {
@@ -49,24 +47,7 @@ const useColumnBillingCustomers = (columns: Column[]) => {
                   params.value.slice(1).toLowerCase()
                 : "N/A",
           };
-        // case "next_12_month_revenue":
-        //   return {
-        //     field: "next_12_month_revenue",
-        //     headerName: "Next 12 Month Revenue",
-        //     width: 120,
-        //     flex: 1.5,
-        //     valueFormatter: (params: any) =>
-        //       params.value ? `€${params.value}` : "N/A",
-        //   };
-        // case "last_12_month_revenue":
-        //   return {
-        //     field: "last_12_month_revenue",
-        //     headerName: "Last 12 Month Revenue",
-        //     width: 120,
-        //     flex: 1.6,
-        //     valueFormatter: (params: any) =>
-        //       params.value ? `€${params.value}` : "N/A",
-        //   };
+        
         case "total_revenue":
           return {
             field: "total_revenue",
@@ -76,23 +57,6 @@ const useColumnBillingCustomers = (columns: Column[]) => {
               params.value ? `€${params.value}` : "N/A",
           };
 
-        // case "actions":
-        //   return {
-        //     ...col,
-        //     headerName: "Actions",
-        //     headerComponent: LastColumnHeader,
-        //     cellRenderer: (params) => (
-        //       <Button
-        //         style={{ color: "#0057b7" }}
-        //         onClick={
-        //           () => router.push(`/manage-customers/${params.data.topId}`)
-        //           // handleClick
-        //         }
-        //       >
-        //         View
-        //       </Button>
-        //     ),
-        //   };
         case "actions":
           return {
             ...col,
@@ -102,12 +66,11 @@ const useColumnBillingCustomers = (columns: Column[]) => {
               const userType = data?.user_type?.toLowerCase();
               console.log("userType", userType);
 
-              // Check if user_type is "company"
               const isCompany = userType === "company";
 
               const handleClick = () => {
                 if (isCompany) {
-                  debugger
+                  
                   router.push(`/manage-customers/${data.topId}`);
                 } else {
                   console.error(
@@ -134,7 +97,6 @@ const useColumnBillingCustomers = (columns: Column[]) => {
           return col;
       }
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [columns, router]);
 };
 

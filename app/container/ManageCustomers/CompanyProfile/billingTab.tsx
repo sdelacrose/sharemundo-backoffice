@@ -32,7 +32,7 @@ const BillingTab = ({ id }: { id: string }) => {
 
       const formattedData = billingData.results.invoices.map(
         (invoice: any) => ({
-          id: invoice.invoice_no,
+          id: invoice.invoice_no || "N/A",
           invoice_date: new Date(invoice.invoice_date).toLocaleDateString(),
           total_amount: `€${invoice.amount_due}`,
           total_licenses: invoice.line_items?.data?.length || 0,
@@ -86,7 +86,7 @@ const BillingTab = ({ id }: { id: string }) => {
 
   useEffect(() => {
     fetchBillingData(`/admin-dashboard/customers/${id}/billing`);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   return (
@@ -103,7 +103,8 @@ const BillingTab = ({ id }: { id: string }) => {
         }}
       >
         <Box m={2} display={"flex"} justifyContent={"end"}>
-          <SelectDatePicker onDateChange={handleDateChange} /> {/* Pass the handleDateChange function */}
+          <SelectDatePicker onDateChange={handleDateChange} />{" "}
+          {/* Pass the handleDateChange function */}
         </Box>
         <AgGridServerSideTable
           rowData={rowData}

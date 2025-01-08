@@ -17,14 +17,13 @@ import { useSearchParams } from "next/navigation";
 const CompanyProfile = ({ customerDetail, id }: any) => {
   const context = useContext(SidebarContext);
   const [activeTab, setActiveTab] = useState(0);
+
   const [isLicenseDetailOpen, setLicenseDetailOpen] = useState(false);
   const companyProfile = customerDetail?.company_profile;
-  console.log("count", customerDetail);
-
-  const [nextPageUrl, setNextPageUrl] = useState<string | null>(null);
-  const [previousPageUrl, setPreviousPageUrl] = useState<string | null>(null);
+  const [nextPageUrl, ] = useState<string | null>(null);
+  const [previousPageUrl, ] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(0);
+  const [totalPages, ] = useState(0);
   const [rowData, setRowData] = useState([]);
 
   const isFreelancer = customerDetail?.user_type === "freelancer";
@@ -104,7 +103,6 @@ const CompanyProfile = ({ customerDetail, id }: any) => {
   const handleViewDetails = () => {
     setLicenseDetailOpen(true);
   };
-
   const fetchLicenses = async (url: string) => {
     try {
       const licenseDetail = await apiCall(url);
@@ -126,8 +124,7 @@ const CompanyProfile = ({ customerDetail, id }: any) => {
     }
   };
 
-  useEffect(() => {
-  }, [rowData]);
+  useEffect(() => {}, [rowData]);
 
   useEffect(() => {
     fetchLicenses(`/admin-dashboard/licenses/${id}`);

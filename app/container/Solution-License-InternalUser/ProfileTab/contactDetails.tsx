@@ -1,21 +1,14 @@
-import { Box, Divider, Stack, Typography } from "@mui/material";
+import { Box,  Stack, Typography } from "@mui/material";
 import React from "react";
 
-const ContactDetails = () => {
+const ContactDetails = ({ profileData }: any) => {
   return (
     <>
-      <Box width={"50%"}>
+      <Box width={"100%"} mt={2}>
         {/* Contact Details------------------------------------------------------------------ */}
 
-        <Typography variant="h5">Contact Details</Typography>
-        <Divider
-          sx={{
-            borderColor: "#F0F2F5",
-            marginTop: "12px",
-            marginBottom: "24px",
-          }}
-        />
-        <Stack gap={3} mr={15}>
+      
+        <Stack gap={3}>
           <Box
             display={"flex"}
             justifyContent={"space-between"}
@@ -26,42 +19,19 @@ const ContactDetails = () => {
                 Address
               </Typography>
               <Typography variant="subtitle1" color="#101928">
-                sdasd@FoliumAI936.sharemundo.com
+                {profileData.street_address || "N/A"}
               </Typography>
             </Stack>
-            <Stack>
-              <Typography variant="caption" color="#667185">
-                Town
-              </Typography>
-              <Typography variant="subtitle1" color="#101928">
-                8y39214ubu012huoo090
-              </Typography>
-            </Stack>
-          </Box>
-          {/* ------------------------------------------- */}
-          <Box
-            display={"flex"}
-            justifyContent={"space-between"}
-            alignItems={"center"}
-          >
-            <Stack>
+            <Stack mr={6}>
               <Typography variant="caption" color="#667185">
                 Country
               </Typography>
               <Typography variant="subtitle1" color="#101928">
-                Germany
-              </Typography>
-            </Stack>
-            <Stack>
-              <Typography variant="caption" color="#667185">
-                Post Code
-              </Typography>
-              <Typography variant="subtitle1" color="#101928">
-                8090
+                {profileData.country || "N/A"}
               </Typography>
             </Stack>
           </Box>
-          {/* -------------------------------------------- */}
+          {/* ------------------------------------------- */}
           <Box
             display={"flex"}
             justifyContent={"space-between"}
@@ -72,7 +42,30 @@ const ContactDetails = () => {
                 Email
               </Typography>
               <Typography variant="subtitle1" color="#101928">
-                www.company.name
+                {profileData.email || "N/A"}
+              </Typography>
+            </Stack>
+            <Stack mr={4}>
+              <Typography variant="caption" color="#667185">
+                Post Code
+              </Typography>
+              <Typography variant="subtitle1" color="#101928">
+                {profileData.post_code || "N/A"}
+              </Typography>
+            </Stack>
+          </Box>
+          {/* -------------------------------------------- */}
+          <Box
+            display={"flex"}
+            justifyContent={"space-between"}
+            alignItems={"center"}
+          >
+            <Stack>
+              <Typography variant="caption" color="#667185">
+                State
+              </Typography>
+              <Typography variant="subtitle1" color="#101928">
+                {profileData.state || "N/A"}
               </Typography>
             </Stack>
             <Stack>
@@ -80,78 +73,10 @@ const ContactDetails = () => {
                 Mobile Number
               </Typography>
               <Typography variant="subtitle1" color="#101928">
-                987623456789
+                {profileData.mobile_phone || "N/A"}
               </Typography>
             </Stack>
           </Box>
-          {/* ------------- */}
-          <Box
-            display={"flex"}
-            justifyContent={"space-between"}
-            alignItems={"center"}
-          >
-            <Stack>
-              <Typography variant="caption" color="#667185">
-                Telephone Number
-              </Typography>
-              <Typography variant="subtitle1" color="#101928">
-                +1234356576
-              </Typography>
-            </Stack>
-          </Box>
-        </Stack>
-
-        {/* Other Details------------------------------------------------------------------------------------- */}
-
-        <Typography variant="h5" mt={4}>
-          Other Details
-        </Typography>
-        <Divider
-          sx={{
-            borderColor: "#F0F2F5",
-            marginTop: "12px",
-            marginBottom: "24px",
-          }}
-        />
-        <Stack gap={3} mr={15}>
-          <Box
-            display={"flex"}
-            justifyContent={"space-between"}
-            alignItems={"center"}
-          >
-            <Stack>
-              <Typography variant="caption" color="#667185">
-                Active Solutions
-              </Typography>
-              <Typography variant="subtitle1" color="#101928">
-                2
-              </Typography>
-            </Stack>
-            <Stack>
-              <Typography variant="caption" color="#667185">
-                Companies{" "}
-              </Typography>
-              <Typography variant="subtitle1" color="#101928">
-                3
-              </Typography>
-            </Stack>
-          </Box>
-          {/* ------------------------------------------- */}
-          <Box
-            display={"flex"}
-            justifyContent={"space-between"}
-            alignItems={"center"}
-          >
-            <Stack>
-              <Typography variant="caption" color="#667185">
-                Pending companies Invites
-              </Typography>
-              <Typography variant="subtitle1" color="#101928">
-                2
-              </Typography>
-            </Stack>
-          </Box>
-          {/* -------------------------------------------- */}
         </Stack>
       </Box>
     </>
