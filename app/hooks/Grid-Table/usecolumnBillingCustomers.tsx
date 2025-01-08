@@ -64,10 +64,7 @@ const useColumnBillingCustomers = (columns: Column[]) => {
             headerComponent: LastColumnHeader,
             cellRenderer: ({ data }) => {
               const userType = data?.user_type?.toLowerCase();
-              console.log("userType", userType);
-
               const isCompany = userType === "company";
-
               const handleClick = () => {
                 if (isCompany) {
                   

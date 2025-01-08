@@ -194,8 +194,7 @@ export const internalColumnDefs = (
         <Button
           variant="text"
           color="primary"
-          // onClick={() => handleViewClick()}
-          // onClick={() => handleViewClick(data.id)}
+       
           onClick={() => handleViewClick(data)}
         >
           View

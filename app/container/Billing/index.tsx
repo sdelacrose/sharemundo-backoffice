@@ -72,7 +72,6 @@ const Billings = () => {
   const handleRowSelection = (event) => {
     const selected = event.api.getSelectedRows();
     setSelectedRows(selected);
-    console.log("Selected Rows: ", selected);
   };
   const fetchBillingData = async (url: string) => {
     try {
@@ -126,10 +125,7 @@ const Billings = () => {
           (user) => user.user_type?.toLowerCase() === "company"
         );
 
-        console.log("Filtered Company Users:", filteredData);
         setTopUserData(filteredData);
-        // setTopUserData(extractedData);
-        console.log("top user data", extractedData);
         setLoading(false);
       } catch (err) {
         console.error("Error fetching top user data:", err);

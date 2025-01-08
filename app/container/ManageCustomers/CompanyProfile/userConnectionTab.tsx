@@ -23,7 +23,6 @@ import {
 import ProfileDrawer from "../../Solution-License-InternalUser/ProfileTab";
 const UserConnectionTab = ({
   id,
-  
   companyId,
 }: any) => {
   const [viewMode, setViewMode] = useState<"internal" | "connections">(
@@ -48,11 +47,7 @@ const UserConnectionTab = ({
   const [addUserDrawerOpen, setAddUserDrawerOpen] = useState(false);
   const [userType, setUserType] = useState<string | null>("all");
   const [, setConnectionType] = useState<string | null>("all");
-  // const [openDrawer, setOpenDrawer] = useState(false);
-  // const handleViewClick = () => {
-  //   setOpenDrawer(true);
-  //   // setActiveTab(0);
-  // };
+
   const [openDrawer, setOpenDrawer] = useState(false);
   const [drawerData, setDrawerData] = useState(null);
   const handleViewClick = (rowData: any) => {
@@ -66,7 +61,6 @@ const UserConnectionTab = ({
   };
 
   const internalDefs = internalColumnDefs(
-    // handleViewClick,
     (rowData) => handleViewClick(rowData),
     setSelectedUserId,
     setRestoreUserDrawerOpen,
