@@ -105,7 +105,7 @@ const InternalUserContactDetails = ({
                   Total Users
                 </Typography>
                 <Typography variant="subtitle1" color="#101928">
-                  {profileDetail.allocated_licenses || "N/A"}
+                  {profileDetail.users_count || "N/A"}
                 </Typography>
               </Stack>
               <Stack>
@@ -121,7 +121,7 @@ const InternalUserContactDetails = ({
                   Pending Freelance Invites
                 </Typography>
                 <Typography variant="subtitle1" color="#101928">
-                  N/A
+                  {profileDetail.pending_invites || "0"}
                 </Typography>
               </Stack>
             </Box>
@@ -131,7 +131,7 @@ const InternalUserContactDetails = ({
                   Freelancers
                 </Typography>
                 <Typography variant="subtitle1" color="#101928">
-                  N/A
+                  {profileDetail.accepted_invites || "0"}
                 </Typography>
               </Stack>
               <Stack>
@@ -141,7 +141,7 @@ const InternalUserContactDetails = ({
                 <Typography variant="subtitle1" color="#101928">
                   {profileDetail.licenses?.filter(
                     (license: any) => license.status
-                  ).length || 0}
+                  ).length || 1}
                 </Typography>
               </Stack>
               <Stack>
