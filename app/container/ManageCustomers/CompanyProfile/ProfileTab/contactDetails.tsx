@@ -4,7 +4,6 @@ import { Box, Divider, Stack, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 
 const ContactDetails = ({ profileDetail, licenses }: any) => {
-
   const companyProfile = profileDetail.company_profile;
   const { id } = profileDetail;
   const [userCount, setUserCount] = useState(null);
@@ -19,10 +18,10 @@ const ContactDetails = ({ profileDetail, licenses }: any) => {
       setUserCount(response.count);
 
       console.log("User count:", userCount);
-      return userCount; 
+      return userCount;
     } catch (error) {
       console.error("Failed to fetch user count:", error);
-      return 0; 
+      return 0;
     }
   };
   useEffect(() => {
@@ -30,12 +29,12 @@ const ContactDetails = ({ profileDetail, licenses }: any) => {
       const count = await fetchUserCount(
         `/admin-dashboard/customers/${id}/users`
       );
-      console.log("count",count)
+      console.log("count", count);
     };
 
     fetchCount();
   }, [id]);
-  
+
   if (!profileDetail || !profileDetail.company_profile) {
     return <Loader />;
   }
@@ -155,7 +154,7 @@ const ContactDetails = ({ profileDetail, licenses }: any) => {
                   Pending Freelance Invites
                 </Typography>
                 <Typography variant="subtitle1" color="#101928">
-                  N/A
+                  {companyProfile.pending_invites || "0"}
                 </Typography>
               </Stack>
             </Box>
@@ -165,7 +164,7 @@ const ContactDetails = ({ profileDetail, licenses }: any) => {
                   Freelancers
                 </Typography>
                 <Typography variant="subtitle1" color="#101928">
-                  N/A
+                  {companyProfile.accepted_invites || "0"}
                 </Typography>
               </Stack>
               <Stack>
