@@ -2,9 +2,13 @@ import Loader from "@/app/components/common/Loader";
 import { Box, Divider, Stack, Typography } from "@mui/material";
 import React from "react";
 
-const InternalUserContactDetails = ({ profileDetail }: { profileDetail: any }) => {
+const InternalUserContactDetails = ({
+  profileDetail,
+}: {
+  profileDetail: any;
+}) => {
   if (!profileDetail || !profileDetail.company_profile) {
-    return <Loader/>
+    return <Loader />;
   }
 
   const companyProfile = profileDetail.company_profile;
@@ -33,7 +37,7 @@ const InternalUserContactDetails = ({ profileDetail }: { profileDetail: any }) =
                   {profileDetail.company_country || "N/A"}
                 </Typography>
               </Stack>
-             
+
               <Stack>
                 <Typography variant="caption" color="#667185">
                   Post Code
@@ -43,7 +47,7 @@ const InternalUserContactDetails = ({ profileDetail }: { profileDetail: any }) =
                 </Typography>
               </Stack>
               <Stack>
-              <Typography variant="caption" color="#667185">
+                <Typography variant="caption" color="#667185">
                   Street Address
                 </Typography>
                 <Typography variant="subtitle1" color="#101928">
@@ -62,7 +66,7 @@ const InternalUserContactDetails = ({ profileDetail }: { profileDetail: any }) =
                 </Typography>
               </Stack>
               <Stack>
-              <Typography variant="caption" color="#667185">
+                <Typography variant="caption" color="#667185">
                   Mobile Number
                 </Typography>
                 <Typography variant="subtitle1" color="#101928">
@@ -101,7 +105,7 @@ const InternalUserContactDetails = ({ profileDetail }: { profileDetail: any }) =
                   Total Users
                 </Typography>
                 <Typography variant="subtitle1" color="#101928">
-                  {profileDetail.allocated_licenses || "N/A"}
+                  {profileDetail.users_count || "N/A"}
                 </Typography>
               </Stack>
               <Stack>
@@ -117,7 +121,7 @@ const InternalUserContactDetails = ({ profileDetail }: { profileDetail: any }) =
                   Pending Freelance Invites
                 </Typography>
                 <Typography variant="subtitle1" color="#101928">
-                  N/A
+                  {profileDetail.pending_invites || "0"}
                 </Typography>
               </Stack>
             </Box>
@@ -127,7 +131,7 @@ const InternalUserContactDetails = ({ profileDetail }: { profileDetail: any }) =
                   Freelancers
                 </Typography>
                 <Typography variant="subtitle1" color="#101928">
-                  N/A
+                  {profileDetail.accepted_invites || "0"}
                 </Typography>
               </Stack>
               <Stack>
@@ -137,7 +141,7 @@ const InternalUserContactDetails = ({ profileDetail }: { profileDetail: any }) =
                 <Typography variant="subtitle1" color="#101928">
                   {profileDetail.licenses?.filter(
                     (license: any) => license.status
-                  ).length || 0}
+                  ).length || 1}
                 </Typography>
               </Stack>
               <Stack>

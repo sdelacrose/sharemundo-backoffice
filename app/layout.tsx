@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.scss";
 import CustomLayout from "./components/CustomLayout";
-
+import logo from "./assets/images/favIcon.png";
 
 export const metadata: Metadata = {
   title: "Backoffice",
@@ -15,6 +15,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <link rel="icon" href={logo.src} type="image/png" />
+        <title>{String(metadata.title)}</title>
+        <meta name="description" content={String(metadata.description)} />{" "}
+      </head>
       <body>
         <CustomLayout>{children}</CustomLayout>
       </body>

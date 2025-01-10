@@ -1,13 +1,13 @@
 import { Box, Divider, Stack, Typography } from "@mui/material";
 import React from "react";
 
-const InternalUserDetails = () => {
+const InternalUserDetails = ({profileData}:any) => {
   return (
     <>
-      <Box width={"50%"}>
+      <Box width={"100%"}>
         {/* freelancer Details------------------------------------------------------------------ */}
 
-        <Typography variant="h5">Freelancer Details</Typography>
+        <Typography variant="h5">User Details</Typography>
         <Divider
           sx={{
             borderColor: "#F0F2F5",
@@ -15,18 +15,19 @@ const InternalUserDetails = () => {
             marginBottom: "24px",
           }}
         />
-        <Stack gap={3} mr={15}>
+        <Stack gap={3} mr={15} width={"100%"}>
           <Box
             display={"flex"}
             justifyContent={"space-between"}
             alignItems={"center"}
+            width={"100%"}
           >
             <Stack>
               <Typography variant="caption" color="#667185">
                 Name
               </Typography>
               <Typography variant="subtitle1" color="#101928">
-                John Doe
+                {profileData.name || "N/A"}
               </Typography>
             </Stack>
             <Stack>
@@ -34,88 +35,16 @@ const InternalUserDetails = () => {
                 sharemundo Links IDs
               </Typography>
               <Typography variant="subtitle1" color="#101928">
-                8y39214ubu012huoo090
+              {profileData.sharemundo_links_id || "N/A"}
               </Typography>
             </Stack>
           </Box>
           {/* ------------------------------------------- */}
-          <Box
-            display={"flex"}
-            justifyContent={"space-between"}
-            alignItems={"center"}
-          >
-            <Stack>
-              <Typography variant="caption" color="#667185">
-                Reg Number
-              </Typography>
-              <Typography variant="subtitle1" color="#101928">
-                8y39214ubu012huoo090
-              </Typography>
-            </Stack>
-          </Box>
+          
           {/* -------------------------------------------- */}
         </Stack>
 
-        {/* Bank Details------------------------------------------------------------------------------------- */}
-
-        <Typography variant="h5" mt={4}>
-          Bank Details
-        </Typography>
-        <Divider
-          sx={{
-            borderColor: "#F0F2F5",
-            marginTop: "12px",
-            marginBottom: "24px",
-          }}
-        />
-        <Stack gap={3} mr={15}>
-          <Box
-            display={"flex"}
-            justifyContent={"space-between"}
-            alignItems={"center"}
-          >
-            <Stack>
-              <Typography variant="caption" color="#667185">
-                Bank Name
-              </Typography>
-              <Typography variant="subtitle1" color="#101928">
-                XYZ Bank
-              </Typography>
-            </Stack>
-            <Stack>
-              <Typography variant="caption" color="#667185">
-                Bank Address
-              </Typography>
-              <Typography variant="subtitle1" color="#101928">
-                8y39214ubu012huoo090
-              </Typography>
-            </Stack>
-          </Box>
-          {/* ------------------------------------------- */}
-          <Box
-            display={"flex"}
-            justifyContent={"space-between"}
-            alignItems={"center"}
-          >
-            <Stack>
-              <Typography variant="caption" color="#667185">
-                IBAN
-              </Typography>
-              <Typography variant="subtitle1" color="#101928">
-                8y39214ubu012huoo090
-              </Typography>
-            </Stack>
-            <Stack>
-              <Typography variant="caption" color="#667185">
-                BIC
-              </Typography>
-              <Typography variant="subtitle1" color="#101928">
-                8y39214ubu012huoo090
-              </Typography>
-            </Stack>
-          </Box>
-          {/* -------------------------------------------- */}
-        </Stack>
+       
       </Box>
     </>
   );
