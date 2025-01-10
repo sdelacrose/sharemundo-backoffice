@@ -2,9 +2,13 @@ import Loader from "@/app/components/common/Loader";
 import { Box, Divider, Stack, Typography } from "@mui/material";
 import React from "react";
 
-const InternalUserContactDetails = ({ profileDetail }: { profileDetail: any }) => {
+const InternalUserContactDetails = ({
+  profileDetail,
+}: {
+  profileDetail: any;
+}) => {
   if (!profileDetail || !profileDetail.company_profile) {
-    return <Loader/>
+    return <Loader />;
   }
 
   const companyProfile = profileDetail.company_profile;
@@ -33,7 +37,7 @@ const InternalUserContactDetails = ({ profileDetail }: { profileDetail: any }) =
                   {profileDetail.company_country || "N/A"}
                 </Typography>
               </Stack>
-             
+
               <Stack>
                 <Typography variant="caption" color="#667185">
                   Post Code
@@ -43,7 +47,7 @@ const InternalUserContactDetails = ({ profileDetail }: { profileDetail: any }) =
                 </Typography>
               </Stack>
               <Stack>
-              <Typography variant="caption" color="#667185">
+                <Typography variant="caption" color="#667185">
                   Street Address
                 </Typography>
                 <Typography variant="subtitle1" color="#101928">
@@ -62,7 +66,7 @@ const InternalUserContactDetails = ({ profileDetail }: { profileDetail: any }) =
                 </Typography>
               </Stack>
               <Stack>
-              <Typography variant="caption" color="#667185">
+                <Typography variant="caption" color="#667185">
                   Mobile Number
                 </Typography>
                 <Typography variant="subtitle1" color="#101928">

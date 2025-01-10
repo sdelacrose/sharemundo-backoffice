@@ -1,15 +1,44 @@
 import Loader from "@/app/components/common/Loader";
+import { apiCall } from "@/app/utils/APIUtils";
 import { Box, Divider, Stack, Typography } from "@mui/material";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
-const ContactDetails = ({ profileDetail }: { profileDetail: any }) => {
+const ContactDetails = ({ profileDetail, licenses }: any) => {
+
+  const companyProfile = profileDetail.company_profile;
+  const { id } = profileDetail;
+  const [userCount, setUserCount] = useState(null);
+  const fetchUserCount = async (url: string) => {
+    try {
+      const trimmedUrl = url.includes("/admin-dashboard")
+        ? url.substring(url.indexOf("/admin-dashboard"))
+        : url;
+
+      const response = await apiCall(trimmedUrl);
+
+      setUserCount(response.count);
+
+      console.log("User count:", userCount);
+      return userCount; 
+    } catch (error) {
+      console.error("Failed to fetch user count:", error);
+      return 0; 
+    }
+  };
+  useEffect(() => {
+    const fetchCount = async () => {
+      const count = await fetchUserCount(
+        `/admin-dashboard/customers/${id}/users`
+      );
+      console.log("count",count)
+    };
+
+    fetchCount();
+  }, [id]);
+  
   if (!profileDetail || !profileDetail.company_profile) {
     return <Loader />;
   }
-
-  const companyProfile = profileDetail.company_profile;
- 
-
   return (
     <>
       <Box width={"50%"}>
@@ -109,7 +138,7 @@ const ContactDetails = ({ profileDetail }: { profileDetail: any }) => {
                   Total Users
                 </Typography>
                 <Typography variant="subtitle1" color="#101928">
-                  {profileDetail.allocated_licenses || "N/A"}
+                  {userCount || "N/A"}
                 </Typography>
               </Stack>
               <Stack>
@@ -117,7 +146,8 @@ const ContactDetails = ({ profileDetail }: { profileDetail: any }) => {
                   License
                 </Typography>
                 <Typography variant="subtitle1" color="#101928">
-                  {profileDetail.licenses?.length || 0}
+                  {/* {profileDetail.licenses?.length || 0} */}
+                  {licenses || 0}
                 </Typography>
               </Stack>
               <Stack>
@@ -145,7 +175,7 @@ const ContactDetails = ({ profileDetail }: { profileDetail: any }) => {
                 <Typography variant="subtitle1" color="#101928">
                   {profileDetail.licenses?.filter(
                     (license: any) => license.status
-                  ).length || 0}
+                  ).length || 1}
                 </Typography>
               </Stack>
               <Stack>

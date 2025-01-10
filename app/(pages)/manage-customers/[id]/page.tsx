@@ -36,7 +36,6 @@ const Page = ({ params }: any) => {
     );
   }
 
-  console.log("customerDetail",customerDetail)
 
   if (error) {
     return <div>{error}</div>;

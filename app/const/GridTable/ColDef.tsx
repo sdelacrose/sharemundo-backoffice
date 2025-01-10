@@ -152,7 +152,12 @@ export const userManagementColumnDefs = [
   { field: "actions", headerName: "Actions" },
 ];
 
-export const internalColumnDefs = (handleViewClick, setSelectedUserId, setRestoreUserDrawerOpen, setRemoveUserDrawerOpen) => [
+export const internalColumnDefs = (
+  handleViewClick,
+  setSelectedUserId,
+  setRestoreUserDrawerOpen,
+  setRemoveUserDrawerOpen
+) => [
   { field: "name", headerName: "Display Name", flex: 1 },
   { field: "email", headerName: "Email", flex: 1 },
   {
@@ -186,7 +191,12 @@ export const internalColumnDefs = (handleViewClick, setSelectedUserId, setRestor
         gap={1}
         sx={{ marginTop: "8px", marginLeft: "-14px" }}
       >
-        <Button variant="text" color="primary" onClick={() => handleViewClick()}>
+        <Button
+          variant="text"
+          color="primary"
+       
+          onClick={() => handleViewClick(data)}
+        >
           View
         </Button>
         {data.is_deleted ? (
@@ -218,7 +228,10 @@ export const internalColumnDefs = (handleViewClick, setSelectedUserId, setRestor
   },
 ];
 
-export const connectionColumnDefs = (handleViewClick, handleOpenRemoveDrawer) => [
+export const connectionColumnDefs = (
+  handleViewClick,
+  handleOpenRemoveDrawer
+) => [
   { field: "name", headerName: "Name", flex: 2 },
   {
     field: "sharemundo_links_id",
@@ -237,7 +250,11 @@ export const connectionColumnDefs = (handleViewClick, handleOpenRemoveDrawer) =>
         gap={1}
         sx={{ marginTop: "8px", marginLeft: "-14px" }}
       >
-        <Button variant="text" color="primary" onClick={() => handleViewClick()}>
+        <Button
+          variant="text"
+          color="primary"
+          onClick={() => handleViewClick()}
+        >
           View
         </Button>
         <Button

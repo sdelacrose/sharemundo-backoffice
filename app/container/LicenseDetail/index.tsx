@@ -37,7 +37,7 @@ const LicenseDetail: React.FC<LicenseDetailProps> = ({
     try {
       const url = `/admin-dashboard/licenses/${licenseId}`;
       const responseData = await apiCall(url);
-
+      console.log("data", responseData);
       if (responseData && responseData.length > 0) {
         setLicensesData(responseData[0].licenses || []);
       }
@@ -50,7 +50,7 @@ const LicenseDetail: React.FC<LicenseDetailProps> = ({
     if (licenseId) {
       getLicensesData();
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [licenseId]);
 
   return (

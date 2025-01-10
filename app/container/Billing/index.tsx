@@ -72,7 +72,6 @@ const Billings = () => {
   const handleRowSelection = (event) => {
     const selected = event.api.getSelectedRows();
     setSelectedRows(selected);
-    console.log("Selected Rows: ", selected);
   };
   const fetchBillingData = async (url: string) => {
     try {
@@ -114,7 +113,7 @@ const Billings = () => {
         const data = await apiCall("/admin-dashboard/invoices/paid", "GET");
         const topCustomersData = data?.results?.users || [];
         const extractedData = topCustomersData.map((user: any) => ({
-          id: user.id || "N/a",
+          topId: user.id || "N/a",
           first_name: user.first_name || "N/A",
           sharemundo_links_id: user.sharemundo_links_id || "N/A",
           user_type: user.user_type || "N/A",
@@ -122,7 +121,11 @@ const Billings = () => {
           next_12_month_revenue: user.next_12_month_revenue || 0,
           total_revenue: user.total_revenue || 0,
         }));
-        setTopUserData(extractedData);
+        const filteredData = extractedData.filter(
+          (user) => user.user_type?.toLowerCase() === "company"
+        );
+
+        setTopUserData(filteredData);
         setLoading(false);
       } catch (err) {
         console.error("Error fetching top user data:", err);
@@ -178,7 +181,6 @@ const Billings = () => {
         name: key,
         value: value as number,
       }));
-      console.log("Chart data-------", transformedData);
       setFailedData(transformedData);
       setLoading(false);
     } catch (err) {
