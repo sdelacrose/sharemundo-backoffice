@@ -329,7 +329,7 @@ const Billings = () => {
                 Email: item.email,
                 "First Name": item.first_name,
                 "Last Name": item.last_name,
-                "Active Status": item.is_active,
+                "Active Status": item.is_active ? "Active" : "Inactive",
                 "User Type": item.user_type,
                 Company: item.company || "N/A",
                 "Preferred Language": item.preferred_language,

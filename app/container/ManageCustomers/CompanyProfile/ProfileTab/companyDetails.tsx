@@ -1,17 +1,66 @@
 import Loader from "@/app/components/common/Loader";
 import { Box, Divider, Stack, Typography } from "@mui/material";
+import { useSearchParams } from "next/navigation";
 import React from "react";
 
 const CompanyDetails = ({ profileDetail }: any) => {
+  const searchParams = useSearchParams();
+
+  const hideTabs = searchParams.get("hideTabs") === "1";
   if (!profileDetail || !profileDetail.company_profile) {
-    return <Loader/>;
+    return <Loader />;
   }
 
   const companyProfile = profileDetail.company_profile;
-
   return (
     <>
       <Box width={"50%"}>
+        {hideTabs && (
+          <>
+            <Typography variant="h5">Company Owner Details</Typography>
+            <Divider
+              sx={{
+                borderColor: "#F0F2F5",
+                marginTop: "12px",
+                marginBottom: "24px",
+              }}
+            />
+            <Stack gap={3} mr={15} mb={4}>
+              <Box display="flex" gap={4}>
+                <Box
+                  flex={3}
+                  display="flex"
+                  flexDirection="column"
+                  gap={"24px"}
+                >
+                  <Stack>
+                    <Typography variant="caption" color="#667185">
+                      Title
+                    </Typography>
+                    <Typography variant="subtitle1" color="#101928">
+                      {profileDetail.title || "N/A"}
+                    </Typography>
+                  </Stack>
+                </Box>
+                <Box
+                  flex={2}
+                  display="flex"
+                  flexDirection="column"
+                  gap={"24px"}
+                >
+                  <Stack>
+                    <Typography variant="caption" color="#667185">
+                      Owner Name
+                    </Typography>
+                    <Typography variant="subtitle1" color="#101928">
+                      {profileDetail.username || "N/A"}
+                    </Typography>
+                  </Stack>
+                </Box>
+              </Box>
+            </Stack>
+          </>
+        )}
         <Typography variant="h5">Company Details</Typography>
         <Divider
           sx={{

@@ -20,10 +20,10 @@ const CompanyProfile = ({ customerDetail, id }: any) => {
 
   const [isLicenseDetailOpen, setLicenseDetailOpen] = useState(false);
   const companyProfile = customerDetail?.company_profile;
-  const [nextPageUrl, ] = useState<string | null>(null);
-  const [previousPageUrl, ] = useState<string | null>(null);
+  const [nextPageUrl] = useState<string | null>(null);
+  const [previousPageUrl] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, ] = useState(0);
+  const [totalPages] = useState(0);
   const [rowData, setRowData] = useState([]);
 
   const isFreelancer = customerDetail?.user_type === "freelancer";
