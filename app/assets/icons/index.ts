@@ -35,6 +35,7 @@ import ManageCustomers from "./ManageCustomers.svg";
 import ManageUsers from "./ManageUsers.svg";
 import SolutionLicenses from "./SolutionLicenses.svg";
 import Promotion from "./Promo.svg"
+import PromoBlack from "./PromoBlack.svg"
 
 export {
     Card,
@@ -73,5 +74,6 @@ export {
     SolutionLicenses,
     ManageCustomers,
     ManageUsers,
-    Promotion
+    Promotion,
+    PromoBlack
 };

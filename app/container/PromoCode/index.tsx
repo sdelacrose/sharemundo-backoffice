@@ -20,7 +20,6 @@ import {
 } from "@mui/material";
 import {AgGridReact} from "ag-grid-react";
 import CloseIcon from "@mui/icons-material/Close";
-import {DatePicker} from "@mui/x-date-pickers";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
 import {SidebarContext} from "@/app/(pages)/layout";
@@ -30,9 +29,9 @@ import CustomSearchField from "@/app/components/common/CustomSearch";
 import CustomFilterSelect from "@/app/components/common/CustomFilterSelect";
 import Loader from "@/app/components/common/Loader";
 import {Search} from "@/app/assets/icons";
-import {AdapterDateFns} from "@mui/x-date-pickers/AdapterDateFns";
-import {LocalizationProvider} from "@mui/x-date-pickers/LocalizationProvider";
+
 import SelectDatePicker from "@/app/components/common/DatePicker/DatePicker";
+import { promoCodeBreadcrumb } from "../Dashboard/data";
 
 interface Coupon {
     id: number;
@@ -308,7 +307,7 @@ const CouponManagement = () => {
             }}
         >
             <Box sx={{ml: "-24px"}}>
-                <Header breadcrumbItems={breadcrumbItems}/>
+                <Header breadcrumbItems={promoCodeBreadcrumb}/>
             </Box>
 
             <Box sx={{m: 3}}>
