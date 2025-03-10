@@ -217,6 +217,7 @@ const CouponManagement = () => {
             borderRadius: "8px",
             textTransform: "none",
             fontWeight: 600,
+            marginLeft:"-12px"
           }}
           onClick={() => {
             setSelectedCoupon(params.data);
