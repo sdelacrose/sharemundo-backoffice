@@ -31,6 +31,7 @@ import { capitalizeFirstLetter } from "@/app/utils/CapitalizeFirstLetter";
 import SelectDatePicker from "@/app/components/common/DatePicker/DatePicker";
 import { promoCodeBreadcrumb } from "../Dashboard/data";
 import StatusBadge from "@/app/utils/StatusBadge";
+import AgGridTable from "@/app/ag-grid";
 
 interface Coupon {
   id: number;
@@ -158,18 +159,13 @@ const CouponManagement = () => {
     {
       field: "name",
       headerName: "Name",
-      flex: 1,
-      minWidth: 200,
+      flex: 0.5,
+      minWidth: 130,
     },
     {
       field: "discount_type",
       headerName: "Type",
       cellRenderer: (params: any) => (
-        // <Chip
-        //   label={params.value.toUpperCase()}
-        //   color={params.value === "percentage" ? "primary" : "secondary"}
-        //   sx={{ borderRadius: "4px", fontWeight: 500 }}
-        // />
         <StatusBadge
           color="white"
           text={capitalizeFirstLetter(params.value)}
@@ -180,6 +176,8 @@ const CouponManagement = () => {
     {
       field: "value",
       headerName: "Value",
+      flex: 0.5,
+
       valueGetter: (params: any) =>
         params.data.discount_type === "percentage"
           ? `${params.data.percent_off}%`
@@ -214,10 +212,11 @@ const CouponManagement = () => {
           variant="contained"
           size="small"
           sx={{
-            borderRadius: "6px",
+            height: 40,
+            px: 2,
+            borderRadius: "8px",
             textTransform: "none",
-            boxShadow: "none",
-            "&:hover": { boxShadow: "none" },
+            fontWeight: 600,
           }}
           onClick={() => {
             setSelectedCoupon(params.data);
@@ -231,7 +230,7 @@ const CouponManagement = () => {
   ];
 
   const promoCodeColumns = [
-    { field: "code", headerName: "Code", flex: 1, minWidth: 150 },
+    { field: "code", headerName: "Code", flex: 1, minWidth: 100 },
     {
       field: "expires_at",
       headerName: "Expiration",
@@ -241,17 +240,19 @@ const CouponManagement = () => {
     {
       field: "is_active",
       headerName: "Status",
-      cellRenderer: (params: any) => (
-        <Chip
-          label={params.value ? "ACTIVE" : "INACTIVE"}
-          color={params.value ? "success" : "error"}
-          sx={{ fontWeight: 600, borderRadius: "4px" }}
-        />
-      ),
+      flex:0.7,
+      cellRenderer: (params: any) => {
+        return params.value === true ? (
+          <StatusBadge color="#036B26" text="Active" background="#E7F6EC" />
+        ) : (
+          <StatusBadge color="#865503" text="Inactive" background="#FEF6E7" />
+        );
+      },
     },
     {
       field: "first_time_transaction",
       headerName: "First Time",
+      flex:0.8,
       cellRenderer: (params: any) => (
         <Checkbox checked={params.value} color="primary" disabled />
       ),
@@ -260,11 +261,14 @@ const CouponManagement = () => {
       field: "actions",
       headerName: "Actions",
       cellRenderer: (params: any) => (
-        <Stack direction="row" spacing={1}>
+        <Stack direction="row" spacing={1} marginTop={1} marginLeft={-3}>
           <Button
             variant="outlined"
             size="small"
-            sx={{ borderRadius: "6px", textTransform: "none" }}
+            sx={{       height: 40,
+            borderRadius: "8px",
+            textTransform: "none",
+            fontWeight: 600, }}
             onClick={() => {
               setPromoFormData(params.data);
               setPromoCodeDrawerOpen(true);
@@ -276,7 +280,10 @@ const CouponManagement = () => {
             variant="outlined"
             color="error"
             size="small"
-            sx={{ borderRadius: "6px", textTransform: "none" }}
+            sx={{       height: 40,
+            borderRadius: "8px",
+            textTransform: "none",
+            fontWeight: 600, }}
             onClick={async () => {
               await apiCall(
                 `/package-license/promo-code/${params.data.id}/`,
@@ -376,13 +383,11 @@ const CouponManagement = () => {
                   height: "70vh",
                 }}
               >
-                <AgGridServerSideTable
+                <AgGridTable
                   rowData={coupons}
                   columnDefs={couponColumns}
-                  pagination={true}
                   paginationPageSize={10}
-                  onGridReady={(params) => params.api.sizeColumnsToFit()}
-                  height={580}
+                  height={640}
                 />
               </Box>
             </Grid>
@@ -426,15 +431,12 @@ const CouponManagement = () => {
                     </Button>
                   </Stack>
 
-                  {/* <Divider sx={{ my: 3 }} /> */}
 
-                  <AgGridServerSideTable
+                  <AgGridTable
                     rowData={promoCodes}
                     columnDefs={promoCodeColumns}
-                    pagination={true}
                     paginationPageSize={10}
-                    onGridReady={(params) => params.api.sizeColumnsToFit()}
-                    height={560}
+                    height={565}
                   />
                 </Box>
               </Grid>
