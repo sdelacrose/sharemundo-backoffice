@@ -1,79 +1,38 @@
 "use client";
 
 import { useState, useEffect, useCallback, useContext } from "react";
-import {
-  Box,
-  Grid,
-  Typography,
-  Button,
-  Chip,
-  Divider,
-  Stack,
-  Drawer,
-  IconButton,
-  TextField,
-  MenuItem,
-  InputAdornment,
-  FormControlLabel,
-  Checkbox,
-  ButtonGroup,
-} from "@mui/material";
-import AgGridServerSideTable from "@/app/ag-grid/AgGridServerSideTable";
-import CloseIcon from "@mui/icons-material/Close";
+import { Box, Grid, Typography, Button, Divider, Stack } from "@mui/material";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
 import { SidebarContext } from "@/app/(pages)/layout";
 import { apiCall } from "@/app/utils/APIUtils";
 import Header from "@/app/components/common/Header";
 import Loader from "@/app/components/common/Loader";
-import { capitalizeFirstLetter } from "@/app/utils/CapitalizeFirstLetter";
 
-import SelectDatePicker from "@/app/components/common/DatePicker/DatePicker";
 import { promoCodeBreadcrumb } from "../Dashboard/data";
-import StatusBadge from "@/app/utils/StatusBadge";
 import AgGridTable from "@/app/ag-grid";
-
-interface Coupon {
-  id: number;
-  stripe_coupon_id?: string;
-  name: string;
-  discount_type: "percentage" | "fixed";
-  percent_off?: number;
-  amount_off?: number;
-  currency?: string;
-  duration: "forever" | "once" | "repeating";
-  duration_in_months?: number;
-  max_redemptions?: number;
-  times_redeemed: number;
-  is_active: boolean;
-  created_at: string;
-  updated_at: string;
-}
-
-interface PromoCode {
-  id: number;
-  coupon: number;
-  code: string;
-  is_active: boolean;
-  max_redemptions?: number;
-  times_redeemed: number;
-  expires_at?: string | undefined;
-  first_time_transaction: boolean;
-  minimum_amount?: number;
-  minimum_amount_currency?: string;
-  is_valid: boolean;
-}
+import dayjs from "dayjs";
+import { getCouponColumns } from "./couponColumnDefs";
+import { Coupon } from "@/app/types/CouponProps";
+import { PromoCode } from "@/app/types/PromoCodeProps";
+import { getPromoCodeColumns } from "./promoCodeColumnDefs";
+import CouponDrawer from "./CouponDrawer";
+import NewPromoCodeDrawer from "./NewPromoCodeDrawer";
+import toast from "react-hot-toast";
 
 const CouponManagement = () => {
   const context = useContext(SidebarContext);
   const [coupons, setCoupons] = useState<Coupon[]>([]);
   const [selectedCoupon, setSelectedCoupon] = useState<Coupon | null>(null);
-  const [promoCodes, setPromoCodes] = useState<PromoCode[]>([]);
   const [couponDrawerOpen, setCouponDrawerOpen] = useState(false);
   const [promoCodeDrawerOpen, setPromoCodeDrawerOpen] = useState(false);
   const [formData, setFormData] = useState<Partial<Coupon>>({});
   const [promoFormData, setPromoFormData] = useState<any>({});
   const [loading, setLoading] = useState(true);
+
+  const selectedPromoCodes: any =
+    selectedCoupon &&
+    coupons.find((coupon) => coupon.id === selectedCoupon?.id)?.promo_codes;
 
   const fetchCoupons = useCallback(async (url = "/package-license/coupon/") => {
     try {
@@ -87,50 +46,62 @@ const CouponManagement = () => {
     }
   }, []);
 
-  const fetchPromoCodes = useCallback(async (couponId: number) => {
-    try {
-      const data = await apiCall(
-        `/package-license/promo-code/?coupon=${couponId}`,
-        "GET"
-      );
-      setPromoCodes(data.results);
-    } catch (error) {
-      console.error("Error fetching promo codes:", error);
-    }
-  }, []);
-
   useEffect(() => {
     fetchCoupons();
   }, [fetchCoupons]);
 
-  const handleCouponSubmit = async () => {
+  const handleCouponSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     try {
       const method = formData.id ? "PUT" : "POST";
       const url = formData.id
         ? `/package-license/coupon/${formData.id}/`
         : "/package-license/coupon/";
 
-      const payload = {
-        ...formData,
-        percent_off:
-          formData.discount_type === "percentage"
-            ? Number(formData.percent_off)
-            : null,
-        amount_off:
-          formData.discount_type === "fixed"
-            ? Number(formData.amount_off)
-            : null,
-        duration_in_months:
-          formData.duration === "repeating"
-            ? Number(formData.duration_in_months)
-            : null,
-      };
+      const payload = formData.id
+        ? { name: formData.name }
+        : {
+            ...formData,
+            percent_off:
+              formData.discount_type === "percentage"
+                ? Number(formData.percent_off)
+                : null,
+            amount_off:
+              formData.discount_type === "fixed"
+                ? Number(formData.amount_off)
+                : null,
+            duration_in_months:
+              formData.duration === "repeating"
+                ? Number(formData.duration_in_months)
+                : null,
+          };
 
       await apiCall(url, method, payload);
+      toast.success(
+        formData.id
+          ? "Coupon name updated successfully"
+          : "Coupon created successfully"
+      );
       fetchCoupons();
       setCouponDrawerOpen(false);
     } catch (error) {
       console.error("Error saving coupon:", error);
+    }
+  };
+
+  const handleManageCode = (data: Coupon) => setSelectedCoupon(data);
+  const handleEditCoupon = (data: Coupon) => {
+    setFormData(data);
+    setCouponDrawerOpen(true);
+  };
+  const handleDeleteCoupon = async (couponId: number) => {
+    try {
+      await apiCall(`/package-license/coupon/${couponId}/`, "DELETE");
+      setSelectedCoupon(null);
+      fetchCoupons();
+      toast.success("Coupon deleted successfully");
+    } catch (error) {
+      console.error("Error deleting coupon:", error);
     }
   };
 
@@ -148,157 +119,46 @@ const CouponManagement = () => {
       };
 
       await apiCall("/package-license/promo-code/", "POST", payload);
-      selectedCoupon && fetchPromoCodes(selectedCoupon.id);
+      selectedCoupon && fetchCoupons();
       setPromoCodeDrawerOpen(false);
+      toast.success("Promo code created successfully");
     } catch (error) {
       console.error("Error saving promo code:", error);
     }
   };
 
-  const couponColumns = [
-    {
-      field: "name",
-      headerName: "Name",
-      flex: 0.5,
-      minWidth: 130,
-    },
-    {
-      field: "discount_type",
-      headerName: "Type",
-      cellRenderer: (params: any) => (
-        <StatusBadge
-          color="white"
-          text={capitalizeFirstLetter(params.value)}
-          background="#F0F2F5"
-        />
-      ),
-    },
-    {
-      field: "value",
-      headerName: "Value",
-      flex: 0.5,
+  const handleViewPromoCode = (data: PromoCode) => {
+    setPromoFormData({
+      ...data,
+      expires_at: dayjs(data.expires_at),
+    });
+    setPromoCodeDrawerOpen(true);
+  };
+  const handleChangePromoCodeStatus = async (
+    promoCodeId: number,
+    status: boolean
+  ) => {
+    try {
+      await apiCall(`/package-license/promo-code/${promoCodeId}/`, "PATCH", {
+        is_active: !status,
+      });
+      fetchCoupons();
+      toast.success(`Promo code is ${status ? "inactivated" : "activated"}`);
+    } catch (error) {
+      console.error("Error editing promo code:", error);
+    }
+  };
 
-      valueGetter: (params: any) =>
-        params.data.discount_type === "percentage"
-          ? `${params.data.percent_off}%`
-          : `${params.data.currency} ${params.data.amount_off}`,
-    },
-    {
-      field: "duration",
-      headerName: "Duration",
-      valueFormatter: (params: any) => {
-        if (params.value === "repeating") {
-          return `${params.value} (${params.data.duration_in_months} months)`;
-        }
-        return params.value.charAt(0).toUpperCase() + params.value.slice(1);
-      },
-    },
-    {
-      field: "is_active",
-      headerName: "Status",
-      cellRenderer: (params: any) => {
-        return params.value === true ? (
-          <StatusBadge color="#036B26" text="Active" background="#E7F6EC" />
-        ) : (
-          <StatusBadge color="#865503" text="Inactive" background="#FEF6E7" />
-        );
-      },
-    },
-    {
-      field: "actions",
-      headerName: "Actions",
-      cellRenderer: (params: any) => (
-        <Button
-          variant="contained"
-          size="small"
-          sx={{
-            height: 40,
-            px: 2,
-            borderRadius: "8px",
-            textTransform: "none",
-            fontWeight: 600,
-            marginLeft:"-12px"
-          }}
-          onClick={() => {
-            setSelectedCoupon(params.data);
-            fetchPromoCodes(params.data.id);
-          }}
-        >
-          Manage Codes
-        </Button>
-      ),
-    },
-  ];
+  const couponColumns = getCouponColumns({
+    onManageCode: handleManageCode,
+    onEditCoupon: handleEditCoupon,
+    onDeleteCoupon: handleDeleteCoupon,
+  });
 
-  const promoCodeColumns = [
-    { field: "code", headerName: "Code", flex: 1, minWidth: 100 },
-    {
-      field: "expires_at",
-      headerName: "Expiration",
-      valueFormatter: (params: any) =>
-        params.value ? new Date(params.value).toLocaleDateString() : "Never",
-    },
-    {
-      field: "is_active",
-      headerName: "Status",
-      flex:0.7,
-      cellRenderer: (params: any) => {
-        return params.value === true ? (
-          <StatusBadge color="#036B26" text="Active" background="#E7F6EC" />
-        ) : (
-          <StatusBadge color="#865503" text="Inactive" background="#FEF6E7" />
-        );
-      },
-    },
-    {
-      field: "first_time_transaction",
-      headerName: "First Time",
-      flex:0.8,
-      cellRenderer: (params: any) => (
-        <Checkbox checked={params.value} color="primary" disabled />
-      ),
-    },
-    {
-      field: "actions",
-      headerName: "Actions",
-      cellRenderer: (params: any) => (
-        <Stack direction="row" spacing={1} marginTop={1} marginLeft={-3}>
-          <Button
-            variant="outlined"
-            size="small"
-            sx={{       height: 40,
-            borderRadius: "8px",
-            textTransform: "none",
-            fontWeight: 600, }}
-            onClick={() => {
-              setPromoFormData(params.data);
-              setPromoCodeDrawerOpen(true);
-            }}
-          >
-            Edit
-          </Button>
-          <Button
-            variant="outlined"
-            color="error"
-            size="small"
-            sx={{       height: 40,
-            borderRadius: "8px",
-            textTransform: "none",
-            fontWeight: 600, }}
-            onClick={async () => {
-              await apiCall(
-                `/package-license/promo-code/${params.data.id}/`,
-                "DELETE"
-              );
-              fetchPromoCodes(selectedCoupon!.id);
-            }}
-          >
-            Delete
-          </Button>
-        </Stack>
-      ),
-    },
-  ];
+  const promoCodeColumns = getPromoCodeColumns({
+    onViewPromoCode: handleViewPromoCode,
+    onChangePromoCodeStatus: handleChangePromoCodeStatus,
+  });
 
   if (context === undefined) {
     return <div>Error: Sidebar context is undefined!</div>;
@@ -342,6 +202,7 @@ const CouponManagement = () => {
                   setFormData({
                     discount_type: "percentage",
                     duration: "forever",
+                    currency: "USD",
                   });
                   setCouponDrawerOpen(true);
                 }}
@@ -417,7 +278,11 @@ const CouponManagement = () => {
                       variant="outlined"
                       size="small"
                       onClick={() => {
-                        setPromoFormData({});
+                        setPromoFormData({
+                          is_active: true,
+                          currency: "USD",
+                          expires_at: dayjs().add(1, "hour"),
+                        });
                         setPromoCodeDrawerOpen(true);
                       }}
                       sx={{
@@ -432,9 +297,8 @@ const CouponManagement = () => {
                     </Button>
                   </Stack>
 
-
                   <AgGridTable
-                    rowData={promoCodes}
+                    rowData={selectedPromoCodes}
                     columnDefs={promoCodeColumns}
                     paginationPageSize={10}
                     height={565}
@@ -446,372 +310,22 @@ const CouponManagement = () => {
         )}
 
         {/* Coupon Form Drawer */}
-        <Drawer
-          anchor="right"
+        <CouponDrawer
           open={couponDrawerOpen}
           onClose={() => setCouponDrawerOpen(false)}
-          PaperProps={{
-            sx: {
-              width: "40%",
-              p: 3,
-              bgcolor: "background.paper",
-              borderLeft: "2px solid",
-              borderColor: "divider",
-            },
-          }}
-        >
-          <Box sx={{ position: "relative" }}>
-            <IconButton
-              sx={{
-                position: "absolute",
-                right: 0,
-                top: 0,
-                color: "text.secondary",
-              }}
-              onClick={() => setCouponDrawerOpen(false)}
-            >
-              <CloseIcon />
-            </IconButton>
-
-            <Typography
-              variant="h5"
-              fontWeight={700}
-              mb={3}
-              color="text.primary"
-            >
-              {formData.id ? "Edit Coupon" : "Create Coupon"}
-            </Typography>
-
-            <Stack spacing={3}>
-              <TextField
-                fullWidth
-                label="Coupon Name"
-                value={formData.name || ""}
-                onChange={(e) =>
-                  setFormData({ ...formData, name: e.target.value })
-                }
-                variant="outlined"
-                size="small"
-                required
-              />
-
-              <TextField
-                fullWidth
-                label="Stripe Coupon ID"
-                value={formData.stripe_coupon_id || ""}
-                onChange={(e) =>
-                  setFormData({ ...formData, stripe_coupon_id: e.target.value })
-                }
-                variant="outlined"
-                size="small"
-              />
-
-              <Grid container spacing={2}>
-                <Grid item xs={6}>
-                  <TextField
-                    select
-                    fullWidth
-                    label="Discount Type"
-                    value={formData.discount_type || "percentage"}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        discount_type: e.target.value as "percentage" | "fixed",
-                      })
-                    }
-                    size="small"
-                    required
-                  >
-                    <MenuItem value="percentage">Percentage</MenuItem>
-                    <MenuItem value="fixed">Fixed Amount</MenuItem>
-                  </TextField>
-                </Grid>
-
-                <Grid item xs={6}>
-                  {formData.discount_type === "percentage" ? (
-                    <TextField
-                      fullWidth
-                      type="number"
-                      label="Percentage Off"
-                      value={formData.percent_off || ""}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          percent_off: Number(e.target.value),
-                        })
-                      }
-                      InputProps={{
-                        endAdornment: (
-                          <InputAdornment position="end">%</InputAdornment>
-                        ),
-                      }}
-                      size="small"
-                      required
-                    />
-                  ) : (
-                    <Stack direction="row" spacing={1}>
-                      <TextField
-                        fullWidth
-                        type="number"
-                        label="Amount Off"
-                        value={formData.amount_off || ""}
-                        onChange={(e) =>
-                          setFormData({
-                            ...formData,
-                            amount_off: Number(e.target.value),
-                          })
-                        }
-                        InputProps={{
-                          startAdornment: (
-                            <InputAdornment position="start">$</InputAdornment>
-                          ),
-                        }}
-                        size="small"
-                        required
-                      />
-                      <TextField
-                        select
-                        label="Currency"
-                        value={formData.currency || "USD"}
-                        onChange={(e) =>
-                          setFormData({ ...formData, currency: e.target.value })
-                        }
-                        size="small"
-                        sx={{ width: "100px" }}
-                      >
-                        {["USD", "EUR", "GBP"].map((currency) => (
-                          <MenuItem key={currency} value={currency}>
-                            {currency}
-                          </MenuItem>
-                        ))}
-                      </TextField>
-                    </Stack>
-                  )}
-                </Grid>
-              </Grid>
-
-              <Grid container spacing={2}>
-                <Grid item xs={8}>
-                  <TextField
-                    select
-                    fullWidth
-                    label="Duration"
-                    value={formData.duration || "forever"}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        duration: e.target.value as
-                          | "forever"
-                          | "once"
-                          | "repeating",
-                      })
-                    }
-                    size="small"
-                    required
-                  >
-                    <MenuItem value="forever">Forever</MenuItem>
-                    <MenuItem value="once">Once</MenuItem>
-                    <MenuItem value="repeating">Repeating</MenuItem>
-                  </TextField>
-                </Grid>
-                <Grid item xs={4}>
-                  {formData.duration === "repeating" && (
-                    <TextField
-                      fullWidth
-                      type="number"
-                      label="Months"
-                      value={formData.duration_in_months || ""}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          duration_in_months: Number(e.target.value),
-                        })
-                      }
-                      size="small"
-                      required
-                    />
-                  )}
-                </Grid>
-              </Grid>
-
-              <Button
-                variant="contained"
-                size="large"
-                onClick={handleCouponSubmit}
-                sx={{
-                  mt: 2,
-                  borderRadius: "8px",
-                  textTransform: "none",
-                  fontWeight: 600,
-                  py: 1.5,
-                }}
-              >
-                {formData.id ? "Save Changes" : "Create Coupon"}
-              </Button>
-            </Stack>
-          </Box>
-        </Drawer>
+          formData={formData}
+          setFormData={setFormData}
+          onCouponSubmit={handleCouponSubmit}
+        />
 
         {/* Promo Code Form Drawer */}
-        <Drawer
-          anchor="right"
+        <NewPromoCodeDrawer
           open={promoCodeDrawerOpen}
           onClose={() => setPromoCodeDrawerOpen(false)}
-          PaperProps={{
-            sx: {
-              width: "40%",
-              p: 3,
-              bgcolor: "background.paper",
-              borderLeft: "2px solid",
-              borderColor: "divider",
-            },
-          }}
-        >
-          <Box sx={{ position: "relative" }}>
-            <IconButton
-              sx={{
-                position: "absolute",
-                right: 0,
-                top: 0,
-                color: "text.secondary",
-              }}
-              onClick={() => setPromoCodeDrawerOpen(false)}
-            >
-              <CloseIcon />
-            </IconButton>
-
-            <Typography
-              variant="h5"
-              fontWeight={700}
-              mb={3}
-              color="text.primary"
-            >
-              {promoFormData.id ? "Edit Promo Code" : "Create Promo Code"}
-            </Typography>
-
-            <Stack spacing={3}>
-              <TextField
-                fullWidth
-                label="Promo Code"
-                value={promoFormData.code || ""}
-                onChange={(e) =>
-                  setPromoFormData({ ...promoFormData, code: e.target.value })
-                }
-                variant="outlined"
-                size="small"
-                required
-              />
-              <SelectDatePicker
-                onDateChange={(date) =>
-                  setPromoFormData({ ...promoFormData, expires_at: date })
-                }
-              />
-
-              <Grid container spacing={2}>
-                <Grid item xs={6}>
-                  <TextField
-                    fullWidth
-                    type="number"
-                    label="Max Redemptions"
-                    value={promoFormData.max_redemptions || ""}
-                    onChange={(e) =>
-                      setPromoFormData({
-                        ...promoFormData,
-                        max_redemptions: Number(e.target.value),
-                      })
-                    }
-                    size="small"
-                  />
-                </Grid>
-                <Grid item xs={6}>
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={promoFormData.first_time_transaction || false}
-                        onChange={(e) =>
-                          setPromoFormData({
-                            ...promoFormData,
-                            first_time_transaction: e.target.checked,
-                          })
-                        }
-                      />
-                    }
-                    label="First Time Only"
-                  />
-                </Grid>
-              </Grid>
-
-              <Grid container spacing={2}>
-                <Grid item xs={8}>
-                  <TextField
-                    fullWidth
-                    type="number"
-                    label="Minimum Amount"
-                    value={promoFormData.minimum_amount || ""}
-                    onChange={(e) =>
-                      setPromoFormData({
-                        ...promoFormData,
-                        minimum_amount: Number(e.target.value),
-                      })
-                    }
-                    size="small"
-                  />
-                </Grid>
-                <Grid item xs={4}>
-                  <TextField
-                    select
-                    label="Currency"
-                    value={promoFormData.minimum_amount_currency || "USD"}
-                    onChange={(e) =>
-                      setPromoFormData({
-                        ...promoFormData,
-                        minimum_amount_currency: e.target.value,
-                      })
-                    }
-                    size="small"
-                    fullWidth
-                  >
-                    {["USD", "EUR", "GBP"].map((currency) => (
-                      <MenuItem key={currency} value={currency}>
-                        {currency}
-                      </MenuItem>
-                    ))}
-                  </TextField>
-                </Grid>
-              </Grid>
-
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={promoFormData.is_active || false}
-                    onChange={(e) =>
-                      setPromoFormData({
-                        ...promoFormData,
-                        is_active: e.target.checked,
-                      })
-                    }
-                  />
-                }
-                label="Active Status"
-              />
-
-              <Button
-                variant="contained"
-                size="large"
-                onClick={handlePromoCodeSubmit}
-                sx={{
-                  mt: 2,
-                  borderRadius: "8px",
-                  textTransform: "none",
-                  fontWeight: 600,
-                  py: 1.5,
-                }}
-              >
-                {promoFormData.id ? "Save Changes" : "Create Promo Code"}
-              </Button>
-            </Stack>
-          </Box>
-        </Drawer>
+          formData={promoFormData}
+          setFormData={setPromoFormData}
+          onPromoCodeSubmit={handlePromoCodeSubmit}
+        />
       </Box>
     </Box>
   );
