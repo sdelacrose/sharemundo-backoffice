@@ -6,9 +6,12 @@ import {
   HomeBlackIcon,
   Progress,
   TotalUser,
+  PromoBlack
 } from "@/app/assets/icons";
 
 export const homeBreadcrumb = [{ title: "Home", icon: HomeBlackIcon }];
+export const promoCodeBreadcrumb = [{ title: "Promo Code", icon: PromoBlack }];
+
 export const filterItems = [
   { label: "1 Month" },
   { label: "2 Month" },
