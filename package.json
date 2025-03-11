@@ -15,7 +15,7 @@
     "@emotion/styled": "^11.14.0",
     "@mui/icons-material": "^6.1.10",
     "@mui/material": "^6.2.0",
-    "@mui/x-date-pickers": "^7.23.1",
+    "@mui/x-date-pickers": "^7.27.3",
     "@mui/x-date-pickers-pro": "^7.23.1",
     "ag-grid-community": "^32.3.3",
     "ag-grid-react": "^32.3.3",
