@@ -119,7 +119,7 @@ const CouponManagement = () => {
       };
 
       await apiCall("/package-license/promo-code/", "POST", payload);
-      selectedCoupon && fetchCoupons();
+      if (selectedCoupon) fetchCoupons();
       setPromoCodeDrawerOpen(false);
       toast.success("Promo code created successfully");
     } catch (error) {
