@@ -1,6 +1,6 @@
 "use client";
 
-import { Box, Divider, Typography } from "@mui/material";
+import { Box, Divider, Tooltip, Typography } from "@mui/material";
 import React, { useContext, useEffect, useMemo, useState } from "react";
 import Header from "@/app/components/common/Header";
 import { SidebarContext } from "@/app/(pages)/layout";
@@ -13,33 +13,30 @@ import ProfileTab from "./ProfileTab";
 import LicenseDetail from "../../LicenseDetail";
 import { apiCall } from "@/app/utils/APIUtils";
 import ConnectionTab from "./connectionTab";
-
+import { useSearchParams } from "next/navigation";
 const CompanyProfile = ({ customerDetail, id }: any) => {
   const context = useContext(SidebarContext);
   const [activeTab, setActiveTab] = useState(0);
+
   const [isLicenseDetailOpen, setLicenseDetailOpen] = useState(false);
   const companyProfile = customerDetail?.company_profile;
-
-  const [nextPageUrl, setNextPageUrl] = useState<string | null>(null);
-  const [previousPageUrl, setPreviousPageUrl] = useState<string | null>(null);
+  const [nextPageUrl] = useState<string | null>(null);
+  const [previousPageUrl] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(0);
   const [rowData, setRowData] = useState([]);
 
   const isFreelancer = customerDetail?.user_type === "freelancer";
   const isCompany = customerDetail?.user_type === "company";
   const isInternalUser = customerDetail?.user_type === "internal_user";
+  const searchParams = useSearchParams();
 
-  useEffect(() => {
-    if (customerDetail && !isInternalUser) {
-      fetchLicenses(`/admin-dashboard/customers/${id}/licenses`);
-    }
-  }, [id, customerDetail, isInternalUser]);
+  const hideTabs = searchParams.get("hideTabs") === "1";
+  const totalPages = 0;
 
   const columnDefs = useMemo(
     () => [
-      { field: "product_name", headerName: "Product Name", width: 200 },
-      { field: "total_license", headerName: "Total License", width: 150 },
+      { field: "product_name", headerName: "Product Name", flex: 1.5 },
+      { field: "total_licenses", headerName: "Total License", width: 150 },
       {
         field: "available_licenses",
         headerName: "Available Licenses",
@@ -50,7 +47,32 @@ const CompanyProfile = ({ customerDetail, id }: any) => {
         headerName: "Assigned Licenses",
         width: 150,
       },
-      { field: "renewal_date", headerName: "Renewal Date", width: 150 },
+      {
+        field: "renewal_dates",
+        headerName: "Renewal Dates",
+        width: 150,
+        cellRenderer: ({ value }: any) => (
+          <Tooltip
+            title={
+              <Box>
+                {value.map((date: string, index: number) => (
+                  <Typography
+                    key={index}
+                    variant="body2"
+                    sx={{ color: "#f0f2f5" }}
+                  >
+                    {date}
+                  </Typography>
+                ))}
+              </Box>
+            }
+            arrow
+          >
+            <span style={{ cursor: "pointer" }}>Multiple Dates</span>
+          </Tooltip>
+        ),
+      },
+
       {
         field: "actions",
         headerName: "Actions",
@@ -75,32 +97,32 @@ const CompanyProfile = ({ customerDetail, id }: any) => {
   const handleViewDetails = () => {
     setLicenseDetailOpen(true);
   };
-
   const fetchLicenses = async (url: string) => {
     try {
-      const trimmedUrl = url.includes("/admin-dashboard")
-        ? url.substring(url.indexOf("/admin-dashboard"))
-        : url;
+      const licenseDetail = await apiCall(url);
 
-      const licenseDetail = await apiCall(trimmedUrl);
-
-      const licenses = licenseDetail.results.licenses.map((license: any) => ({
-        product_name: license.product.name,
-        product_id: license.product.id,
-        total_license: license.product.license_count,
-        available_licenses: license.product.license_count,
-        assigned_licenses: license.is_active ? 1 : 0,
-        renewal_date: new Date(license.package.expires_at).toLocaleDateString(),
+      const licenses = licenseDetail.map((license: any) => ({
+        product_name: license.product_name,
+        product_id: license.product_id,
+        total_licenses: license.total_licenses,
+        available_licenses: license.available_licenses,
+        assigned_licenses: license.total_licenses - license.available_licenses,
+        renewal_dates: license.licenses.map((licenseItem: any) =>
+          new Date(licenseItem.renewal_date).toLocaleDateString()
+        ),
       }));
 
       setRowData(licenses);
-      setNextPageUrl(licenseDetail.next || null);
-      setPreviousPageUrl(licenseDetail.previous || null);
-      setTotalPages(Math.ceil(licenseDetail.count / 10));
     } catch (error) {
       console.error("Failed to fetch licenses:", error);
     }
   };
+
+  useEffect(() => {}, [rowData]);
+
+  useEffect(() => {
+    fetchLicenses(`/admin-dashboard/licenses/${id}`);
+  }, [id]);
 
   const handleNextPage = () => {
     if (nextPageUrl) {
@@ -129,13 +151,22 @@ const CompanyProfile = ({ customerDetail, id }: any) => {
   }, [isInternalUser, isFreelancer]);
 
   const renderTabContent = () => {
+    const totalLicenses = rowData.reduce(
+      (sum, license: any) => sum + (license.total_licenses || 0),
+      0
+    );
     if (isInternalUser) {
       return <ProfileTab profileData={customerDetail} />;
     }
 
     switch (activeTab) {
       case 0:
-        return <ProfileTab profileData={customerDetail} />;
+        return (
+          <ProfileTab
+            profileData={customerDetail}
+            licenses={totalLicenses || undefined}
+          />
+        );
       case 1:
         return isFreelancer ? (
           <ConnectionTab id={id} setActiveTab={handleTabChange} />
@@ -202,14 +233,15 @@ const CompanyProfile = ({ customerDetail, id }: any) => {
             color="#0057b7"
             mt={1}
             fontSize={16}
-            sx={{ marginBottom: isInternalUser ? "24px" : "0px" }}
+            sx={{ marginBottom: isInternalUser || hideTabs ? "24px" : "0px" }}
           >
             {isFreelancer && "Freelancer"}
-            {isCompany && "Company"}
+            {isCompany && (hideTabs ? "Company Owner" : "Company")}
+
             {isInternalUser && "Internal User"}
           </Typography>
 
-          {!isInternalUser && (
+          {!isInternalUser && !hideTabs && (
             <Divider
               sx={{
                 borderColor: "rgba(240, 242, 245, 1)",
@@ -219,7 +251,7 @@ const CompanyProfile = ({ customerDetail, id }: any) => {
             />
           )}
 
-          {!isInternalUser && (
+          {!isInternalUser && !hideTabs && (
             <Box mb={4}>
               <CustomTabs
                 tabs={tabs}

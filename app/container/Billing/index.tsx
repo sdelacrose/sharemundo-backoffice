@@ -3,7 +3,7 @@
 import { SidebarContext } from "@/app/(pages)/layout";
 import Header from "@/app/components/common/Header";
 import { Box, Divider, Stack, Typography } from "@mui/material";
-import { useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { billingBreadcrumb, tabs } from "./billingData";
 import CustomTabs from "@/app/components/common/CustomTab";
 import BarChartComponent from "@/app/components/common/Barchart";
@@ -72,14 +72,11 @@ const Billings = () => {
   const handleRowSelection = (event) => {
     const selected = event.api.getSelectedRows();
     setSelectedRows(selected);
-    console.log("Selected Rows: ", selected);
   };
-  const fetchBillingData = async () => {
+  const fetchBillingData = async (url: string) => {
     try {
-      const data = await apiCall("/admin-dashboard/invoices/failed", "GET");
+      const data = await apiCall(url, "GET");
       const billingsData = data?.results?.users || [];
-      // console.log("billingsData",billingsData)
-
       const extractedData = billingsData.map((user: any) => {
         const invoice = user?.invoices?.[0] || {};
         return {
@@ -105,7 +102,7 @@ const Billings = () => {
     }
   };
   useEffect(() => {
-    fetchBillingData();
+    fetchBillingData("/admin-dashboard/invoices/failed");
   }, []);
 
   useEffect(() => {
@@ -116,7 +113,7 @@ const Billings = () => {
         const data = await apiCall("/admin-dashboard/invoices/paid", "GET");
         const topCustomersData = data?.results?.users || [];
         const extractedData = topCustomersData.map((user: any) => ({
-          id: user.id || "N/a",
+          topId: user.id || "N/a",
           first_name: user.first_name || "N/A",
           sharemundo_links_id: user.sharemundo_links_id || "N/A",
           user_type: user.user_type || "N/A",
@@ -124,7 +121,11 @@ const Billings = () => {
           next_12_month_revenue: user.next_12_month_revenue || 0,
           total_revenue: user.total_revenue || 0,
         }));
-        setTopUserData(extractedData);
+        const filteredData = extractedData.filter(
+          (user) => user.user_type?.toLowerCase() === "company"
+        );
+
+        setTopUserData(filteredData);
         setLoading(false);
       } catch (err) {
         console.error("Error fetching top user data:", err);
@@ -180,7 +181,6 @@ const Billings = () => {
         name: key,
         value: value as number,
       }));
-      console.log("Chart data-------", transformedData);
       setFailedData(transformedData);
       setLoading(false);
     } catch (err) {
@@ -234,19 +234,19 @@ const Billings = () => {
     }
   };
 
-  const handleNextPage = () => {
-    if (nextPageUrl) {
+  const handleNextPage = useCallback(() => {
+    if (!loading && nextPageUrl) {
       setCurrentPage((prev) => prev + 1);
-      fetchBillingData();
+      fetchBillingData(nextPageUrl);
     }
-  };
+  }, [nextPageUrl, fetchBillingData, loading]);
 
-  const handlePreviousPage = () => {
-    if (previousPageUrl) {
+  const handlePreviousPage = useCallback(() => {
+    if (!loading && previousPageUrl && currentPage > 1) {
       setCurrentPage((prev) => prev - 1);
-      fetchBillingData();
+      fetchBillingData(previousPageUrl);
     }
-  };
+  }, [previousPageUrl, fetchBillingData, currentPage, loading]);
 
   if (loading) {
     return (
@@ -279,7 +279,10 @@ const Billings = () => {
       if (selectedRows.length > 0) {
         exportData = selectedRows;
       } else {
-        const data = await apiCall(`${apiUrl}?all=true`, "GET");
+        const data = await apiCall(`${apiUrl}?all=true`, "GET", null, null, {
+          successMessage: "Exported File Successfully",
+          errorMessage: "Error in export",
+        });
         exportData =
           section === "paymentIssues" ? data : data.results?.users || [];
       }
@@ -326,7 +329,7 @@ const Billings = () => {
                 Email: item.email,
                 "First Name": item.first_name,
                 "Last Name": item.last_name,
-                "Active Status": item.is_active,
+                "Active Status": item.is_active ? "Active" : "Inactive",
                 "User Type": item.user_type,
                 Company: item.company || "N/A",
                 "Preferred Language": item.preferred_language,
@@ -529,6 +532,7 @@ const Billings = () => {
               height={580}
               rowSelection={true}
               handleRowSelection={handleRowSelection}
+              loading={loading}
             />
           </Box>
         </Box>

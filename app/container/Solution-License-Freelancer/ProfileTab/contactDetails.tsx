@@ -106,7 +106,7 @@ const FreelanceContactDetails = ({ freelanceContactDetail }) => {
                   Active Solutions
                 </Typography>
                 <Typography variant="subtitle1" color="#101928">
-                  {activeSolutions || 0}
+                  {activeSolutions || 1}
                 </Typography>
               </Stack>
               <Stack>
@@ -114,7 +114,7 @@ const FreelanceContactDetails = ({ freelanceContactDetail }) => {
                   Companies
                 </Typography>
                 <Typography variant="subtitle1" color="#101928">
-                  {freelanceContactDetail?.companies || "N/A"}
+                  {freelanceContactDetail?.accepted_invites || "0"}
                 </Typography>
               </Stack>
             </Box>
@@ -124,7 +124,7 @@ const FreelanceContactDetails = ({ freelanceContactDetail }) => {
                   Pending Company Invites
                 </Typography>
                 <Typography variant="subtitle1" color="#101928">
-                  {freelanceContactDetail?.pending_company_invites || 0}
+                  {freelanceContactDetail?.pending_invites || 0}
                 </Typography>
               </Stack>
             </Box>
