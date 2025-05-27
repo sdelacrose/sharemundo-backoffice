@@ -30,7 +30,7 @@ const InternalUserContactDetails = ({
             {/* Left Column */}
             <Box flex={1} display="flex" flexDirection="column" gap={3}>
               <Stack>
-                <Typography variant="caption" color="#667185">
+                <Typography variant="h6" color="#667185">
                   Country
                 </Typography>
                 <Typography variant="subtitle1" color="#101928">
@@ -39,7 +39,7 @@ const InternalUserContactDetails = ({
               </Stack>
 
               <Stack>
-                <Typography variant="caption" color="#667185">
+                <Typography variant="h6" color="#667185">
                   Post Code
                 </Typography>
                 <Typography variant="subtitle1" color="#101928">
@@ -47,7 +47,7 @@ const InternalUserContactDetails = ({
                 </Typography>
               </Stack>
               <Stack>
-                <Typography variant="caption" color="#667185">
+                <Typography variant="h6" color="#667185">
                   Street Address
                 </Typography>
                 <Typography variant="subtitle1" color="#101928">
@@ -58,7 +58,7 @@ const InternalUserContactDetails = ({
             {/* Right Column */}
             <Box flex={1} display="flex" flexDirection="column" gap={3}>
               <Stack>
-                <Typography variant="caption" color="#667185">
+                <Typography variant="h6" color="#667185">
                   State
                 </Typography>
                 <Typography variant="subtitle1" color="#101928">
@@ -66,7 +66,7 @@ const InternalUserContactDetails = ({
                 </Typography>
               </Stack>
               <Stack>
-                <Typography variant="caption" color="#667185">
+                <Typography variant="h6" color="#667185">
                   Mobile Number
                 </Typography>
                 <Typography variant="subtitle1" color="#101928">
@@ -74,7 +74,7 @@ const InternalUserContactDetails = ({
                 </Typography>
               </Stack>
               <Stack>
-                <Typography variant="caption" color="#667185">
+                <Typography variant="h6" color="#667185">
                   City
                 </Typography>
                 <Typography variant="subtitle1" color="#101928">
@@ -101,7 +101,7 @@ const InternalUserContactDetails = ({
             {/* Left Column */}
             <Box flex={1} display="flex" flexDirection="column" gap={3}>
               <Stack>
-                <Typography variant="caption" color="#667185">
+                <Typography variant="h6" color="#667185">
                   Total Users
                 </Typography>
                 <Typography variant="subtitle1" color="#101928">
@@ -109,7 +109,7 @@ const InternalUserContactDetails = ({
                 </Typography>
               </Stack>
               <Stack>
-                <Typography variant="caption" color="#667185">
+                <Typography variant="h6" color="#667185">
                   License
                 </Typography>
                 <Typography variant="subtitle1" color="#101928">
@@ -117,7 +117,7 @@ const InternalUserContactDetails = ({
                 </Typography>
               </Stack>
               <Stack>
-                <Typography variant="caption" color="#667185">
+                <Typography variant="h6" color="#667185">
                   Pending Freelance Invites
                 </Typography>
                 <Typography variant="subtitle1" color="#101928">
@@ -127,7 +127,7 @@ const InternalUserContactDetails = ({
             </Box>
             <Box flex={1} display="flex" flexDirection="column" gap={3}>
               <Stack>
-                <Typography variant="caption" color="#667185">
+                <Typography variant="h6" color="#667185">
                   Freelancers
                 </Typography>
                 <Typography variant="subtitle1" color="#101928">
@@ -135,7 +135,7 @@ const InternalUserContactDetails = ({
                 </Typography>
               </Stack>
               <Stack>
-                <Typography variant="caption" color="#667185">
+                <Typography variant="h6" color="#667185">
                   Active Solutions
                 </Typography>
                 <Typography variant="subtitle1" color="#101928">
@@ -145,7 +145,7 @@ const InternalUserContactDetails = ({
                 </Typography>
               </Stack>
               <Stack>
-                <Typography variant="caption" color="#667185">
+                <Typography variant="h6" color="#667185">
                   Mobile Number
                 </Typography>
                 <Typography variant="subtitle1" color="#101928">
