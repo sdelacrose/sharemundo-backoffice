@@ -74,7 +74,7 @@ const useColumnManageUserDefs = ({
         case "total_bought_license":
           return {
             ...col,
-            headerName: "Total Bought License",
+            headerName: "N° of Licences",
           };
         case "action":
           return {

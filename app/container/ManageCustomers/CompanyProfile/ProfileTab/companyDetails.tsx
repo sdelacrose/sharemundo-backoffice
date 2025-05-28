@@ -34,7 +34,7 @@ const CompanyDetails = ({ profileDetail }: any) => {
                   gap={"24px"}
                 >
                   <Stack>
-                    <Typography variant="caption" color="#667185">
+                    <Typography variant="h6" color="#667185">
                       Title
                     </Typography>
                     <Typography variant="subtitle1" color="#101928">
@@ -49,7 +49,7 @@ const CompanyDetails = ({ profileDetail }: any) => {
                   gap={"24px"}
                 >
                   <Stack>
-                    <Typography variant="caption" color="#667185">
+                    <Typography variant="h6" color="#667185">
                       Owner Name
                     </Typography>
                     <Typography variant="subtitle1" color="#101928">
@@ -73,7 +73,7 @@ const CompanyDetails = ({ profileDetail }: any) => {
           <Box display="flex" gap={4}>
             <Box flex={3} display="flex" flexDirection="column" gap={"24px"}>
               <Stack>
-                <Typography variant="caption" color="#667185">
+                <Typography variant="h6" color="#667185">
                   Company Name
                 </Typography>
                 <Typography variant="subtitle1" color="#101928">
@@ -81,7 +81,7 @@ const CompanyDetails = ({ profileDetail }: any) => {
                 </Typography>
               </Stack>
               <Stack>
-                <Typography variant="caption" color="#667185">
+                <Typography variant="h6" color="#667185">
                   Reg Number
                 </Typography>
                 <Typography variant="subtitle1" color="#101928">
@@ -89,7 +89,7 @@ const CompanyDetails = ({ profileDetail }: any) => {
                 </Typography>
               </Stack>
               <Stack>
-                <Typography variant="caption" color="#667185">
+                <Typography variant="h6" color="#667185">
                   Website
                 </Typography>
                 <Typography variant="subtitle1" color="#101928">
@@ -99,7 +99,7 @@ const CompanyDetails = ({ profileDetail }: any) => {
             </Box>
             <Box flex={2} display="flex" flexDirection="column" gap={"24px"}>
               <Stack>
-                <Typography variant="caption" color="#667185">
+                <Typography variant="h6" color="#667185">
                   sharemundo Links IDs
                 </Typography>
                 <Typography variant="subtitle1" color="#101928">
@@ -107,7 +107,7 @@ const CompanyDetails = ({ profileDetail }: any) => {
                 </Typography>
               </Stack>
               <Stack>
-                <Typography variant="caption" color="#667185">
+                <Typography variant="h6" color="#667185">
                   Tax Ref Number
                 </Typography>
                 <Typography variant="subtitle1" color="#101928">
@@ -115,7 +115,7 @@ const CompanyDetails = ({ profileDetail }: any) => {
                 </Typography>
               </Stack>
               <Stack>
-                <Typography variant="caption" color="#667185">
+                <Typography variant="h6" color="#667185">
                   Email
                 </Typography>
                 <Typography variant="subtitle1" color="#101928">
@@ -141,7 +141,7 @@ const CompanyDetails = ({ profileDetail }: any) => {
           <Box display="flex" gap={4}>
             <Box flex={3} display="flex" flexDirection="column" gap={"24px"}>
               <Stack>
-                <Typography variant="caption" color="#667185">
+                <Typography variant="h6" color="#667185">
                   Bank Name
                 </Typography>
                 <Typography variant="subtitle1" color="#101928">
@@ -149,7 +149,7 @@ const CompanyDetails = ({ profileDetail }: any) => {
                 </Typography>
               </Stack>
               <Stack>
-                <Typography variant="caption" color="#667185">
+                <Typography variant="h6" color="#667185">
                   BIC
                 </Typography>
                 <Typography variant="subtitle1" color="#101928">
@@ -159,7 +159,7 @@ const CompanyDetails = ({ profileDetail }: any) => {
             </Box>
             <Box flex={2} display="flex" flexDirection="column" gap={"24px"}>
               <Stack>
-                <Typography variant="caption" color="#667185">
+                <Typography variant="h6" color="#667185">
                   Bank Address
                 </Typography>
                 <Typography variant="subtitle1" color="#101928">
@@ -167,7 +167,7 @@ const CompanyDetails = ({ profileDetail }: any) => {
                 </Typography>
               </Stack>
               <Stack>
-                <Typography variant="caption" color="#667185">
+                <Typography variant="h6" color="#667185">
                   IBAN
                 </Typography>
                 <Typography variant="subtitle1" color="#101928">

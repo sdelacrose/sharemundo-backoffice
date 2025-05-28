@@ -9,7 +9,7 @@ import {
   CartesianGrid,
 } from "recharts";
 
-const BarChartComponent: React.FC<any> = ({ data, tooltipFormatter }) => {
+const BarChartComponent: React.FC<any> = ({ data, tooltipFormatter, yAxisFormatter }) => {
   return (
     <div style={{ width: "100%", height: 400, margin: "20px auto" }}>
       <ResponsiveContainer width="100%" height="100%">
@@ -19,7 +19,7 @@ const BarChartComponent: React.FC<any> = ({ data, tooltipFormatter }) => {
         >
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="name" />
-          <YAxis />
+          <YAxis allowDecimals={false} />
           {tooltipFormatter ? (
             <Tooltip
               formatter={
@@ -30,7 +30,22 @@ const BarChartComponent: React.FC<any> = ({ data, tooltipFormatter }) => {
             <Tooltip />
           )}
 
-          <Bar dataKey="value" fill="#0057b7" barSize={50} />
+          <Bar
+            dataKey="value"
+            fill="#0057b7"
+            barSize={50}
+            label={({ x, y, value }) => (
+              <text
+                x={x + 25}
+                y={y - 10}
+                fill="#0057B7"
+                fontSize={12}
+                textAnchor="middle"
+              >
+                {yAxisFormatter ? yAxisFormatter(value) : value}
+              </text>
+            )}
+          />
         </BarChart>
       </ResponsiveContainer>
     </div>
