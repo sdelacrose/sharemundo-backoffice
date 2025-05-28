@@ -26,26 +26,21 @@ const UsersStatsContainer = ({ heading, stats }: any) => {
             justifyContent: "space-between",
           }}
         >
-          <StatsCard
-            icon={<TotalUser />}
-            title="Total Users"
-            value={stats?.total_users}
-          />
-          <StatsCard
-            icon={<ActiveUser />}
-            title="Active Users"
-            value={stats?.active_users}
-          />
-          <StatsCard
-            icon={<BlockUser />}
-            title="Internal User"
-            value={stats?.internal_users_count}
-          />
-          <StatsCard
-            icon={<BlockUser />}
-            title="Blocked Users"
-            value={stats?.blocked_users}
-          />
+            <StatsCard
+              icon={<TotalUser />}
+              title='Total Users'
+              value={stats?.total_users}
+            />
+            <StatsCard
+              icon={<ActiveUser />}
+              title='Active Users'
+              value={stats?.active_users}
+            />
+            <StatsCard
+              icon={<BlockUser />}
+              title='Blocked Users'
+              value={stats?.blocked_users}
+            />
         </Box>
       </Box>
     </>

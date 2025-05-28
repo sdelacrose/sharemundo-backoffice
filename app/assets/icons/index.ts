@@ -36,7 +36,6 @@ import ManageUsers from "./ManageUsers.svg";
 import SolutionLicenses from "./SolutionLicenses.svg";
 import Promotion from "./Promo.svg"
 import PromoBlack from "./PromoBlack.svg"
-import LogoutIcon from "./LogoutIcon.svg";
 
 export {
     Card,
@@ -76,6 +75,5 @@ export {
     ManageCustomers,
     ManageUsers,
     Promotion,
-    PromoBlack,
-    LogoutIcon
+    PromoBlack
 };

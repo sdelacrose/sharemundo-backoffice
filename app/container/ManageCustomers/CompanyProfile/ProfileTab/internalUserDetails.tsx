@@ -24,7 +24,7 @@ const InternalUserDetails = ({ profileDetail }: any) => {
         <Box display="flex" gap={4}>
           <Box flex={3} display="flex" flexDirection="column" gap={"24px"}>
             <Stack>
-              <Typography variant="h6" color="#667185">
+              <Typography variant="caption" color="#667185">
                 Internal User Name
               </Typography>
               <Typography variant="subtitle1" color="#101928">
@@ -32,7 +32,7 @@ const InternalUserDetails = ({ profileDetail }: any) => {
               </Typography>
             </Stack>
             <Stack>
-              <Typography variant="h6" color="#667185">
+              <Typography variant="caption" color="#667185">
                 Email
               </Typography>
               <Typography variant="subtitle1" color="#101928">
@@ -40,7 +40,7 @@ const InternalUserDetails = ({ profileDetail }: any) => {
               </Typography>
             </Stack>
             <Stack>
-              <Typography variant="h6" color="#667185">
+              <Typography variant="caption" color="#667185">
                 Role
               </Typography>
               <Typography variant="subtitle1" color="#101928">
@@ -51,7 +51,7 @@ const InternalUserDetails = ({ profileDetail }: any) => {
           </Box>
           <Box flex={2} display="flex" flexDirection="column" gap={"24px"}>
             <Stack>
-              <Typography variant="h6" color="#667185">
+              <Typography variant="caption" color="#667185">
                 sharemundo Links IDs
               </Typography>
               <Typography variant="subtitle1" color="#101928">
@@ -59,7 +59,7 @@ const InternalUserDetails = ({ profileDetail }: any) => {
               </Typography>
             </Stack>
             <Stack>
-              <Typography variant="h6" color="#667185">
+              <Typography variant="caption" color="#667185">
                 Job Title
               </Typography>
               <Typography variant="subtitle1" color="#101928">
@@ -86,7 +86,7 @@ const InternalUserDetails = ({ profileDetail }: any) => {
       <Box display="flex" gap={4}>
           <Box flex={3} display="flex" flexDirection="column" gap={"24px"}>
             <Stack>
-              <Typography variant="h6" color="#667185">
+              <Typography variant="caption" color="#667185">
                 Company Name
               </Typography>
               <Typography variant="subtitle1" color="#101928">
@@ -94,7 +94,7 @@ const InternalUserDetails = ({ profileDetail }: any) => {
               </Typography>
             </Stack>
             <Stack>
-              <Typography variant="h6" color="#667185">
+              <Typography variant="caption" color="#667185">
                 Reg Number
               </Typography>
               <Typography variant="subtitle1" color="#101928">
@@ -102,7 +102,7 @@ const InternalUserDetails = ({ profileDetail }: any) => {
               </Typography>
             </Stack>
             <Stack>
-              <Typography variant="h6" color="#667185">
+              <Typography variant="caption" color="#667185">
                 Website
               </Typography>
               <Typography variant="subtitle1" color="#101928">
@@ -112,7 +112,7 @@ const InternalUserDetails = ({ profileDetail }: any) => {
           </Box>
           <Box flex={2} display="flex" flexDirection="column" gap={"24px"}>
             <Stack>
-              <Typography variant="h6" color="#667185">
+              <Typography variant="caption" color="#667185">
                 sharemundo Links IDs
               </Typography>
               <Typography variant="subtitle1" color="#101928">
@@ -120,7 +120,7 @@ const InternalUserDetails = ({ profileDetail }: any) => {
               </Typography>
             </Stack>
             <Stack>
-              <Typography variant="h6" color="#667185">
+              <Typography variant="caption" color="#667185">
                 Tax Ref Number
               </Typography>
               <Typography variant="subtitle1" color="#101928">
@@ -128,7 +128,7 @@ const InternalUserDetails = ({ profileDetail }: any) => {
               </Typography>
             </Stack>
             <Stack>
-              <Typography variant="h6" color="#667185">
+              <Typography variant="caption" color="#667185">
                 Email
               </Typography>
               <Typography variant="subtitle1" color="#101928">

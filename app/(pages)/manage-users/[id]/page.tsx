@@ -5,8 +5,8 @@ import CompanyProfile from "@/app/container/ManageCustomers/CompanyProfile";
 import { apiCall } from "@/app/utils/APIUtils";
 import Loader from "@/app/components/common/Loader";
 
-const Page = ({ params }: { params: Promise<{ id: string }> }) => {
-  const { id } = React.use(params);
+const Page = ({ params }: any) => {
+  const { id } = params;
   const [userDetail, setUserDetail] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
