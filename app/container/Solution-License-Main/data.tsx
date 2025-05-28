@@ -5,6 +5,9 @@ export const tabs = [
   { label: "Users" },
   { label: "License" },
 ];
+export const solutionTabs = [
+  { label: "License" },
+];
 export const filterItems = [
   { label: "1 Month" },
   { label: "2 Month" },

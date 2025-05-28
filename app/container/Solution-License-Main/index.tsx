@@ -5,7 +5,7 @@ import Header from "@/app/components/common/Header";
 import { Box, Divider, Stack, Typography } from "@mui/material";
 import { useCallback, useContext, useEffect, useState } from "react";
 import CustomTabs from "@/app/components/common/CustomTab";
-import { solutionsBreadcrumb, tabs } from "./data";
+import { solutionsBreadcrumb, solutionTabs } from "./data";
 import SharpLineChart from "@/app/components/common/SharpLineChart";
 import CustomSearchField from "@/app/components/common/CustomSearch";
 import { Search } from "@/app/assets/icons";
@@ -33,7 +33,7 @@ const SolutionLicenseMain = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
 
-  const fetchSolutionData = async (url: string) => {
+  const fetchSolutionData = useCallback(async (url: string) => {
     try {
       setLoading(true);
       const trimmedUrl = url.includes("/admin-dashboard")
@@ -71,7 +71,7 @@ const SolutionLicenseMain = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     fetchSolutionData("/admin-dashboard/products");
@@ -290,7 +290,7 @@ const SolutionLicenseMain = () => {
           >
             <Stack gap={2}>
               <CustomTabs
-                tabs={tabs}
+                tabs={solutionTabs}
                 onTabChange={handleTabChange}
                 value={activeTab}
               />

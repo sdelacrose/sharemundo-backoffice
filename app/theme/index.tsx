@@ -174,11 +174,6 @@ const theme = createTheme({
             color: "rgba(255, 255, 255, 1)",
           },
         },
-
-        disabled: {
-          color: "#fff",
-          background: colors.disabled,
-        },
         text: {
           color: colors.primary,
           background: "transparent",

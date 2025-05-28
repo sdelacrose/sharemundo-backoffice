@@ -9,7 +9,6 @@ import Activity from "./Activity";
 import Header from "@/app/components/common/Header";
 import { SidebarContext } from "@/app/(pages)/layout";
 import PieChartComponent from "@/app/components/common/Piechart";
-import Legend from "./legend";
 import { apiCall } from "@/app/utils/APIUtils";
 import CustomersStatsContainer from "./CustomersStatsContainer";
 import UsersStatsContainer from "./UsersStatsContainer";
@@ -154,19 +153,7 @@ const Dashboard = () => {
                   marginBottom: "24px",
                 }}
               />
-              <Box ml={3}>
-                <Legend />
-              </Box>
-              <PieChartComponent
-                totalUsers={dashboardData?.user_stats?.total_users || 0}
-                totalCustomers={dashboardData?.user_stats?.total_customers || 0}
-                licenseCount={
-                  dashboardData?.license_stats?.reduce(
-                    (acc: number, curr: any) => acc + curr.license_count,
-                    0
-                  ) || 0
-                }
-              />
+              <PieChartComponent licenseData={dashboardData?.license_stats} />
             </Box>
           </Stack>
           <Activity />
