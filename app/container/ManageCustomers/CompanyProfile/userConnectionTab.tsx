@@ -5,7 +5,7 @@ import React, { useState, useEffect } from "react";
 import CustomButton from "@/app/components/common/CustomButton";
 import CustomFilterSelect from "@/app/components/common/CustomFilterSelect";
 import CustomSearchField from "@/app/components/common/CustomSearch";
-import { Adduser, BlockUser, Search } from "@/app/assets/icons";
+import { Adduser, BlockUser, Search, TotalUser } from "@/app/assets/icons";
 import AgGridServerSideTable from "@/app/ag-grid/AgGridServerSideTable";
 import { apiCall } from "@/app/utils/APIUtils";
 import RemoveConnectionDrawer from "../Drawers/removeConnectionDrawer";
@@ -434,7 +434,7 @@ const UserConnectionTab = ({
                   Remove Bulk Users
                 </Button>
                 <Button
-                  startIcon={<BlockUser />}
+                  startIcon={<TotalUser />}
                   onClick={() => setRestoreBulkUsersDrawerOpen(true)}
                   disabled={selectedRows.length === 0}
                   sx={

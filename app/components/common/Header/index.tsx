@@ -2,8 +2,8 @@ import React from "react";
 import { Box, Divider } from "@mui/material";
 import CustomBreadcrumbs from "@/app/components/common/CustomBreadcrumb";
 import { HeaderProps } from "@/app/types/DashboardProps";
+import { LogoutIcon } from "@/app/assets/icons";
 
-import {  Logout } from "@/app/assets/icons";
 const Header: React.FC<HeaderProps> = ({ breadcrumbItems }) => {
   return (
     <>
@@ -43,7 +43,7 @@ const Header: React.FC<HeaderProps> = ({ breadcrumbItems }) => {
               <Logout />
             </div>
           </Tooltip> */}
-          <Logout onClick={() => {
+          <LogoutIcon onClick={() => {
             window.location.href = "/api/auth/logout";
           }} />
         </Box>

@@ -22,7 +22,7 @@ const FreelanceContactDetails = ({ freelanceContactDetail }) => {
           <Box display="flex" gap={4}>
             <Box flex={3} display="flex" flexDirection="column" gap={"24px"}>
               <Stack>
-                <Typography variant="caption" color="#667185">
+                <Typography variant="h6" color="#667185">
                   Address
                 </Typography>
                 <Typography variant="subtitle1" color="#101928">
@@ -30,7 +30,7 @@ const FreelanceContactDetails = ({ freelanceContactDetail }) => {
                 </Typography>
               </Stack>
               <Stack>
-                <Typography variant="caption" color="#667185">
+                <Typography variant="h6" color="#667185">
                   Town
                 </Typography>
                 <Typography variant="subtitle1" color="#101928">
@@ -38,7 +38,7 @@ const FreelanceContactDetails = ({ freelanceContactDetail }) => {
                 </Typography>
               </Stack>
               <Stack>
-                <Typography variant="caption" color="#667185">
+                <Typography variant="h6" color="#667185">
                   Country
                 </Typography>
                 <Typography variant="subtitle1" color="#101928">
@@ -48,7 +48,7 @@ const FreelanceContactDetails = ({ freelanceContactDetail }) => {
             </Box>
             <Box flex={2} display="flex" flexDirection="column" gap={"24px"}>
               <Stack>
-                <Typography variant="caption" color="#667185">
+                <Typography variant="h6" color="#667185">
                   Post Code
                 </Typography>
                 <Typography variant="subtitle1" color="#101928">
@@ -56,7 +56,7 @@ const FreelanceContactDetails = ({ freelanceContactDetail }) => {
                 </Typography>
               </Stack>
               <Stack>
-                <Typography variant="caption" color="#667185">
+                <Typography variant="h6" color="#667185">
                   Email
                 </Typography>
                 <Typography variant="subtitle1" color="#101928">
@@ -64,7 +64,7 @@ const FreelanceContactDetails = ({ freelanceContactDetail }) => {
                 </Typography>
               </Stack>
               <Stack>
-                <Typography variant="caption" color="#667185">
+                <Typography variant="h6" color="#667185">
                   Mobile Number
                 </Typography>
                 <Typography variant="subtitle1" color="#101928">
@@ -76,7 +76,7 @@ const FreelanceContactDetails = ({ freelanceContactDetail }) => {
           <Box display="flex" gap={4}>
             <Box flex={3} display="flex" flexDirection="column" gap={"24px"}>
               <Stack>
-                <Typography variant="caption" color="#667185">
+                <Typography variant="h6" color="#667185">
                   Telephone Number
                 </Typography>
                 <Typography variant="subtitle1" color="#101928">
@@ -102,7 +102,7 @@ const FreelanceContactDetails = ({ freelanceContactDetail }) => {
           <Box display="flex" gap={4}>
             <Box flex={3} display="flex" flexDirection="column" gap={"24px"}>
               <Stack>
-                <Typography variant="caption" color="#667185">
+                <Typography variant="h6" color="#667185">
                   Active Solutions
                 </Typography>
                 <Typography variant="subtitle1" color="#101928">
@@ -110,7 +110,7 @@ const FreelanceContactDetails = ({ freelanceContactDetail }) => {
                 </Typography>
               </Stack>
               <Stack>
-                <Typography variant="caption" color="#667185">
+                <Typography variant="h6" color="#667185">
                   Companies
                 </Typography>
                 <Typography variant="subtitle1" color="#101928">
@@ -120,7 +120,7 @@ const FreelanceContactDetails = ({ freelanceContactDetail }) => {
             </Box>
             <Box flex={2} display="flex" flexDirection="column" gap={"24px"}>
               <Stack>
-                <Typography variant="caption" color="#667185">
+                <Typography variant="h6" color="#667185">
                   Pending Company Invites
                 </Typography>
                 <Typography variant="subtitle1" color="#101928">

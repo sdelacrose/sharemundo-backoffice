@@ -12,7 +12,7 @@ import { manageCustomersColumnDefs } from "@/app/const/GridTable/ColDef";
 import Header from "@/app/components/common/Header";
 import { customersBreadcrumb, filterByRoleItems } from "./manageData";
 import { SidebarContext } from "@/app/(pages)/layout";
-import { Adduser, BlockUser, Search } from "@/app/assets/icons";
+import { Adduser, BlockUser, Search, TotalUser } from "@/app/assets/icons";
 import CustomSearchField from "@/app/components/common/CustomSearch";
 import CustomFilterSelect from "@/app/components/common/CustomFilterSelect";
 import useColumnManageUserDefs from "@/app/hooks/Grid-Table/useColumnManageUser";
@@ -330,7 +330,7 @@ const ManageCustomers = () => {
               Active Bulk Users
             </Button>
             <Button
-              startIcon={<BlockUser />}
+              startIcon={<TotalUser />}
               onClick={() => setBlockBulkCustomersDrawerOpen(true)}
               disabled={selectedRows.length === 0}
               sx={{
