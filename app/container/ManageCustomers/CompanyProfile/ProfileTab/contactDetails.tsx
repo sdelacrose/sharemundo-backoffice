@@ -55,7 +55,7 @@ const ContactDetails = ({ profileDetail, licenses }: any) => {
             {/* Left Column */}
             <Box flex={1} display="flex" flexDirection="column" gap={3}>
               <Stack>
-                <Typography variant="h6" color="#667185">
+                <Typography variant="caption" color="#667185">
                   Address
                 </Typography>
                 <Typography variant="subtitle1" color="#101928">
@@ -63,7 +63,7 @@ const ContactDetails = ({ profileDetail, licenses }: any) => {
                 </Typography>
               </Stack>
               <Stack>
-                <Typography variant="h6" color="#667185">
+                <Typography variant="caption" color="#667185">
                   Country
                 </Typography>
                 <Typography variant="subtitle1" color="#101928">
@@ -71,7 +71,7 @@ const ContactDetails = ({ profileDetail, licenses }: any) => {
                 </Typography>
               </Stack>
               <Stack>
-                <Typography variant="h6" color="#667185">
+                <Typography variant="caption" color="#667185">
                   Company Email
                 </Typography>
                 <Typography variant="subtitle1" color="#101928">
@@ -79,7 +79,7 @@ const ContactDetails = ({ profileDetail, licenses }: any) => {
                 </Typography>
               </Stack>
               <Stack>
-                <Typography variant="h6" color="#667185">
+                <Typography variant="caption" color="#667185">
                   Telephone Number
                 </Typography>
                 <Typography variant="subtitle1" color="#101928">
@@ -90,7 +90,7 @@ const ContactDetails = ({ profileDetail, licenses }: any) => {
             {/* Right Column */}
             <Box flex={1} display="flex" flexDirection="column" gap={3}>
               <Stack>
-                <Typography variant="h6" color="#667185">
+                <Typography variant="caption" color="#667185">
                   Town
                 </Typography>
                 <Typography variant="subtitle1" color="#101928">
@@ -98,7 +98,7 @@ const ContactDetails = ({ profileDetail, licenses }: any) => {
                 </Typography>
               </Stack>
               <Stack>
-                <Typography variant="h6" color="#667185">
+                <Typography variant="caption" color="#667185">
                   Post Code
                 </Typography>
                 <Typography variant="subtitle1" color="#101928">
@@ -106,7 +106,7 @@ const ContactDetails = ({ profileDetail, licenses }: any) => {
                 </Typography>
               </Stack>
               <Stack>
-                <Typography variant="h6" color="#667185">
+                <Typography variant="caption" color="#667185">
                   Mobile Number
                 </Typography>
                 <Typography variant="subtitle1" color="#101928">
@@ -133,7 +133,7 @@ const ContactDetails = ({ profileDetail, licenses }: any) => {
             {/* Left Column */}
             <Box flex={1} display="flex" flexDirection="column" gap={3}>
               <Stack>
-                <Typography variant="h6" color="#667185">
+                <Typography variant="caption" color="#667185">
                   Total Users
                 </Typography>
                 <Typography variant="subtitle1" color="#101928">
@@ -141,7 +141,7 @@ const ContactDetails = ({ profileDetail, licenses }: any) => {
                 </Typography>
               </Stack>
               <Stack>
-                <Typography variant="h6" color="#667185">
+                <Typography variant="caption" color="#667185">
                   License
                 </Typography>
                 <Typography variant="subtitle1" color="#101928">
@@ -150,7 +150,7 @@ const ContactDetails = ({ profileDetail, licenses }: any) => {
                 </Typography>
               </Stack>
               <Stack>
-                <Typography variant="h6" color="#667185">
+                <Typography variant="caption" color="#667185">
                   Pending Freelance Invites
                 </Typography>
                 <Typography variant="subtitle1" color="#101928">

@@ -16,7 +16,7 @@ const useColumnUser = (columns: Column[]) => {
         case "name":
           return {
             field: "name",
-            headerName: "Full Name",
+            headerName: "Display Name",
             width: 580,
           };
         case "email":

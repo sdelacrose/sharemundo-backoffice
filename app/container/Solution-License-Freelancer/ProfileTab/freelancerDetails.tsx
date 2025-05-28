@@ -23,7 +23,7 @@ const FreelancerDetails = ({ freelancerDetail }) => {
           <Box display="flex" gap={4}>
             <Box flex={3} display="flex" flexDirection="column" gap={"24px"}>
               <Stack>
-                <Typography variant="h6" color="#667185">
+                <Typography variant="caption" color="#667185">
                   Name
                 </Typography>
                 <Typography variant="subtitle1" color="#101928">
@@ -33,7 +33,7 @@ const FreelancerDetails = ({ freelancerDetail }) => {
                 </Typography>
               </Stack>
               <Stack>
-                <Typography variant="h6" color="#667185">
+                <Typography variant="caption" color="#667185">
                   Reg Number
                 </Typography>
                 <Typography variant="subtitle1" color="#101928">
@@ -43,7 +43,7 @@ const FreelancerDetails = ({ freelancerDetail }) => {
             </Box>
             <Box flex={2} display="flex" flexDirection="column" gap={"24px"}>
               <Stack>
-                <Typography variant="h6" color="#667185">
+                <Typography variant="caption" color="#667185">
                   sharemundo Links IDs
                 </Typography>
                 <Typography variant="subtitle1" color="#101928">
@@ -69,7 +69,7 @@ const FreelancerDetails = ({ freelancerDetail }) => {
           <Box display="flex" gap={4}>
             <Box flex={3} display="flex" flexDirection="column" gap={"24px"}>
               <Stack>
-                <Typography variant="h6" color="#667185">
+                <Typography variant="caption" color="#667185">
                   Bank Name
                 </Typography>
                 <Typography variant="subtitle1" color="#101928">
@@ -77,7 +77,7 @@ const FreelancerDetails = ({ freelancerDetail }) => {
                 </Typography>
               </Stack>
               <Stack>
-                <Typography variant="h6" color="#667185">
+                <Typography variant="caption" color="#667185">
                   IBAN
                 </Typography>
                 <Typography variant="subtitle1" color="#101928">
@@ -87,7 +87,7 @@ const FreelancerDetails = ({ freelancerDetail }) => {
             </Box>
             <Box flex={2} display="flex" flexDirection="column" gap={"24px"}>
               <Stack>
-                <Typography variant="h6" color="#667185">
+                <Typography variant="caption" color="#667185">
                   Bank Address
                 </Typography>
                 <Typography variant="subtitle1" color="#101928">
@@ -95,7 +95,7 @@ const FreelancerDetails = ({ freelancerDetail }) => {
                 </Typography>
               </Stack>
               <Stack>
-                <Typography variant="h6" color="#667185">
+                <Typography variant="caption" color="#667185">
                   BIC
                 </Typography>
                 <Typography variant="subtitle1" color="#101928">

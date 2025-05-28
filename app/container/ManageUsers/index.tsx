@@ -238,7 +238,7 @@ const ManageUsers = () => {
             display={"flex"}
             alignItems={"center"}
             gap={2}
-            justifyContent={"flex-end"}
+            justifyContent={"space-between"}
             mt={3}
             mb={3}
           >

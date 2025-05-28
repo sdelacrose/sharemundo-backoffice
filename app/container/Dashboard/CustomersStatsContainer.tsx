@@ -41,7 +41,11 @@ const CustomersStatsContainer = ({ heading, stats }: any) => {
               title='Freelancers'
               value={stats?.freelancers_count}
             />
-            
+            <StatsCard
+              icon={<BlockUser />}
+              title='Internal User'
+              value={stats?.internal_users_count}
+            />
         </Box>
       </Box>
     </>
