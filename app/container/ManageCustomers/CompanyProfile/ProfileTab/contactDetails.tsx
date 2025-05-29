@@ -17,7 +17,6 @@ const ContactDetails = ({ profileDetail, licenses }: any) => {
 
       setUserCount(response.count);
 
-      console.log("User count:", userCount);
       return userCount;
     } catch (error) {
       console.error("Failed to fetch user count:", error);

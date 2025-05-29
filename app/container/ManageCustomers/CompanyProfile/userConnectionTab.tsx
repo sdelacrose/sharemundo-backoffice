@@ -177,7 +177,6 @@ const UserConnectionTab = ({
   const handleRowSelection = (event) => {
     const selected = event.api.getSelectedRows();
     setSelectedRows(selected);
-    console.log("Selected Rows: ", selected);
   };
 
   const handleSearchChange = _debounce(

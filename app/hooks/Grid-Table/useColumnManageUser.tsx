@@ -14,6 +14,12 @@ const useColumnManageUserDefs = ({
   columns,
   onBlockClick,
   onActivateClick,
+  type,
+}: {
+  columns: any[];
+  onBlockClick?: (id: number) => void;
+  onActivateClick?: (id: number) => void;
+  type: "active" | "blocked";
 }) => {
   const router = useRouter();
   return useMemo(() => {
@@ -92,14 +98,29 @@ const useColumnManageUserDefs = ({
                   View
                 </Button>
                 <Button
-                  style={{ color: params.data.is_active ? "red" : "green" }}
+                  style={{
+                    color:
+                      type === "blocked"
+                        ? "green"
+                        : params.data.is_active
+                        ? "red"
+                        : "green",
+                  }}
                   onClick={() =>
                     params.data.is_active
-                      ? onBlockClick(params.data.id)
-                      : onActivateClick(params.data.id)
+                      ? onBlockClick
+                        ? onBlockClick(params.data.id)
+                        : null
+                      : onActivateClick
+                      ? onActivateClick(params.data.id)
+                      : null
                   }
                 >
-                  {params.data.is_active ? "Block" : "Activate"}
+                  {type === "blocked"
+                    ? "Activate"
+                    : params.data.is_active
+                    ? "Block"
+                    : "Activate"}
                 </Button>
               </>
             ),

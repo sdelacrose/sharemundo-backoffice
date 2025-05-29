@@ -153,7 +153,7 @@ const Billings = () => {
           }));
         };
 
-        const past12MonthsData = transformChartData(data.past_12_months);
+        const past12MonthsData = transformChartData(data.past_12_months).reverse();
         const next12MonthsData = transformChartData(data.next_12_months);
 
         setChartData({

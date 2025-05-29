@@ -9,6 +9,7 @@ const CustomTextField: React.FC<any> = forwardRef(
       label,
       variant = 'outlined',
       helperText = '',
+      type = 'text',
       placeholder = 'Write Something ',
       error = false,
       startIcon = null,
@@ -19,6 +20,7 @@ const CustomTextField: React.FC<any> = forwardRef(
       width,
       background,
       fixedEndText,
+      onChange,
       ...rest
     },
     ref,
@@ -33,6 +35,8 @@ const CustomTextField: React.FC<any> = forwardRef(
           error={error}
           helperText={helperText}
           inputRef={ref}
+          type={type}
+          onChange={onChange}
           placeholder={placeholder}
           InputProps={{
             startAdornment: startIcon ? (
@@ -66,6 +70,7 @@ const CustomTextField: React.FC<any> = forwardRef(
               ) : null,
           }}
           inputProps={{
+            ...((type !== 'file') && { value: rest.value }),
             sx: {
               '&::placeholder': {
                 color: '#667185',

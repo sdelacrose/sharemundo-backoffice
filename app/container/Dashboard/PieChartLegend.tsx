@@ -1,4 +1,4 @@
-// PieChartLegend.tsx
+import { Box } from "@mui/material";
 import React from "react";
 
 const PieChartLegend = ({
@@ -9,30 +9,37 @@ const PieChartLegend = ({
   colors: string[];
 }) => {
   return (
-    <div style={{ display: "flex", flexWrap: "wrap", marginBottom: "1rem", marginLeft: 1 }}>
+    <Box
+      sx={{
+        display: "flex",
+        flexWrap: "wrap",
+        marginBottom: 2,
+        marginLeft: 3,
+      }}
+    >
       {data.map((item, index) => (
-        <div
+        <Box
           key={item.name}
-          style={{
+          sx={{
             display: "flex",
             alignItems: "center",
-            marginRight: "1.5rem",
-            marginBottom: "0.5rem",
+            marginRight: 3,
+            marginBottom: 1,
           }}
         >
-          <div
-            style={{
+          <Box
+            sx={{
               width: 14,
               height: 14,
-              backgroundColor: colors[index % colors.length],
+              bgcolor: colors[index % colors.length],
               borderRadius: "50%",
-              marginRight: 8,
+              mr: 1,
             }}
           />
           <span style={{ fontSize: 14, color: "#333" }}>{item.name}</span>
-        </div>
+        </Box>
       ))}
-    </div>
+    </Box>
   );
 };
 

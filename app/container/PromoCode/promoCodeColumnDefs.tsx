@@ -27,7 +27,6 @@ export const getPromoCodeColumns = ({
     headerName: "Status",
     flex: 0.7,
     cellRenderer: (params: any) => {
-      console.log("DATA: ", params.data);
       return params.value ? (
         <StatusBadge color="#036B26" text="Active" background="#E7F6EC" />
       ) : (
