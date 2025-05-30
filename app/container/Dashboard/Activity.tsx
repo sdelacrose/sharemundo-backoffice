@@ -4,7 +4,14 @@ import ActivityItem from "./activityItem";
 import { DateFormat } from "@/app/utils/FormatDate";
 
 type ActivityLog = {
-  user: string;
+  user: {
+    id: number;
+    name: string;
+  } | null;
+  company_profile: {
+    id: number;
+    name: string;
+  } | null;
   action: "License Purchased" | "Payment Declined" | "License Renewed";
   created_at: string;
 };
@@ -26,32 +33,29 @@ const Activity: React.FC<ActivityProps> = ({ activityData }) => {
     return logs.map((log) => {
       const formattedDate = DateFormat(log.created_at);
 
+      const actor = log.user?.name || log.company_profile?.name || "Company Admin";
+
+      let actionText = "";
       switch (log.action) {
         case "License Purchased":
-          return {
-            user: log.user,
-            action: "purchased a license",
-            date: formattedDate,
-          };
+          actionText = "purchased a license";
+          break;
         case "Payment Declined":
-          return {
-            user: log.user,
-            action: "had a payment declined",
-            date: formattedDate,
-          };
+          actionText = "had a payment declined";
+          break;
         case "License Renewed":
-          return {
-            user: log.user,
-            action: "renewed a license",
-            date: formattedDate,
-          };
+          actionText = "renewed a license";
+          break;
         default:
-          return {
-            user: log.user,
-            action: "performed an unknown action",
-            date: formattedDate,
-          };
+          actionText = "performed an unknown action";
+          break;
       }
+
+      return {
+        user: actor,
+        action: actionText,
+        date: formattedDate,
+      };
     });
   };
 

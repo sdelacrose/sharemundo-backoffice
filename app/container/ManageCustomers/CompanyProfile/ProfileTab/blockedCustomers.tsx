@@ -132,6 +132,7 @@ const BlockedCustomers = forwardRef<BlockedCustomersRef, BlockedCustomersProps>(
         );
 
         setActivateBulkCustomersDrawerOpen(false);
+        setSelectedRows([]);
         fetchBlockedCustomers("/admin-dashboard/customers?is_active=false");
         refresh();
       } catch (err) {

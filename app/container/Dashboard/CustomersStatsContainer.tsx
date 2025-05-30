@@ -40,7 +40,7 @@ const CustomersStatsContainer = ({ heading, stats }: any) => {
               </Box>
             }
             title="Total Customers"
-            value={stats?.company_admins_count + stats?.freelancers_count}
+            value={stats?.total_customers}
           />
           <StatsCard
             icon={

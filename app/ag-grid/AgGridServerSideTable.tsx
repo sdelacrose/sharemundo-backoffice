@@ -10,7 +10,7 @@ const AgGridServerSideTable: React.FC<any> = ({
   columnDefs,
   height = 328,
   width,
-  rowHeight = 60,
+  rowHeight = 50,
   onRowClicked,
   disablePagination = false,
   rowSelection = false,

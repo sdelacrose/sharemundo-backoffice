@@ -11,7 +11,7 @@ const AgGridTable: React.FC<AgGridTableProps> = ({
   columnDefs,
   height = 306,
   width,
-  rowHeight = 60,
+  rowHeight = 50,
   paginationPageSize = 10,
   onRowClicked,
   disablePagination = false,
