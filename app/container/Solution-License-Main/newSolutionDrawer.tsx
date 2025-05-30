@@ -28,26 +28,30 @@ const NewSolutionDrawer: React.FC<CreateNewDrawerProps> = ({
       link: "",
       description: "",
       price: "",
+      file: null,
     },
   });
 
   const onSubmit = async (data: any) => {
-    const payload = {
-      name: data.solutionName,
-      link: data.link,
-      description: data.description,
-      price: parseFloat(data.price),
-    };
+    const formData = new FormData();
+    formData.append("name", data.solutionName);
+    formData.append("link", data.link);
+    formData.append("description", data.description);
+    formData.append("price", data.price);
+    if (data.file) {
+      formData.append("specification_file", data.file);
+    }
 
     try {
       const response = await apiCall(
         "/admin-dashboard/products",
         "POST",
-        payload,
+        formData,
         null,
         {
           successMessage: "Solution created successfully!",
-        }
+        },
+        "multipart/form-data"
       );
 
       onSolutionCreated(response);
@@ -107,7 +111,7 @@ const NewSolutionDrawer: React.FC<CreateNewDrawerProps> = ({
                   rules={{ required: "Solution Name is required" }}
                   render={({ field }) => (
                     <CustomTextField
-                      label="Solution Name"
+                      label="Solution Name*"
                       placeholder="Solution Name"
                       fullWidth
                       error={!!errors.solutionName}
@@ -129,7 +133,7 @@ const NewSolutionDrawer: React.FC<CreateNewDrawerProps> = ({
                   }}
                   render={({ field }) => (
                     <CustomTextField
-                      label="Link"
+                      label="Link*"
                       placeholder="solution.com"
                       fullWidth
                       error={!!errors.link}
@@ -170,12 +174,26 @@ const NewSolutionDrawer: React.FC<CreateNewDrawerProps> = ({
                   }}
                   render={({ field }) => (
                     <CustomTextField
-                      label="Price"
+                      label="Price*"
                       placeholder="Price"
                       fullWidth
                       error={!!errors.price}
                       helperText={errors.price?.message}
                       {...field}
+                    />
+                  )}
+                />
+                <Controller
+                  name="file"
+                  control={control}
+                  render={({ field }) => (
+                    <CustomTextField
+                      label="Upload File"
+                      type="file"
+                      fullWidth
+                      onChange={(e) =>
+                        field.onChange(e.target.files?.[0] || null)
+                      }
                     />
                   )}
                 />

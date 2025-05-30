@@ -37,7 +37,6 @@ const LicenseDetail: React.FC<LicenseDetailProps> = ({
     try {
       const url = `/admin-dashboard/licenses/${licenseId}`;
       const responseData = await apiCall(url);
-      console.log("data", responseData);
       if (responseData && responseData.length > 0) {
         setLicensesData(responseData[0].licenses || []);
       }

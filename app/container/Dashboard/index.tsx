@@ -14,6 +14,7 @@ import CustomersStatsContainer from "./CustomersStatsContainer";
 import UsersStatsContainer from "./UsersStatsContainer";
 import BillingStatsContainer from "./BillingStatsContainer";
 import Loader from "@/app/components/common/Loader";
+import TrendsChartTabs from "./Trends";
 
 const Dashboard = () => {
   const context = useContext(SidebarContext);
@@ -97,13 +98,15 @@ const Dashboard = () => {
         <Box mb={3}>
           <BillingStatsContainer heading="Billings" stats={billingStats} />
         </Box>
-        <Box sx={{ display: "flex", alignItems: "start", gap: "20px" }}>
-          <Stack sx={{ width: "50%" }} gap={3}>
+        <Stack spacing={3}>
+          <Box sx={{ display: "flex", gap: 3 }}>
             <Box
               sx={{
+                flex: 1,
                 borderRadius: "12px",
                 background: "#fff",
                 border: "1px solid #E4E7EC",
+                width: "50%",
                 "& .ag-root-wrapper.ag-layout-normal": {
                   borderBottomLeftRadius: "12px",
                   borderBottomRightRadius: "12px",
@@ -124,17 +127,26 @@ const Dashboard = () => {
               </Typography>
               <AgGridTable rowData={solutionRowData} columnDefs={solutionCol} />
             </Box>
+
             <Box
               sx={{
+                flex: 1,
                 borderRadius: "12px",
                 background: "#fff",
                 border: "1px solid #E4E7EC",
-                "& .ag-root-wrapper.ag-layout-normal": {
-                  borderBottomLeftRadius: "12px",
-                  borderBottomRightRadius: "12px",
-                  outline: "none",
-                  border: "none",
-                },
+              }}
+            >
+              <Activity activityData={dashboardData.activity_logs} />
+            </Box>
+          </Box>
+
+          <Box sx={{ display: "flex", gap: 3 }}>
+            <Box
+              sx={{
+                flex: 1,
+                borderRadius: "12px",
+                background: "#fff",
+                border: "1px solid #E4E7EC",
               }}
             >
               <Typography
@@ -145,7 +157,7 @@ const Dashboard = () => {
                   fontSize: "18px",
                 }}
               >
-                Energy Consultant Solution
+                Solutions Distribution
               </Typography>
               <Divider
                 sx={{
@@ -155,9 +167,34 @@ const Dashboard = () => {
               />
               <PieChartComponent licenseData={dashboardData?.license_stats} />
             </Box>
-          </Stack>
-          <Activity />
-        </Box>
+
+            <Box
+              sx={{
+                flex: 1,
+                borderRadius: "12px",
+                background: "#fff",
+                border: "1px solid #E4E7EC",
+              }}
+            >
+              <Typography
+                variant="body1"
+                sx={{
+                  padding: "12px 24px",
+                  color: "#101928",
+                  fontSize: "18px",
+                }}
+              >
+                Trends
+              </Typography>
+              <Divider
+                sx={{
+                  borderColor: "rgba(240, 242, 245, 1)",
+                }}
+              />
+              <TrendsChartTabs data={dashboardData?.growth_stats} />
+            </Box>
+          </Box>
+        </Stack>
       </Box>
     </Box>
   );

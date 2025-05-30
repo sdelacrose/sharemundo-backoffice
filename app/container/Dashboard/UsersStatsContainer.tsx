@@ -1,7 +1,12 @@
 import { Box, Typography } from "@mui/material";
 import React from "react";
 import StatsCard from "./StatsCard";
-import { ActiveUser, BlockUser, TotalUser } from "@/app/assets/icons";
+import {
+  ActiveUsers,
+  BlockedUsers,
+  InternalUsers,
+  TotalUsers,
+} from "@/app/assets/icons";
 
 const UsersStatsContainer = ({ heading, stats }: any) => {
   return (
@@ -14,7 +19,14 @@ const UsersStatsContainer = ({ heading, stats }: any) => {
           padding: "16px",
         }}
       >
-        <Typography variant="h5" color="#475367" mb={2}>
+        <Typography
+          variant="body1"
+          sx={{
+            color: "#101928",
+            fontSize: "18px",
+            mb: 2,
+          }}
+        >
           {heading}
         </Typography>
         <Box
@@ -27,22 +39,38 @@ const UsersStatsContainer = ({ heading, stats }: any) => {
           }}
         >
           <StatsCard
-            icon={<TotalUser />}
+            icon={
+              <Box sx={{ width: 24, height: 24 }}>
+                <TotalUsers />
+              </Box>
+            }
             title="Total Users"
             value={stats?.total_users}
           />
           <StatsCard
-            icon={<ActiveUser />}
-            title="Active Users"
-            value={stats?.active_users}
-          />
-          <StatsCard
-            icon={<BlockUser />}
+            icon={
+              <Box sx={{ width: 24, height: 24 }}>
+                <InternalUsers />
+              </Box>
+            }
             title="Internal User"
             value={stats?.internal_users_count}
           />
           <StatsCard
-            icon={<BlockUser />}
+            icon={
+              <Box sx={{ width: 24, height: 24 }}>
+                <ActiveUsers />
+              </Box>
+            }
+            title="Active Users"
+            value={stats?.active_users}
+          />
+          <StatsCard
+            icon={
+              <Box sx={{ width: 24, height: 24 }}>
+                <BlockedUsers />
+              </Box>
+            }
             title="Blocked Users"
             value={stats?.blocked_users}
           />

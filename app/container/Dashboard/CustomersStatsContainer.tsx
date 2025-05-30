@@ -1,7 +1,7 @@
 import { Box, Typography } from "@mui/material";
 import React from "react";
 import StatsCard from "./StatsCard";
-import { ActiveUser, BlockUser } from "@/app/assets/icons";
+import { Companies, Freelancers, TotalCustomers } from "@/app/assets/icons";
 
 const CustomersStatsContainer = ({ heading, stats }: any) => {
   return (
@@ -14,7 +14,14 @@ const CustomersStatsContainer = ({ heading, stats }: any) => {
           padding: "16px",
         }}
       >
-        <Typography variant="h5" color="#475367" mb={2}>
+        <Typography
+          variant="body1"
+          sx={{
+            color: "#101928",
+            fontSize: "18px",
+            mb: 2,
+          }}
+        >
           {heading}
         </Typography>
         <Box
@@ -26,22 +33,33 @@ const CustomersStatsContainer = ({ heading, stats }: any) => {
             justifyContent: "space-between",
           }}
         >
-            <StatsCard
-              icon={<ActiveUser />}
-              title='Total Customers'
-              value={stats?.company_admins_count+stats?.freelancers_count}
-            />
-            <StatsCard
-              icon={<ActiveUser />}
-              title='Companies'
-              value={stats?.company_admins_count}
-            />
-            <StatsCard
-              icon={<BlockUser />}
-              title='Freelancers'
-              value={stats?.freelancers_count}
-            />
-            
+          <StatsCard
+            icon={
+              <Box sx={{ width: 24, height: 24 }}>
+                <TotalCustomers />
+              </Box>
+            }
+            title="Total Customers"
+            value={stats?.company_admins_count + stats?.freelancers_count}
+          />
+          <StatsCard
+            icon={
+              <Box sx={{ width: 24, height: 24 }}>
+                <Companies />
+              </Box>
+            }
+            title="Companies"
+            value={stats?.company_admins_count}
+          />
+          <StatsCard
+            icon={
+              <Box sx={{ width: 24, height: 24 }}>
+                <Freelancers />
+              </Box>
+            }
+            title="Freelancers"
+            value={stats?.freelancers_count}
+          />
         </Box>
       </Box>
     </>

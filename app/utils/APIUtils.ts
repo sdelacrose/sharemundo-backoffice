@@ -11,22 +11,29 @@ export const apiCall = async (
   method: string = "GET",
   data: any = null,
   token: string | null = null,
-  { successMessage, errorMessage }: ApiCallOptions = {}
+  { successMessage, errorMessage }: ApiCallOptions = {},
+  contentType: string = "application/json"
 ) => {
   try {
     let authToken = await getAuthToken();
     if (token) {
       authToken = token;
     }
-    const headers = {
-      "Content-Type": "application/json",
+    const headers: any = {
       ...(authToken && { Authorization: `Bearer ${authToken}` }),
     };
+
+    const isFormData = data instanceof FormData;
+    if (!isFormData) {
+      headers["Content-Type"] = contentType;
+    }
 
     const options = {
       method,
       headers,
-      ...(data && { body: JSON.stringify(data) }),
+      ...(data && {
+        body: isFormData ? data : JSON.stringify(data),
+      }),
     };
 
     const response = await fetch(

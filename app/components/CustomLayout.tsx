@@ -14,7 +14,7 @@ export default function CustomLayout({
 }>) {
   return (
     <ThemeProvider theme={theme}>
-      <html lang="en" style={{ overflowX: "hidden" }}>
+      <html lang="en">
         <body>
           <CustomToaster />
           {children}

@@ -51,6 +51,8 @@ const SolutionLicenseMain = () => {
           id,
           link,
           description,
+          specification_file,
+          specification_file_name,
         }: any) => ({
           name,
           price,
@@ -59,6 +61,8 @@ const SolutionLicenseMain = () => {
           id,
           link: link || "",
           description: description || "",
+          specification_file,
+          specification_file_name
         })
       );
       setSolutionData(extractedData);
@@ -127,7 +131,6 @@ const SolutionLicenseMain = () => {
           name: key,
           value: value as number,
         }));
-        console.log("Chart data-------", transformedData);
         setChartData(transformedData);
         setLoading(false);
       } catch (err) {
@@ -242,7 +245,6 @@ const SolutionLicenseMain = () => {
   };
 
   const handleSolutionCreated = (newSolution: any) => {
-    console.log("newSolution-----", newSolution);
     setSolutionData((prevData) => [...prevData, newSolution]);
   };
 
