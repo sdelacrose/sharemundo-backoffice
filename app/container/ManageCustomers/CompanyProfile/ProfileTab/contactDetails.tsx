@@ -159,7 +159,7 @@ const ContactDetails = ({ profileDetail, licenses }: any) => {
             </Box>
             <Box flex={1} display="flex" flexDirection="column" gap={3}>
               <Stack>
-                <Typography variant="caption" color="#667185">
+                <Typography variant="h6" color="#667185">
                   Freelancers
                 </Typography>
                 <Typography variant="subtitle1" color="#101928">
@@ -167,7 +167,7 @@ const ContactDetails = ({ profileDetail, licenses }: any) => {
                 </Typography>
               </Stack>
               <Stack>
-                <Typography variant="caption" color="#667185">
+                <Typography variant="h6" color="#667185">
                   Active Solutions
                 </Typography>
                 <Typography variant="subtitle1" color="#101928">
@@ -177,7 +177,7 @@ const ContactDetails = ({ profileDetail, licenses }: any) => {
                 </Typography>
               </Stack>
               <Stack>
-                <Typography variant="caption" color="#667185">
+                <Typography variant="h6" color="#667185">
                   Mobile Number
                 </Typography>
                 <Typography variant="subtitle1" color="#101928">

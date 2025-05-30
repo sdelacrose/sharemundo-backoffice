@@ -62,7 +62,7 @@ const SolutionLicenseMain = () => {
           link: link || "",
           description: description || "",
           specification_file,
-          specification_file_name
+          specification_file_name,
         })
       );
       setSolutionData(extractedData);
@@ -94,7 +94,6 @@ const SolutionLicenseMain = () => {
       fetchSolutionData(previousPageUrl);
     }
   }, [previousPageUrl, fetchSolutionData, currentPage, loading]);
- 
 
   const handleSearchChange = _debounce(
     async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -117,9 +116,7 @@ const SolutionLicenseMain = () => {
   );
 
   const endpoints = {
-    0: "/admin-dashboard/customers/stats",
-    1: "/admin-dashboard/users/stats",
-    2: "/admin-dashboard/licenses/stats",
+    0: "/admin-dashboard/licenses/stats",
   };
 
   useEffect(() => {
@@ -172,12 +169,6 @@ const SolutionLicenseMain = () => {
     setNewSolution(false);
   };
 
-  const customTooltipCustomersFormatter = (value: any) => [
-    `Customers: ${value}`,
-  ];
-
-  const customTooltipUsersFormatter = (value: any) => [`Users: ${value}`];
-
   const customTooltipLicensesFormatter = (value: any) => [`Licenses: ${value}`];
 
   const renderChart = () => {
@@ -186,20 +177,6 @@ const SolutionLicenseMain = () => {
     }
     switch (activeTab) {
       case 0:
-        return (
-          <SharpLineChart
-            data={chartData}
-            tooltipFormatter={customTooltipCustomersFormatter}
-          />
-        );
-      case 1:
-        return (
-          <SharpLineChart
-            data={chartData}
-            tooltipFormatter={customTooltipUsersFormatter}
-          />
-        );
-      case 2:
         return (
           <SharpLineChart
             data={chartData}

@@ -200,6 +200,7 @@ const ManageCustomers = () => {
 
       fetchCustomers("/admin-dashboard/customers?is_active=true");
       blockedRef.current?.refreshBlockedCustomers();
+      setSelectedRows([]);
       setBlockBulkCustomersDrawerOpen(false);
     } catch (err) {
       console.error("Failed to block users:", err);
