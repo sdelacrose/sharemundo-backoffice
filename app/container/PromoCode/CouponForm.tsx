@@ -10,7 +10,6 @@ import {
     InputAdornment
 } from '@mui/material';
 import {useEffect, useState} from "react";
-
 interface CouponFormProps {
     open: boolean;
     onClose: () => void;
