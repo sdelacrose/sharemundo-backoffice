@@ -12,7 +12,8 @@ const Callback = async () => {
     }
 
     try {
-      const response = await fetch(
+      // const response =
+       await fetch(
         `${process.env.NEXT_PUBLIC_BASE_API_URL}/accounts/auth/signup`,
         {
           method: 'POST',
@@ -23,7 +24,7 @@ const Callback = async () => {
         },
       );
 
-      const data = await response.json();
+      // const data = await response.json();
 
       return session.accessToken;
     } catch (error) {
