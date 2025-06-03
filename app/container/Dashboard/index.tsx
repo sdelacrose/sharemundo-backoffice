@@ -5,7 +5,7 @@ import { homeBreadcrumb } from "./data";
 import useColumnSolutions from "@/app/hooks/Grid-Table/useColumnSolutions";
 import { solutionColumnDefs } from "@/app/const/GridTable/ColDef";
 import AgGridTable from "@/app/ag-grid";
-import Activity from "./Activity";
+import Activity, { ActivityLog } from "./Activity";
 import Header from "@/app/components/common/Header";
 import { SidebarContext } from "@/app/(pages)/layout";
 import PieChartComponent from "@/app/components/common/Piechart";
@@ -15,13 +15,43 @@ import UsersStatsContainer from "./UsersStatsContainer";
 import BillingStatsContainer from "./BillingStatsContainer";
 import Loader from "@/app/components/common/Loader";
 import TrendsChartTabs from "./Trends";
+import { useInView } from "react-intersection-observer";
+
 
 const Dashboard = () => {
   const context = useContext(SidebarContext);
   const [dashboardData, setDashboardData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [activityLogs, setActivityLogs] = useState<ActivityLog[]>([]);
+  const [page, setPage] = useState(1);
+  const [totalCount, setTotalCount] = useState(0);
+  const [loadingActivities, setLoadingActivities] = useState(false);
+  const PAGE_SIZE = 10;
+
+  const totalPages = Math.ceil(totalCount / PAGE_SIZE);
 
   const solutionCol = useColumnSolutions(solutionColumnDefs);
+
+  const fetchActivities = async () => {
+    if (loading || (totalPages && page > totalPages)) return;
+
+    setLoading(true);
+    try {
+      const res = await apiCall(
+        `admin-api/admin-dashboard/activity-logs/?page=${page}&page_size=${PAGE_SIZE}`
+      );
+      setActivityLogs((prev) => [...prev, ...res.results]);
+      setTotalCount(res.count);
+    } catch (e) {
+      console.error("Error fetching activity logs:", e);
+    } finally {
+      setLoadingActivities(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchActivities();
+  }, []);
 
   useEffect(() => {
     const fetchDashboardData = async () => {
@@ -38,6 +68,14 @@ const Dashboard = () => {
 
     fetchDashboardData();
   }, []);
+
+  const { ref, inView } = useInView({ threshold: 0.5 });
+
+  useEffect(() => {
+    if (inView && !loadingActivities && page < totalPages) {
+      setPage((prev) => prev + 1);
+    }
+  }, [inView]);
 
   if (context === undefined) {
     return <div>Error: Sidebar context is undefined!</div>;
@@ -136,7 +174,11 @@ const Dashboard = () => {
                 border: "1px solid #E4E7EC",
               }}
             >
-              <Activity activityData={dashboardData.activity_logs} />
+              <Activity
+                activityData={activityLogs}
+                ref={ref}
+                isLoading={loadingActivities}
+              />
             </Box>
           </Box>
 

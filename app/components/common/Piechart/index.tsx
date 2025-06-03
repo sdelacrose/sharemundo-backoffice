@@ -41,8 +41,8 @@ const renderCustomizedLabel = ({
 const PieChartComponent = ({ licenseData }: { licenseData: { product_name: string; license_count: number }[] }) => {
   // Filter out entries with zero license count
   const filteredData = licenseData
-    .filter(item => item.license_count > 0)
-    .map(item => ({
+    ?.filter(item => item.license_count > 0)
+    ?.map(item => ({
       name: item.product_name,
       value: item.license_count,
     }));
@@ -72,7 +72,7 @@ const PieChartComponent = ({ licenseData }: { licenseData: { product_name: strin
           fill="#8884d8"
           dataKey="value"
         >
-          {filteredData.map((entry, index) => (
+          {filteredData?.map((entry, index) => (
             <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
           ))}
         </Pie>

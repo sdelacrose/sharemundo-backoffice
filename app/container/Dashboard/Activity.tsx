@@ -1,9 +1,9 @@
-import { Box, Divider, Typography } from "@mui/material";
+import { Box, CircularProgress, Divider, Typography } from "@mui/material";
 import React from "react";
 import ActivityItem from "./activityItem";
 import { DateFormat } from "@/app/utils/FormatDate";
 
-type ActivityLog = {
+export type ActivityLog = {
   user: {
     id: number;
     name: string;
@@ -12,12 +12,14 @@ type ActivityLog = {
     id: number;
     name: string;
   } | null;
-  action: "License Purchased" | "Payment Declined" | "License Renewed";
+  action: string;
   created_at: string;
 };
 
 type ActivityProps = {
   activityData: ActivityLog[];
+  ref: (node?: Element | null) => void;
+  isLoading: boolean;
 };
 
 type TransformedActivity = {
@@ -26,14 +28,19 @@ type TransformedActivity = {
   date: string;
 };
 
-const Activity: React.FC<ActivityProps> = ({ activityData }) => {
+const Activity: React.FC<ActivityProps> = ({
+  activityData,
+  isLoading,
+  ref,
+}) => {
   const transformActivityLogs = (
     logs: ActivityLog[]
   ): TransformedActivity[] => {
     return logs.map((log) => {
       const formattedDate = DateFormat(log.created_at);
 
-      const actor = log.user?.name || log.company_profile?.name || "Company Admin";
+      const actor =
+        log.user?.name || log.company_profile?.name || "Company Admin";
 
       let actionText = "";
       switch (log.action) {
@@ -85,14 +92,38 @@ const Activity: React.FC<ActivityProps> = ({ activityData }) => {
         }}
       />
       {transformedLogs.length > 0 ? (
-        transformedLogs.map((activity, index) => (
-          <ActivityItem
-            key={index}
-            user={activity.user}
-            action={activity.action}
-            date={activity.date}
-          />
-        ))
+        <Box sx={{ maxHeight: "360px", overflowY: "auto" }}>
+          {transformedLogs.map((activity, index) => (
+            <ActivityItem
+              key={index}
+              user={activity.user}
+              action={activity.action}
+              date={activity.date}
+            />
+          ))}
+
+          <div ref={ref} />
+
+          {isLoading && (
+            <Box display="flex" justifyContent="center" p={2}>
+              <CircularProgress size={20} />
+            </Box>
+          )}
+
+          {!isLoading && activityData.length > 0 && (
+            <Typography
+              variant="body2"
+              sx={{
+                textAlign: "center",
+                p: 2,
+                color: "#6B7280",
+                fontStyle: "italic",
+              }}
+            >
+              No more activities
+            </Typography>
+          )}
+        </Box>
       ) : (
         <Box display="flex" justifyContent="center" alignItems="center">
           <Typography
