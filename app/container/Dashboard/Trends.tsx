@@ -28,6 +28,19 @@ const TrendsChartTabs = ({ data }: { data: any }) => {
     }
   };
 
+  const getFormatter = () => {
+    switch (activeTab) {
+      case 0:
+        return (value: number) => [`Licenses: ${value}`];
+      case 1:
+        return (value: number) => [`Customers: ${value}`];
+      case 2:
+        return (value: number) => [`Users: ${value}`];
+      default:
+        return (value: number) => [value.toString()];
+    }
+  };
+
   return (
     <Box
       sx={{
@@ -44,7 +57,10 @@ const TrendsChartTabs = ({ data }: { data: any }) => {
       </Tabs>
 
       <Box sx={{ mt: 4 }}>
-        <BarChartComponent data={getTabData()} />
+        <BarChartComponent
+          data={getTabData()}
+          tooltipFormatter={getFormatter()}
+        />
       </Box>
     </Box>
   );
