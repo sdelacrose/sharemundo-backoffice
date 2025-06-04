@@ -26,19 +26,21 @@ const Dashboard = () => {
   const [page, setPage] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
   const [loadingActivities, setLoadingActivities] = useState(false);
-  const PAGE_SIZE = 10;
+  const PAGE_SIZE = 5;
 
   const totalPages = Math.ceil(totalCount / PAGE_SIZE);
 
   const solutionCol = useColumnSolutions(solutionColumnDefs);
 
+  // Modify fetchActivities to use `loadingActivities`
   const fetchActivities = async () => {
-    if (loading || (totalPages && page > totalPages)) return;
+    if (loadingActivities || (totalPages && page > totalPages)) return;
 
-    setLoading(true);
+    setLoadingActivities(true);
     try {
       const res = await apiCall(
-        `admin-api/admin-dashboard/activity-logs/?page=${page}&page_size=${PAGE_SIZE}`
+        `/admin-dashboard/activity-logs/?page=${page}&page_size=${PAGE_SIZE}`,
+        "GET"
       );
       setActivityLogs((prev) => [...prev, ...res.results]);
       setTotalCount(res.count);
@@ -49,44 +51,45 @@ const Dashboard = () => {
     }
   };
 
-  useEffect(() => {
-    fetchActivities();
-  }, []);
+  const fetchDashboardData = async () => {
+    try {
+      const data = await apiCall("/admin-dashboard/", "GET");
+      setDashboardData(data);
+      setLoading(false);
+    } catch (err) {
+      console.error("Error fetching dashboard data:", err);
+      // setError("Failed to load dashboard data.");
+      setLoading(false);
+    }
+  };
 
+  // Fix initial load logic
   useEffect(() => {
-    const fetchDashboardData = async () => {
-      try {
-        const data = await apiCall("/admin-dashboard/", "GET");
-        setDashboardData(data);
-        setLoading(false);
-      } catch (err) {
-        console.error("Error fetching dashboard data:", err);
-        // setError("Failed to load dashboard data.");
-        setLoading(false);
-      }
-    };
-
+    // Load page 1 initially
     fetchDashboardData();
+    fetchActivities(); // This loads the first page
   }, []);
+
+  useEffect(() => {
+    if (page === 1) return; // Page 1 is already loaded on mount
+    fetchActivities();
+  }, [page]);
 
   const { ref, inView } = useInView({ threshold: 0.5 });
 
+  // Infinite scroll trigger
   useEffect(() => {
     if (inView && !loadingActivities && page < totalPages) {
       setPage((prev) => prev + 1);
     }
-  }, [inView]);
+  }, [inView, loadingActivities, page, totalPages]);
 
   if (context === undefined) {
     return <div>Error: Sidebar context is undefined!</div>;
   }
 
   if (loading) {
-    return (
-      <div>
-        <Loader />
-      </div>
-    );
+    return <Loader />
   }
 
   const userStats = dashboardData?.user_stats;
