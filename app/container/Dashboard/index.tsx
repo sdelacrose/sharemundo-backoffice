@@ -5,7 +5,7 @@ import { homeBreadcrumb } from "./data";
 import useColumnSolutions from "@/app/hooks/Grid-Table/useColumnSolutions";
 import { solutionColumnDefs } from "@/app/const/GridTable/ColDef";
 import AgGridTable from "@/app/ag-grid";
-import Activity from "./Activity";
+import Activity, { ActivityLog } from "./Activity";
 import Header from "@/app/components/common/Header";
 import { SidebarContext } from "@/app/(pages)/layout";
 import PieChartComponent from "@/app/components/common/Piechart";
@@ -15,40 +15,81 @@ import UsersStatsContainer from "./UsersStatsContainer";
 import BillingStatsContainer from "./BillingStatsContainer";
 import Loader from "@/app/components/common/Loader";
 import TrendsChartTabs from "./Trends";
+import { useInView } from "react-intersection-observer";
+
 
 const Dashboard = () => {
   const context = useContext(SidebarContext);
   const [dashboardData, setDashboardData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [activityLogs, setActivityLogs] = useState<ActivityLog[]>([]);
+  const [page, setPage] = useState(1);
+  const [totalCount, setTotalCount] = useState(0);
+  const [loadingActivities, setLoadingActivities] = useState(false);
+  const PAGE_SIZE = 5;
+
+  const totalPages = Math.ceil(totalCount / PAGE_SIZE);
 
   const solutionCol = useColumnSolutions(solutionColumnDefs);
 
-  useEffect(() => {
-    const fetchDashboardData = async () => {
-      try {
-        const data = await apiCall("/admin-dashboard/", "GET");
-        setDashboardData(data);
-        setLoading(false);
-      } catch (err) {
-        console.error("Error fetching dashboard data:", err);
-        // setError("Failed to load dashboard data.");
-        setLoading(false);
-      }
-    };
+  // Modify fetchActivities to use `loadingActivities`
+  const fetchActivities = async () => {
+    if (loadingActivities || (totalPages && page > totalPages)) return;
 
+    setLoadingActivities(true);
+    try {
+      const res = await apiCall(
+        `/admin-dashboard/activity-logs/?page=${page}&page_size=${PAGE_SIZE}`,
+        "GET"
+      );
+      setActivityLogs((prev) => [...prev, ...res.results]);
+      setTotalCount(res.count);
+    } catch (e) {
+      console.error("Error fetching activity logs:", e);
+    } finally {
+      setLoadingActivities(false);
+    }
+  };
+
+  const fetchDashboardData = async () => {
+    try {
+      const data = await apiCall("/admin-dashboard/", "GET");
+      setDashboardData(data);
+      setLoading(false);
+    } catch (err) {
+      console.error("Error fetching dashboard data:", err);
+      // setError("Failed to load dashboard data.");
+      setLoading(false);
+    }
+  };
+
+  // Fix initial load logic
+  useEffect(() => {
+    // Load page 1 initially
     fetchDashboardData();
+    fetchActivities(); // This loads the first page
   }, []);
+
+  useEffect(() => {
+    if (page === 1) return; // Page 1 is already loaded on mount
+    fetchActivities();
+  }, [page]);
+
+  const { ref, inView } = useInView({ threshold: 0.5 });
+
+  // Infinite scroll trigger
+  useEffect(() => {
+    if (inView && !loadingActivities && page < totalPages) {
+      setPage((prev) => prev + 1);
+    }
+  }, [inView, loadingActivities, page, totalPages]);
 
   if (context === undefined) {
     return <div>Error: Sidebar context is undefined!</div>;
   }
 
   if (loading) {
-    return (
-      <div>
-        <Loader />
-      </div>
-    );
+    return <Loader />
   }
 
   const userStats = dashboardData?.user_stats;
@@ -136,7 +177,11 @@ const Dashboard = () => {
                 border: "1px solid #E4E7EC",
               }}
             >
-              <Activity activityData={dashboardData.activity_logs} />
+              <Activity
+                activityData={activityLogs}
+                ref={ref}
+                isLoading={loadingActivities}
+              />
             </Box>
           </Box>
 

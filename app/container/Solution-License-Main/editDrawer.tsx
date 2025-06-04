@@ -5,6 +5,7 @@ import { apiCall } from "@/app/utils/APIUtils";
 import { Box, Drawer, Stack, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
+import VisibilityIcon from "@mui/icons-material/Visibility";
 
 interface SolutionData {
   name: string;
@@ -221,13 +222,30 @@ const EditDrawer: React.FC<CreateEditDrawerProps> = ({
                       {initialData.specification_file_name}
                     </Typography>
                     <Box
-                      sx={{ cursor: "pointer" }}
-                      onClick={() => {
-                        setFileRemoved(true);
-                        setValue("specification_file", null);
-                      }}
+                      sx={{ display: "flex", gap: "8px", alignItems: "center" }}
                     >
-                      <Cross />
+                      <Box
+                        sx={{ cursor: "pointer" }}
+                        onClick={() => {
+                          if (initialData?.specification_file) {
+                            window.open(
+                              initialData.specification_file,
+                              "_blank"
+                            );
+                          }
+                        }}
+                      >
+                        <VisibilityIcon />
+                      </Box>
+                      <Box
+                        sx={{ cursor: "pointer" }}
+                        onClick={() => {
+                          setFileRemoved(true);
+                          setValue("specification_file", null);
+                        }}
+                      >
+                        <Cross />
+                      </Box>
                     </Box>
                   </Box>
                 ) : (
