@@ -190,6 +190,7 @@ const NewSolutionDrawer: React.FC<CreateNewDrawerProps> = ({
                     <CustomTextField
                       label="Upload File"
                       type="file"
+                      accept=".jpg, .jpeg, .png, .pdf"
                       fullWidth
                       onChange={(e) =>
                         field.onChange(e.target.files?.[0] || null)
