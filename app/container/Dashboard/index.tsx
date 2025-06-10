@@ -5,50 +5,90 @@ import { homeBreadcrumb } from "./data";
 import useColumnSolutions from "@/app/hooks/Grid-Table/useColumnSolutions";
 import { solutionColumnDefs } from "@/app/const/GridTable/ColDef";
 import AgGridTable from "@/app/ag-grid";
-import Activity from "./Activity";
+import Activity, { ActivityLog } from "./Activity";
 import Header from "@/app/components/common/Header";
 import { SidebarContext } from "@/app/(pages)/layout";
 import PieChartComponent from "@/app/components/common/Piechart";
-import Legend from "./legend";
 import { apiCall } from "@/app/utils/APIUtils";
 import CustomersStatsContainer from "./CustomersStatsContainer";
-import UsersStatsContainer from "./UsersStatsContainer";
 import BillingStatsContainer from "./BillingStatsContainer";
 import Loader from "@/app/components/common/Loader";
+import TrendsChartTabs from "./Trends";
+import { useInView } from "react-intersection-observer";
+import BlockedStatContainer from "./BlockedStatContainer";
 
 const Dashboard = () => {
   const context = useContext(SidebarContext);
   const [dashboardData, setDashboardData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [activityLogs, setActivityLogs] = useState<ActivityLog[]>([]);
+  const [page, setPage] = useState(1);
+  const [totalCount, setTotalCount] = useState(0);
+  const [loadingActivities, setLoadingActivities] = useState(false);
+  const PAGE_SIZE = 5;
+
+  const totalPages = Math.ceil(totalCount / PAGE_SIZE);
 
   const solutionCol = useColumnSolutions(solutionColumnDefs);
 
-  useEffect(() => {
-    const fetchDashboardData = async () => {
-      try {
-        const data = await apiCall("/admin-dashboard/", "GET");
-        setDashboardData(data);
-        setLoading(false);
-      } catch (err) {
-        console.error("Error fetching dashboard data:", err);
-        // setError("Failed to load dashboard data.");
-        setLoading(false);
-      }
-    };
+  // Modify fetchActivities to use `loadingActivities`
+  const fetchActivities = async () => {
+    if (loadingActivities || (totalPages && page > totalPages)) return;
 
+    setLoadingActivities(true);
+    try {
+      const res = await apiCall(
+        `/admin-dashboard/activity-logs/?page=${page}&page_size=${PAGE_SIZE}`,
+        "GET"
+      );
+      setActivityLogs((prev) => [...prev, ...res.results]);
+      setTotalCount(res.count);
+    } catch (e) {
+      console.error("Error fetching activity logs:", e);
+    } finally {
+      setLoadingActivities(false);
+    }
+  };
+
+  const fetchDashboardData = async () => {
+    try {
+      const data = await apiCall("/admin-dashboard/", "GET");
+      setDashboardData(data);
+      setLoading(false);
+    } catch (err) {
+      console.error("Error fetching dashboard data:", err);
+      // setError("Failed to load dashboard data.");
+      setLoading(false);
+    }
+  };
+
+  // Fix initial load logic
+  useEffect(() => {
+    // Load page 1 initially
     fetchDashboardData();
+    fetchActivities(); // This loads the first page
   }, []);
+
+  useEffect(() => {
+    if (page === 1) return; // Page 1 is already loaded on mount
+    fetchActivities();
+  }, [page]);
+
+  const { ref, inView } = useInView({ threshold: 0.5 });
+
+  // Infinite scroll trigger
+  useEffect(() => {
+    if (inView && !loadingActivities && page < totalPages) {
+      setPage((prev) => prev + 1);
+    }
+  }, [inView, loadingActivities, page, totalPages]);
 
   if (context === undefined) {
     return <div>Error: Sidebar context is undefined!</div>;
   }
 
   if (loading) {
-    return (
-      <div>
-        <Loader />
-      </div>
-    );
+    return <Loader />
   }
 
   const userStats = dashboardData?.user_stats;
@@ -88,23 +128,33 @@ const Dashboard = () => {
             marginBottom: "24px",
           }}
         />
-        <Box mb={3}>
-          <CustomersStatsContainer heading="Customers" stats={userStats} />
-        </Box>
-        <Box mb={3}>
-          <UsersStatsContainer heading="Users" stats={userStats} />
+        <Box
+          mb={3}
+          sx={{
+            display: "flex",
+            gap: 2,
+          }}
+        >
+          <Box sx={{ flex: 4 }}>
+            <CustomersStatsContainer heading="Active Users" stats={userStats} />
+          </Box>
+          <Box sx={{ flex: 1 }}>
+            <BlockedStatContainer heading="Inactive Users" stats={userStats} />
+          </Box>
         </Box>
 
         <Box mb={3}>
           <BillingStatsContainer heading="Billings" stats={billingStats} />
         </Box>
-        <Box sx={{ display: "flex", alignItems: "start", gap: "20px" }}>
-          <Stack sx={{ width: "50%" }} gap={3}>
+        <Stack spacing={3}>
+          <Box sx={{ display: "flex", gap: 3 }}>
             <Box
               sx={{
+                flex: 1,
                 borderRadius: "12px",
                 background: "#fff",
                 border: "1px solid #E4E7EC",
+                width: "50%",
                 "& .ag-root-wrapper.ag-layout-normal": {
                   borderBottomLeftRadius: "12px",
                   borderBottomRightRadius: "12px",
@@ -125,17 +175,30 @@ const Dashboard = () => {
               </Typography>
               <AgGridTable rowData={solutionRowData} columnDefs={solutionCol} />
             </Box>
+
             <Box
               sx={{
+                flex: 1,
                 borderRadius: "12px",
                 background: "#fff",
                 border: "1px solid #E4E7EC",
-                "& .ag-root-wrapper.ag-layout-normal": {
-                  borderBottomLeftRadius: "12px",
-                  borderBottomRightRadius: "12px",
-                  outline: "none",
-                  border: "none",
-                },
+              }}
+            >
+              <Activity
+                activityData={activityLogs}
+                ref={ref}
+                isLoading={loadingActivities}
+              />
+            </Box>
+          </Box>
+
+          <Box sx={{ display: "flex", gap: 3 }}>
+            <Box
+              sx={{
+                flex: 1,
+                borderRadius: "12px",
+                background: "#fff",
+                border: "1px solid #E4E7EC",
               }}
             >
               <Typography
@@ -146,7 +209,7 @@ const Dashboard = () => {
                   fontSize: "18px",
                 }}
               >
-                Energy Consultant Solution
+                Solutions Distribution
               </Typography>
               <Divider
                 sx={{
@@ -154,23 +217,36 @@ const Dashboard = () => {
                   marginBottom: "24px",
                 }}
               />
-              <Box ml={3}>
-                <Legend />
-              </Box>
-              <PieChartComponent
-                totalUsers={dashboardData?.user_stats?.total_users || 0}
-                totalCustomers={dashboardData?.user_stats?.total_customers || 0}
-                licenseCount={
-                  dashboardData?.license_stats?.reduce(
-                    (acc: number, curr: any) => acc + curr.license_count,
-                    0
-                  ) || 0
-                }
-              />
+              <PieChartComponent licenseData={dashboardData?.license_stats} />
             </Box>
-          </Stack>
-          <Activity />
-        </Box>
+
+            <Box
+              sx={{
+                flex: 1,
+                borderRadius: "12px",
+                background: "#fff",
+                border: "1px solid #E4E7EC",
+              }}
+            >
+              <Typography
+                variant="body1"
+                sx={{
+                  padding: "12px 24px",
+                  color: "#101928",
+                  fontSize: "18px",
+                }}
+              >
+                Trends
+              </Typography>
+              <Divider
+                sx={{
+                  borderColor: "rgba(240, 242, 245, 1)",
+                }}
+              />
+              <TrendsChartTabs data={dashboardData?.growth_stats} />
+            </Box>
+          </Box>
+        </Stack>
       </Box>
     </Box>
   );

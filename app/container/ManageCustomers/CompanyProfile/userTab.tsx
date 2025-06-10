@@ -12,14 +12,13 @@ import { UserColumnDefs } from "@/app/const/GridTable/ColDef";
 import { UserRow } from "@/app/const/GridTable/RowData";
 
 const UserTab = () => {
-  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const query = event.target.value;
-    console.log(query);
-  };
+  // const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   const query = event.target.value;
+
+  // };
   const [, setSelectedFilter] = useState<string | null>(null);
 
   const handleSelect = (label: string | null) => {
-    console.log("Selected filter:", label);
     setSelectedFilter(label);
   };
   const userCol = useColumnUser(UserColumnDefs);
@@ -32,9 +31,6 @@ const UserTab = () => {
   const handleCloseDrawer = () => {
     setUserDrawer(false);
   };
-  // const handleCloseBlockDrawer = () => {
-  //   setBlockDrawer(false);
-  // };
   const handleBlockDrawer = () => {
     setBlockDrawer(true);
   };
@@ -66,7 +62,7 @@ const UserTab = () => {
             <CustomSearchField
               startIcon={<Search />}
               placeholder="Search here..."
-              onChange={handleSearchChange}
+              // onChange={handleSearchChange}
               width="340px"
             />{" "}
             <CustomFilterSelect items={filterItems} onSelect={handleSelect} />

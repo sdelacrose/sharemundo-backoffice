@@ -26,7 +26,9 @@ const CompanyProfile = ({ customerDetail, id }: any) => {
   const [rowData, setRowData] = useState([]);
 
   const isFreelancer = customerDetail?.user_type === "freelancer";
-  const isCompany = customerDetail?.user_type === "company";
+  const isCompany =
+    customerDetail?.user_type === "company" ||
+    customerDetail?.user_type === "company_admin";
   const isInternalUser = customerDetail?.user_type === "internal_user";
   const searchParams = useSearchParams();
 

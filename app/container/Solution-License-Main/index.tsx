@@ -5,7 +5,7 @@ import Header from "@/app/components/common/Header";
 import { Box, Divider, Stack, Typography } from "@mui/material";
 import { useCallback, useContext, useEffect, useState } from "react";
 import CustomTabs from "@/app/components/common/CustomTab";
-import { solutionsBreadcrumb, tabs } from "./data";
+import { solutionsBreadcrumb, solutionTabs } from "./data";
 import SharpLineChart from "@/app/components/common/SharpLineChart";
 import CustomSearchField from "@/app/components/common/CustomSearch";
 import { Search } from "@/app/assets/icons";
@@ -33,7 +33,7 @@ const SolutionLicenseMain = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
 
-  const fetchSolutionData = async (url: string) => {
+  const fetchSolutionData = useCallback(async (url: string) => {
     try {
       setLoading(true);
       const trimmedUrl = url.includes("/admin-dashboard")
@@ -51,6 +51,8 @@ const SolutionLicenseMain = () => {
           id,
           link,
           description,
+          specification_file,
+          specification_file_name,
         }: any) => ({
           name,
           price,
@@ -59,6 +61,8 @@ const SolutionLicenseMain = () => {
           id,
           link: link || "",
           description: description || "",
+          specification_file,
+          specification_file_name,
         })
       );
       setSolutionData(extractedData);
@@ -71,7 +75,7 @@ const SolutionLicenseMain = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     fetchSolutionData("/admin-dashboard/products");
@@ -90,7 +94,6 @@ const SolutionLicenseMain = () => {
       fetchSolutionData(previousPageUrl);
     }
   }, [previousPageUrl, fetchSolutionData, currentPage, loading]);
- 
 
   const handleSearchChange = _debounce(
     async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -113,9 +116,7 @@ const SolutionLicenseMain = () => {
   );
 
   const endpoints = {
-    0: "/admin-dashboard/customers/stats",
-    1: "/admin-dashboard/users/stats",
-    2: "/admin-dashboard/licenses/stats",
+    0: "/admin-dashboard/licenses/stats",
   };
 
   useEffect(() => {
@@ -127,7 +128,6 @@ const SolutionLicenseMain = () => {
           name: key,
           value: value as number,
         }));
-        console.log("Chart data-------", transformedData);
         setChartData(transformedData);
         setLoading(false);
       } catch (err) {
@@ -169,12 +169,6 @@ const SolutionLicenseMain = () => {
     setNewSolution(false);
   };
 
-  const customTooltipCustomersFormatter = (value: any) => [
-    `Customers: ${value}`,
-  ];
-
-  const customTooltipUsersFormatter = (value: any) => [`Users: ${value}`];
-
   const customTooltipLicensesFormatter = (value: any) => [`Licenses: ${value}`];
 
   const renderChart = () => {
@@ -183,20 +177,6 @@ const SolutionLicenseMain = () => {
     }
     switch (activeTab) {
       case 0:
-        return (
-          <SharpLineChart
-            data={chartData}
-            tooltipFormatter={customTooltipCustomersFormatter}
-          />
-        );
-      case 1:
-        return (
-          <SharpLineChart
-            data={chartData}
-            tooltipFormatter={customTooltipUsersFormatter}
-          />
-        );
-      case 2:
         return (
           <SharpLineChart
             data={chartData}
@@ -242,7 +222,6 @@ const SolutionLicenseMain = () => {
   };
 
   const handleSolutionCreated = (newSolution: any) => {
-    console.log("newSolution-----", newSolution);
     setSolutionData((prevData) => [...prevData, newSolution]);
   };
 
@@ -290,7 +269,7 @@ const SolutionLicenseMain = () => {
           >
             <Stack gap={2}>
               <CustomTabs
-                tabs={tabs}
+                tabs={solutionTabs}
                 onTabChange={handleTabChange}
                 value={activeTab}
               />

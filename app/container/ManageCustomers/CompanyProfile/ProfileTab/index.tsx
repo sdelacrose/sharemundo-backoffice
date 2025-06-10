@@ -16,9 +16,8 @@ interface ProfileTabProps {
 }
 
 const ProfileTab: React.FC<ProfileTabProps> = ({ profileData, licenses }) => {
-  console.log("data profile", profileData);
   const internalUser = profileData?.user_type === "internal_user";
-  const company = profileData?.user_type === "company";
+  const company = profileData?.user_type === "company" || profileData?.user_type === "company_admin";
   const freelancer = profileData?.user_type === "freelancer";
   return (
     <Box display="flex" alignItems="start" gap={2.5} mr={4}>

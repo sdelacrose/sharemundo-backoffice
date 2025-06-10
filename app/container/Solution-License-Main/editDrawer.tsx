@@ -3,20 +3,25 @@ import CustomButton from "@/app/components/common/CustomButton";
 import CustomTextField from "@/app/components/common/CustomTextfield";
 import { apiCall } from "@/app/utils/APIUtils";
 import { Box, Drawer, Stack, Typography } from "@mui/material";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
+import VisibilityIcon from "@mui/icons-material/Visibility";
 
+interface SolutionData {
+  name: string;
+  description: string;
+  price: number;
+  yearly_price: number;
+  link: string | null;
+  specification_file: string | null;
+  specification_file_name: string | null;
+}
 interface CreateEditDrawerProps {
   open: boolean;
   handleClose: () => void;
   id?: any;
   onUpdateData: (updatedItem: any) => void;
-  initialData?: {
-    name: string;
-    price: string;
-    link: string;
-    description: string;
-  };
+  initialData?: SolutionData;
 }
 
 const EditDrawer: React.FC<CreateEditDrawerProps> = ({
@@ -31,42 +36,56 @@ const EditDrawer: React.FC<CreateEditDrawerProps> = ({
     handleSubmit,
     setValue,
     formState: { errors, isSubmitting },
-  } = useForm({
+  } = useForm<SolutionData>({
     defaultValues: {
-      solutionName: "",
-      price: "",
+      name: "",
+      price: NaN,
       link: "",
       description: "",
+      specification_file: null,
+      specification_file_name: null,
     },
   });
+
+  const [fileRemoved, setFileRemoved] = useState(false);
+
   useEffect(() => {
     if (initialData) {
-      setValue("solutionName", initialData.name || "");
-      setValue("price", initialData.price || "");
+      setValue("name", initialData.name || "");
+      setValue("price", initialData.price || NaN);
+      setValue("yearly_price", initialData.yearly_price || NaN);
       setValue("link", initialData.link || "");
       setValue("description", initialData.description || "");
+      if (initialData.specification_file) {
+        setFileRemoved(false);
+      }
     }
   }, [initialData, setValue]);
   const onSubmit = async (data: any) => {
     if (!id) return;
 
-    const payload = {
-      name: data.solutionName,
-      price: parseFloat(data.price),
-      link: data.link,
-      description: data.description,
-    };
+    const formData = new FormData();
+    formData.append("name", data.name);
+    formData.append("link", data.link);
+    formData.append("description", data.description);
+    formData.append("price", data.price);
+    formData.append("yearly_price", data.price);
+
+    if (data.specification_file) {
+      formData.append("specification_file", data.specification_file);
+    }
 
     try {
       const response = await apiCall(
         `/admin-dashboard/products/${id}`,
         "PUT",
-        payload,
+        formData,
         null,
         {
           successMessage: "Solution updated successfully!",
           errorMessage: "Failed to update the solution. Please try again.",
-        }
+        },
+        "multipart/form-data"
       );
 
       onUpdateData(response);
@@ -113,16 +132,16 @@ const EditDrawer: React.FC<CreateEditDrawerProps> = ({
               </Typography>
               <Stack gap={2.4}>
                 <Controller
-                  name="solutionName"
+                  name="name"
                   control={control}
                   rules={{ required: "Solution Name is required" }}
                   render={({ field }) => (
                     <CustomTextField
-                      label="Solution Name"
+                      label="Solution Name*"
                       placeholder="Solution Name"
                       fullWidth
-                      error={!!errors.solutionName}
-                      helperText={errors.solutionName?.message}
+                      error={!!errors.name}
+                      helperText={errors.name?.message}
                       {...field}
                     />
                   )}
@@ -140,7 +159,7 @@ const EditDrawer: React.FC<CreateEditDrawerProps> = ({
                   }}
                   render={({ field }) => (
                     <CustomTextField
-                      label="Link"
+                      label="Link*"
                       placeholder="link.com"
                       fullWidth
                       error={!!errors.link}
@@ -160,9 +179,6 @@ const EditDrawer: React.FC<CreateEditDrawerProps> = ({
                 <Controller
                   name="description"
                   control={control}
-                  rules={{
-                    required: "Description is required",
-                  }}
                   render={({ field }) => (
                     <CustomTextField
                       label="Details"
@@ -178,13 +194,14 @@ const EditDrawer: React.FC<CreateEditDrawerProps> = ({
                   name="price"
                   control={control}
                   rules={{
-                    required: "Price is required",
+                    required: "Monthly Price is required",
                     validate: (value) =>
-                      !isNaN(parseFloat(value)) || "Price must be a number",
+                      !isNaN(parseFloat(value?.toString())) ||
+                      "Monthly Price must be a number",
                   }}
                   render={({ field }) => (
                     <CustomTextField
-                      label="Price"
+                      label="Monthly Price*"
                       placeholder="$54.45"
                       fullWidth
                       error={!!errors.price}
@@ -193,6 +210,86 @@ const EditDrawer: React.FC<CreateEditDrawerProps> = ({
                     />
                   )}
                 />
+
+                 <Controller
+                  name="yearly_price"
+                  control={control}
+                  rules={{
+                    required: "Yearly Price is required",
+                    validate: (value) =>
+                      !isNaN(parseFloat(value?.toString())) ||
+                      "Yearly Price must be a number",
+                  }}
+                  render={({ field }) => (
+                    <CustomTextField
+                      label="Yearly Price*"
+                      placeholder="$54.45"
+                      fullWidth
+                      error={!!errors.yearly_price}
+                      helperText={errors.yearly_price?.message}
+                      {...field}
+                    />
+                  )}
+                />
+                {initialData?.specification_file && !fileRemoved ? (
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      border: "1px solid #ccc",
+                      padding: "12px 16px",
+                      borderRadius: "8px",
+                    }}
+                  >
+                    <Typography variant="body1">
+                      {initialData.specification_file_name}
+                    </Typography>
+                    <Box
+                      sx={{ display: "flex", gap: "8px", alignItems: "center" }}
+                    >
+                      <Box
+                        sx={{ cursor: "pointer" }}
+                        onClick={() => {
+                          if (initialData?.specification_file) {
+                            window.open(
+                              initialData.specification_file,
+                              "_blank"
+                            );
+                          }
+                        }}
+                      >
+                        <VisibilityIcon />
+                      </Box>
+                      <Box
+                        sx={{ cursor: "pointer" }}
+                        onClick={() => {
+                          setFileRemoved(true);
+                          setValue("specification_file", null);
+                        }}
+                      >
+                        <Cross />
+                      </Box>
+                    </Box>
+                  </Box>
+                ) : (
+                  <Controller
+                    name="specification_file"
+                    control={control}
+                    render={({ field }) => (
+                      <CustomTextField
+                        label="Upload File"
+                        type="file"
+                        accept=".jpg, .jpeg, .png, .pdf"
+                        fullWidth
+                        onChange={(e) => {
+                          const file = e.target.files?.[0] || null;
+                          field.onChange(file);
+                        }}
+                      />
+                    )}
+                  />
+                )}
               </Stack>
               <Box
                 sx={{

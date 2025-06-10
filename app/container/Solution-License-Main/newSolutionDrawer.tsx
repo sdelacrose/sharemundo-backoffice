@@ -28,26 +28,32 @@ const NewSolutionDrawer: React.FC<CreateNewDrawerProps> = ({
       link: "",
       description: "",
       price: "",
+      yearly_price: "",
+      file: null,
     },
   });
 
   const onSubmit = async (data: any) => {
-    const payload = {
-      name: data.solutionName,
-      link: data.link,
-      description: data.description,
-      price: parseFloat(data.price),
-    };
+    const formData = new FormData();
+    formData.append("name", data.solutionName);
+    formData.append("link", data.link);
+    formData.append("description", data.description);
+    formData.append("price", data.price);
+    formData.append("yearly_price", data.yearly_price);
+    if (data.file) {
+      formData.append("specification_file", data.file);
+    }
 
     try {
       const response = await apiCall(
         "/admin-dashboard/products",
         "POST",
-        payload,
+        formData,
         null,
         {
           successMessage: "Solution created successfully!",
-        }
+        },
+        "multipart/form-data"
       );
 
       onSolutionCreated(response);
@@ -107,7 +113,7 @@ const NewSolutionDrawer: React.FC<CreateNewDrawerProps> = ({
                   rules={{ required: "Solution Name is required" }}
                   render={({ field }) => (
                     <CustomTextField
-                      label="Solution Name"
+                      label="Solution Name*"
                       placeholder="Solution Name"
                       fullWidth
                       error={!!errors.solutionName}
@@ -129,7 +135,7 @@ const NewSolutionDrawer: React.FC<CreateNewDrawerProps> = ({
                   }}
                   render={({ field }) => (
                     <CustomTextField
-                      label="Link"
+                      label="Link*"
                       placeholder="solution.com"
                       fullWidth
                       error={!!errors.link}
@@ -164,18 +170,52 @@ const NewSolutionDrawer: React.FC<CreateNewDrawerProps> = ({
                   name="price"
                   control={control}
                   rules={{
-                    required: "Price is required",
+                    required: "Monthly Price is required",
                     validate: (value) =>
-                      !isNaN(parseFloat(value)) || "Price must be a number",
+                      !isNaN(parseFloat(value)) || "Monthly Price must be a number",
                   }}
                   render={({ field }) => (
                     <CustomTextField
-                      label="Price"
-                      placeholder="Price"
+                      label="Monthly Price*"
+                      placeholder="Monthly Price"
                       fullWidth
                       error={!!errors.price}
                       helperText={errors.price?.message}
                       {...field}
+                    />
+                  )}
+                />
+                <Controller
+                  name="yearly_price"
+                  control={control}
+                  rules={{
+                    required: "Yearly Price is required",
+                    validate: (value) =>
+                      !isNaN(parseFloat(value)) || "Yearly Price must be a number",
+                  }}
+                  render={({ field }) => (
+                    <CustomTextField
+                      label="Yearly Price*"
+                      placeholder="Yearly Price"
+                      fullWidth
+                      error={!!errors.yearly_price}
+                      helperText={errors.yearly_price?.message}
+                      {...field}
+                    />
+                  )}
+                />
+                <Controller
+                  name="file"
+                  control={control}
+                  render={({ field }) => (
+                    <CustomTextField
+                      label="Upload File"
+                      type="file"
+                      accept=".jpg, .jpeg, .png, .pdf"
+                      fullWidth
+                      onChange={(e) =>
+                        field.onChange(e.target.files?.[0] || null)
+                      }
                     />
                   )}
                 />

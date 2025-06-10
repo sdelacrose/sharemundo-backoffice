@@ -25,7 +25,6 @@ const StatsCard = ({ icon, title, value }: StatsCardProps) => {
           <Box
             border={"1px solid #F0F2F5"}
             borderRadius={"6px"}
-            padding={"4px"}
             bgcolor={"#fff"}
             display={"flex"}
             justifyContent={"center"}

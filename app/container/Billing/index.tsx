@@ -22,6 +22,7 @@ import AgGridServerSideTable from "@/app/ag-grid/AgGridServerSideTable";
 import Loader from "@/app/components/common/Loader";
 import CustomButton from "@/app/components/common/CustomButton";
 import { ExportExcel } from "@/app/assets/icons";
+import { formatCurrency } from "@/app/utils/FormatCurrency";
 
 const Billings = () => {
   const [billingData, setBillingData] = useState<any>(null);
@@ -73,7 +74,7 @@ const Billings = () => {
     const selected = event.api.getSelectedRows();
     setSelectedRows(selected);
   };
-  const fetchBillingData = async (url: string) => {
+  const fetchBillingData = useCallback(async (url: string) => {
     try {
       const data = await apiCall(url, "GET");
       const billingsData = data?.results?.users || [];
@@ -100,7 +101,7 @@ const Billings = () => {
       console.error("Error fetching billing data:", err);
       setLoading(false);
     }
-  };
+  }, []);
   useEffect(() => {
     fetchBillingData("/admin-dashboard/invoices/failed");
   }, []);
@@ -152,7 +153,7 @@ const Billings = () => {
           }));
         };
 
-        const past12MonthsData = transformChartData(data.past_12_months);
+        const past12MonthsData = transformChartData(data.past_12_months).reverse();
         const next12MonthsData = transformChartData(data.next_12_months);
 
         setChartData({
@@ -189,7 +190,9 @@ const Billings = () => {
     }
   };
 
-  const customTooltipFormatter = (value: any) => [`Revenue: €${value}`];
+  const customTooltipFormatter = (value: any) => [
+    `Revenue: ${formatCurrency(value)}`,
+  ];
   const customTooltipPaymentIssueFormatter = (value: any) => [
     `Issue: ${value}`,
   ];
@@ -220,6 +223,8 @@ const Billings = () => {
           <SharpLineChart
             data={chartData.past12Months}
             tooltipFormatter={customTooltipFormatter}
+            yAxisFormatter={(value) => formatCurrency(value)}
+            yAxisLabel="Monthly Revenue"
           />
         );
       case 1:
@@ -227,6 +232,7 @@ const Billings = () => {
           <BarChartComponent
             data={chartData.next12Months}
             tooltipFormatter={customTooltipFormatter}
+            yAxisFormatter={(value) => formatCurrency(value)}
           />
         );
       default:
