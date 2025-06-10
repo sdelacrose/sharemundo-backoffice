@@ -11,6 +11,7 @@ interface SolutionData {
   name: string;
   description: string;
   price: number;
+  yearly_price: number;
   link: string | null;
   specification_file: string | null;
   specification_file_name: string | null;
@@ -52,6 +53,7 @@ const EditDrawer: React.FC<CreateEditDrawerProps> = ({
     if (initialData) {
       setValue("name", initialData.name || "");
       setValue("price", initialData.price || NaN);
+      setValue("yearly_price", initialData.yearly_price || NaN);
       setValue("link", initialData.link || "");
       setValue("description", initialData.description || "");
       if (initialData.specification_file) {
@@ -67,6 +69,7 @@ const EditDrawer: React.FC<CreateEditDrawerProps> = ({
     formData.append("link", data.link);
     formData.append("description", data.description);
     formData.append("price", data.price);
+    formData.append("yearly_price", data.price);
 
     if (data.specification_file) {
       formData.append("specification_file", data.specification_file);
@@ -191,18 +194,39 @@ const EditDrawer: React.FC<CreateEditDrawerProps> = ({
                   name="price"
                   control={control}
                   rules={{
-                    required: "Price is required",
+                    required: "Monthly Price is required",
                     validate: (value) =>
                       !isNaN(parseFloat(value?.toString())) ||
-                      "Price must be a number",
+                      "Monthly Price must be a number",
                   }}
                   render={({ field }) => (
                     <CustomTextField
-                      label="Price*"
+                      label="Monthly Price*"
                       placeholder="$54.45"
                       fullWidth
                       error={!!errors.price}
                       helperText={errors.price?.message}
+                      {...field}
+                    />
+                  )}
+                />
+
+                 <Controller
+                  name="yearly_price"
+                  control={control}
+                  rules={{
+                    required: "Yearly Price is required",
+                    validate: (value) =>
+                      !isNaN(parseFloat(value?.toString())) ||
+                      "Yearly Price must be a number",
+                  }}
+                  render={({ field }) => (
+                    <CustomTextField
+                      label="Yearly Price*"
+                      placeholder="$54.45"
+                      fullWidth
+                      error={!!errors.yearly_price}
+                      helperText={errors.yearly_price?.message}
                       {...field}
                     />
                   )}
