@@ -28,6 +28,7 @@ const NewSolutionDrawer: React.FC<CreateNewDrawerProps> = ({
       link: "",
       description: "",
       price: "",
+      yearly_price: "",
       file: null,
     },
   });
@@ -38,6 +39,7 @@ const NewSolutionDrawer: React.FC<CreateNewDrawerProps> = ({
     formData.append("link", data.link);
     formData.append("description", data.description);
     formData.append("price", data.price);
+    formData.append("yearly_price", data.yearly_price);
     if (data.file) {
       formData.append("specification_file", data.file);
     }
@@ -168,17 +170,36 @@ const NewSolutionDrawer: React.FC<CreateNewDrawerProps> = ({
                   name="price"
                   control={control}
                   rules={{
-                    required: "Price is required",
+                    required: "Monthly Price is required",
                     validate: (value) =>
-                      !isNaN(parseFloat(value)) || "Price must be a number",
+                      !isNaN(parseFloat(value)) || "Monthly Price must be a number",
                   }}
                   render={({ field }) => (
                     <CustomTextField
-                      label="Price*"
-                      placeholder="Price"
+                      label="Monthly Price*"
+                      placeholder="Monthly Price"
                       fullWidth
                       error={!!errors.price}
                       helperText={errors.price?.message}
+                      {...field}
+                    />
+                  )}
+                />
+                <Controller
+                  name="yearly_price"
+                  control={control}
+                  rules={{
+                    required: "Yearly Price is required",
+                    validate: (value) =>
+                      !isNaN(parseFloat(value)) || "Yearly Price must be a number",
+                  }}
+                  render={({ field }) => (
+                    <CustomTextField
+                      label="Yearly Price*"
+                      placeholder="Yearly Price"
+                      fullWidth
+                      error={!!errors.yearly_price}
+                      helperText={errors.yearly_price?.message}
                       {...field}
                     />
                   )}
