@@ -11,12 +11,11 @@ import { SidebarContext } from "@/app/(pages)/layout";
 import PieChartComponent from "@/app/components/common/Piechart";
 import { apiCall } from "@/app/utils/APIUtils";
 import CustomersStatsContainer from "./CustomersStatsContainer";
-import UsersStatsContainer from "./UsersStatsContainer";
 import BillingStatsContainer from "./BillingStatsContainer";
 import Loader from "@/app/components/common/Loader";
 import TrendsChartTabs from "./Trends";
 import { useInView } from "react-intersection-observer";
-
+import BlockedStatContainer from "./BlockedStatContainer";
 
 const Dashboard = () => {
   const context = useContext(SidebarContext);
@@ -129,11 +128,19 @@ const Dashboard = () => {
             marginBottom: "24px",
           }}
         />
-        <Box mb={3}>
-          <CustomersStatsContainer heading="Customers" stats={userStats} />
-        </Box>
-        <Box mb={3}>
-          <UsersStatsContainer heading="Users" stats={userStats} />
+        <Box
+          mb={3}
+          sx={{
+            display: "flex",
+            gap: 2,
+          }}
+        >
+          <Box sx={{ flex: 4 }}>
+            <CustomersStatsContainer heading="Active Users" stats={userStats} />
+          </Box>
+          <Box sx={{ flex: 1 }}>
+            <BlockedStatContainer heading="Inactive Users" stats={userStats} />
+          </Box>
         </Box>
 
         <Box mb={3}>

@@ -1,7 +1,7 @@
 import { Box, Typography } from "@mui/material";
 import React from "react";
 import StatsCard from "./StatsCard";
-import { Companies, Freelancers, TotalCustomers } from "@/app/assets/icons";
+import { ActiveUsers, Companies, Freelancers, InternalUsers } from "@/app/assets/icons";
 
 const CustomersStatsContainer = ({ heading, stats }: any) => {
   return (
@@ -36,11 +36,11 @@ const CustomersStatsContainer = ({ heading, stats }: any) => {
           <StatsCard
             icon={
               <Box sx={{ width: 24, height: 24 }}>
-                <TotalCustomers />
+                <ActiveUsers />
               </Box>
             }
-            title="Total Customers"
-            value={stats?.total_customers}
+            title="Active Users"
+            value={stats?.active_users}
           />
           <StatsCard
             icon={
@@ -50,6 +50,15 @@ const CustomersStatsContainer = ({ heading, stats }: any) => {
             }
             title="Companies"
             value={stats?.company_admins_count}
+          />
+          <StatsCard
+            icon={
+              <Box sx={{ width: 24, height: 24 }}>
+                <InternalUsers />
+              </Box>
+            }
+            title="Internal User"
+            value={stats?.internal_users_count}
           />
           <StatsCard
             icon={
