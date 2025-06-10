@@ -256,8 +256,8 @@ const EditDrawer: React.FC<CreateEditDrawerProps> = ({
                       <CustomTextField
                         label="Upload File"
                         type="file"
+                        accept=".jpg, .jpeg, .png, .pdf"
                         fullWidth
-                        inputProps={{ accept: "*" }}
                         onChange={(e) => {
                           const file = e.target.files?.[0] || null;
                           field.onChange(file);
