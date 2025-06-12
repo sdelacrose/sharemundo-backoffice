@@ -69,7 +69,7 @@ const EditDrawer: React.FC<CreateEditDrawerProps> = ({
     formData.append("link", data.link);
     formData.append("description", data.description);
     formData.append("price", data.price);
-    formData.append("yearly_price", data.price);
+    formData.append("yearly_price", data.yearly_price);
 
     if (data.specification_file) {
       formData.append("specification_file", data.specification_file);
