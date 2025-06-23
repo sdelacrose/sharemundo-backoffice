@@ -47,6 +47,8 @@ import Freelancers from "./Freelancers.svg";
 import Companies from "./Companies.svg";
 import BlockedUsers from "./BlockedUsers.svg";
 import ActiveUsers from "./ActiveUsers.svg";
+import FeedbackIcon from "./FeedbackIcon.svg";
+import FeedbackIconBlack from "./FeedbackIconBlack.svg";
 
 export {
   Card,
@@ -98,4 +100,6 @@ export {
   Companies,
   BlockedUsers,
   ActiveUsers,
+  FeedbackIcon,
+  FeedbackIconBlack,
 };

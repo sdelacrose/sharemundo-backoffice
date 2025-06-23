@@ -91,7 +91,7 @@ const CustomTextField: React.FC<any> = forwardRef(
               borderRadius: "6px",
               fontFamily: "Mulish, sans-serif",
               padding: "8px -8px",
-              height: height || "47px",
+              height: height || "100%",
               width: width || "100%",
               background: background || "transparent",
               "& fieldset": {
