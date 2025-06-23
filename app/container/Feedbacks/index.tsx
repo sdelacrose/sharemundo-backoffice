@@ -6,7 +6,6 @@ import { FeedbackIconBlack } from "@/app/assets/icons";
 import AgGridServerSideTable from "@/app/ag-grid/AgGridServerSideTable";
 import { SidebarContext } from "@/app/(pages)/layout";
 import { FEEDBACK_STATUS_OPTIONS } from "@/app/constants";
-import { getAuthToken } from "@/app/utils/GetAuthToken";
 import useColumnFeedbackTable from "@/app/hooks/Grid-Table/useColumnFeedbackTable";
 import { FeedbackColumnDefs } from "@/app/const/GridTable/ColDef";
 import toast from "react-hot-toast";
@@ -145,14 +144,10 @@ const Feedbacks: React.FC = () => {
     onReply
   );
 
-  const getFeedbacks = async (status = "", page = 1, token?: string) => {
+  const getFeedbacks = async (status = "", page = 1) => {
     setLoading(true);
 
     try {
-      let authToken = await getAuthToken();
-      if (token) {
-        authToken = token;
-      }
 
       const res = await apiCall(
         `/admin-dashboard/feedback?page=${page}&page_size=${PAGE_SIZE}&status=${status}`,
@@ -229,9 +224,10 @@ const Feedbacks: React.FC = () => {
             padding: "1rem",
             borderRadius: "8px",
             marginBottom: "1rem",
+            marginTop: "1rem"
           }}
         >
-          <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+          <Typography variant="h2" >
             Feedbacks
           </Typography>
         </Box>

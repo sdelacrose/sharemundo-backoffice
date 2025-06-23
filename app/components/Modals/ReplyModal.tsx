@@ -48,7 +48,7 @@ const ReplyModal: React.FC<ReplyModalProps> = ({ open, onClose, onSave }) => {
           width: 400,
         }}
       >
-        <Typography variant="h6" mb={2}>
+        <Typography variant="h5" mb={2}>
           Add Reply
         </Typography>
 

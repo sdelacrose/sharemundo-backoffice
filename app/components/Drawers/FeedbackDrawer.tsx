@@ -40,7 +40,7 @@ const FeedbackDrawer: React.FC<FeedbackDrawerProps> = ({
         alignItems="center"
         mb={2}
       >
-        <Typography variant="h6">View / Edit Feedback</Typography>
+        <Typography variant="h5">View / Edit Feedback</Typography>
         <IconButton onClick={onClose}>
           <CloseIcon />
         </IconButton>
