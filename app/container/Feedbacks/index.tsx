@@ -229,9 +229,10 @@ const Feedbacks: React.FC = () => {
             padding: "1rem",
             borderRadius: "8px",
             marginBottom: "1rem",
+            marginTop:"1rem"
           }}
         >
-          <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+          <Typography variant="h2" >
             Feedbacks
           </Typography>
         </Box>

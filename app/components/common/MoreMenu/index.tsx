@@ -150,7 +150,8 @@ const MoreMenu: React.FC<MoreMenuProps> = ({
           </MenuItem>
         )}
 
-        {onReply && data.answer_required && (
+        {/* {onReply && data.answer_required && ( */}
+        {onReply && (
           <MenuItem
             onClick={() => {
               onReply(data);
