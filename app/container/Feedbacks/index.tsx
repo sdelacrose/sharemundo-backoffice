@@ -12,6 +12,7 @@ import { FeedbackColumnDefs } from "@/app/const/GridTable/ColDef";
 import toast from "react-hot-toast";
 import ReplyModal from "@/app/components/Modals/ReplyModal";
 import FeedbackDrawer from "@/app/components/Drawers/FeedbackDrawer";
+import { apiCall } from "@/app/utils/APIUtils";
 
 export const feedbacksBreadcrumb = [
   { title: "Feedbacks", icon: FeedbackIconBlack },
@@ -30,7 +31,7 @@ const Feedbacks: React.FC = () => {
   const [isReplyModalOpen, setIsReplyModalOpen] = useState(false);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
-  const pageSize = 10;
+  const PAGE_SIZE = 10;
 
   const onView = (data: any) => {
     setSelectedFeedback(data);
@@ -50,22 +51,12 @@ const Feedbacks: React.FC = () => {
     if (!selectedFeedback?.id) return;
 
     try {
-      const authToken = await getAuthToken();
-      const response = await fetch(
-        `https://development.api.sharemundolinks.com/api/user/feedback/${selectedFeedback.id}/respond/`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${authToken}`,
-          },
-          body: JSON.stringify({ admin_response: replyText }),
-        }
+      await apiCall(
+        `/admin-dashboard/feedback/${selectedFeedback.id}/respond`,
+        "POST",
+        { admin_response: replyText }
       );
 
-      if (!response.ok) {
-        throw new Error("Failed to submit reply");
-      }
       getFeedbacks(selectedStatus, 1);
       setCurrentPage(1);
       toast.success("Reply submitted successfully");
@@ -76,24 +67,13 @@ const Feedbacks: React.FC = () => {
   };
 
   const onMoveToIncident = async (data: any) => {
-    console.log("Moving to incident:", data);
     try {
-      const authToken = await getAuthToken();
-      const response = await fetch(
-        `https://development.api.sharemundolinks.com/api/user/feedback/${data.id}/update_status/`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${authToken}`,
-          },
-          body: JSON.stringify({ status: "incident_created" }),
-        }
+      await apiCall(
+        `/admin-dashboard/feedback/${data.id}/update-status`,
+        "POST",
+        { status: "incident_created" }
       );
 
-      if (!response.ok) {
-        throw new Error("Failed to update status to incident_created");
-      }
       getFeedbacks(selectedStatus, 1);
       setCurrentPage(1);
       toast.success("Moved to incident");
@@ -105,22 +85,12 @@ const Feedbacks: React.FC = () => {
 
   const onMoveToImprovement = async (data: any) => {
     try {
-      const authToken = await getAuthToken();
-      const response = await fetch(
-        `https://development.api.sharemundolinks.com/api/user/feedback/${data.id}/update_status/`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${authToken}`,
-          },
-          body: JSON.stringify({ status: "improvement_created" }),
-        }
+      await apiCall(
+        `/admin-dashboard/feedback/${data.id}/update-status`,
+        "POST",
+        { status: "improvement_created" }
       );
 
-      if (!response.ok) {
-        throw new Error("Failed to update status to improvement_created");
-      }
       getFeedbacks(selectedStatus, 1);
       setCurrentPage(1);
       toast.success("Moved to improvement");
@@ -132,22 +102,12 @@ const Feedbacks: React.FC = () => {
 
   const onClose = async (data: any) => {
     try {
-      const authToken = await getAuthToken();
-      const response = await fetch(
-        `https://development.api.sharemundolinks.com/api/user/feedback/${data.id}/update_status/`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${authToken}`,
-          },
-          body: JSON.stringify({ status: "closed" }),
-        }
+      await apiCall(
+        `/admin-dashboard/feedback/${data.id}/update-status`,
+        "POST",
+        { status: "closed" }
       );
 
-      if (!response.ok) {
-        throw new Error("Failed to update status to closed");
-      }
       getFeedbacks(selectedStatus, 1);
       setCurrentPage(1);
       toast.success("Feedback closed");
@@ -159,22 +119,12 @@ const Feedbacks: React.FC = () => {
 
   const onArchive = async (data: any) => {
     try {
-      const authToken = await getAuthToken();
-      const response = await fetch(
-        `https://development.api.sharemundolinks.com/api/user/feedback/${data.id}/update_status/`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${authToken}`,
-          },
-          body: JSON.stringify({ status: "archived" }),
-        }
+      await apiCall(
+        `/admin-dashboard/feedback/${data.id}/update-status`,
+        "POST",
+        { status: "archived" }
       );
 
-      if (!response.ok) {
-        throw new Error("Failed to update status to archived");
-      }
       getFeedbacks(selectedStatus, 1);
       setCurrentPage(1);
       toast.success("Feedback archived");
@@ -204,32 +154,18 @@ const Feedbacks: React.FC = () => {
         authToken = token;
       }
 
-      const url = new URL(
-        "https://development.api.sharemundolinks.com/api/user/feedback/"
+      const res = await apiCall(
+        `/admin-dashboard/feedback?page=${page}&page_size=${PAGE_SIZE}&status=${status}`,
+        "GET"
       );
-      url.searchParams.append("page", page.toString());
-      url.searchParams.append("page_size", pageSize.toString());
-      if (status) {
-        url.searchParams.append("status", status);
-      }
 
-      const response = await fetch(url.toString(), {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${authToken}`,
-        },
-      });
-
-      if (!response.ok) {
+      if (!res) {
         throw new Error("Failed to fetch feedbacks");
       }
 
-      const res = await response.json();
-
       if (res && res.results) {
         setFeedbackData(res.results);
-        setTotalPages(Math.ceil(res.count / pageSize));
+        setTotalPages(Math.ceil(res.count / PAGE_SIZE));
         setNextPageUrl(res.next || "");
         setPreviousPageUrl(res.previous || "");
       }
