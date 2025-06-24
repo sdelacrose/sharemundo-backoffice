@@ -2,7 +2,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Box, CircularProgress, Tab, Tabs, Typography } from "@mui/material";
 import Header from "@/app/components/common/Header";
-import { FeedbackIconBlack } from "@/app/assets/icons";
+import { FeedbackBlack } from "@/app/assets/icons";
 import AgGridServerSideTable from "@/app/ag-grid/AgGridServerSideTable";
 import { SidebarContext } from "@/app/(pages)/layout";
 import { FEEDBACK_STATUS_OPTIONS } from "@/app/constants";
@@ -14,7 +14,7 @@ import FeedbackDrawer from "@/app/components/Drawers/FeedbackDrawer";
 import { apiCall } from "@/app/utils/APIUtils";
 
 export const feedbacksBreadcrumb = [
-  { title: "Feedbacks", icon: FeedbackIconBlack },
+  { title: "Feedbacks", icon: FeedbackBlack },
 ];
 
 const Feedbacks: React.FC = () => {
@@ -148,7 +148,6 @@ const Feedbacks: React.FC = () => {
     setLoading(true);
 
     try {
-
       const res = await apiCall(
         `/admin-dashboard/feedback?page=${page}&page_size=${PAGE_SIZE}&status=${status}`,
         "GET"
@@ -196,6 +195,23 @@ const Feedbacks: React.FC = () => {
     }
   };
 
+  const handleFormSubmit = async (data: { id: number; status: string }) => {
+    try {
+      await apiCall(
+        `/admin-dashboard/feedback/${data.id}/update-status`,
+        "POST",
+        { status: data.status }
+      );
+
+      getFeedbacks(selectedStatus, 1);
+      setCurrentPage(1);
+      toast.success("Feedback updated successfully");
+    } catch (error) {
+      toast.error("Error updating feedback");
+      console.error("Error updating feedback:", error);
+    }
+  };
+
   if (context === undefined) {
     return <div>Error: Sidebar context is undefined!</div>;
   }
@@ -224,12 +240,10 @@ const Feedbacks: React.FC = () => {
             padding: "1rem",
             borderRadius: "8px",
             marginBottom: "1rem",
-            marginTop: "1rem"
+            marginTop: "1rem",
           }}
         >
-          <Typography variant="h2" >
-            Feedbacks
-          </Typography>
+          <Typography variant="h2">Feedbacks</Typography>
         </Box>
 
         <Tabs
@@ -288,7 +302,8 @@ const Feedbacks: React.FC = () => {
           open={isDrawerOpen}
           onClose={() => setIsDrawerOpen(false)}
           data={selectedFeedback}
-          onSave={() => {
+          onSave={(data) => {
+            handleFormSubmit(data);
             setIsDrawerOpen(false);
             getFeedbacks(selectedStatus, 1);
             setCurrentPage(1);
