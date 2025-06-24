@@ -41,7 +41,11 @@ const FeedbackForm: React.FC<FeedbackFormProps> = ({
   });
 
   const submitForm = (formValues: any) => {
-    onSave(formValues);
+    const wasStatusUpdated = formValues.status !== data.status;
+
+    if (wasStatusUpdated) {
+      onSave({ id: data.id, status: formValues.status });
+    }
   };
 
   const handleFileDownload = (url: string, fileName?: string) => {
