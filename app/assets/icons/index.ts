@@ -49,8 +49,6 @@ import BlockedUsers from "./BlockedUsers.svg";
 import ActiveUsers from "./ActiveUsers.svg";
 import FeedbackIcon from "./FeedbackIcon.svg";
 import FeedbackIconBlack from "./FeedbackIconBlack.svg";
-import FeedbackWhite from "./FeedbackWhite.svg";
-import FeedbackBlack from "./FeedbackBlack.svg";
 
 export {
   Card,
@@ -104,6 +102,4 @@ export {
   ActiveUsers,
   FeedbackIcon,
   FeedbackIconBlack,
-  FeedbackWhite,
-  FeedbackBlack,
 };
