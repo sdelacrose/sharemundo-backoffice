@@ -159,6 +159,7 @@ const Feedbacks: React.FC = () => {
 
       if (res && res.results) {
         setFeedbackData(res.results);
+        setSelectedStatus("");
         setTotalPages(Math.ceil(res.count / PAGE_SIZE));
         setNextPageUrl(res.next || "");
         setPreviousPageUrl(res.previous || "");
