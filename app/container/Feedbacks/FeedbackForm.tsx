@@ -331,18 +331,6 @@ const FeedbackForm: React.FC<FeedbackFormProps> = ({
             gap: 2,
           }}
         >
-          <CustomButton
-            variant="contained"
-            sx={{
-              backgroundColor: "#E4E7EC",
-              color: "black",
-              "&:hover": { backgroundColor: "#E4E7EC" },
-            }}
-            onClick={onCancel}
-          >
-            Cancel
-          </CustomButton>
-
           {!isClosed && (
             <CustomButton
               type="submit"
@@ -356,6 +344,17 @@ const FeedbackForm: React.FC<FeedbackFormProps> = ({
               Save
             </CustomButton>
           )}
+          <CustomButton
+            variant="contained"
+            sx={{
+              backgroundColor: "#E4E7EC",
+              color: "black",
+              "&:hover": { backgroundColor: "#E4E7EC" },
+            }}
+            onClick={onCancel}
+          >
+            Cancel
+          </CustomButton>
         </Box>
       </Box>
     </Box>
