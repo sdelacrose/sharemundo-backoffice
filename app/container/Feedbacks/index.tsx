@@ -58,6 +58,7 @@ const Feedbacks: React.FC = () => {
 
       getFeedbacks(selectedStatus, 1);
       setCurrentPage(1);
+      setSelectedStatus("");
       toast.success("Reply submitted successfully");
     } catch (error) {
       toast.error("Failed to submit reply");
@@ -75,6 +76,7 @@ const Feedbacks: React.FC = () => {
 
       getFeedbacks(selectedStatus, 1);
       setCurrentPage(1);
+      setSelectedStatus("");
       toast.success("Moved to incident");
     } catch (error) {
       toast.error("Error moving to incident");
@@ -92,6 +94,7 @@ const Feedbacks: React.FC = () => {
 
       getFeedbacks(selectedStatus, 1);
       setCurrentPage(1);
+      setSelectedStatus("");
       toast.success("Moved to improvement");
     } catch (error) {
       toast.error("Error moving to improvement");
@@ -109,6 +112,7 @@ const Feedbacks: React.FC = () => {
 
       getFeedbacks(selectedStatus, 1);
       setCurrentPage(1);
+      setSelectedStatus("");
       toast.success("Feedback closed");
     } catch (error) {
       toast.error("Error closing feedback");
@@ -126,6 +130,7 @@ const Feedbacks: React.FC = () => {
 
       getFeedbacks(selectedStatus, 1);
       setCurrentPage(1);
+      setSelectedStatus("");
       toast.success("Feedback archived");
     } catch (error) {
       toast.error("Error archiving feedback:");
@@ -159,7 +164,6 @@ const Feedbacks: React.FC = () => {
 
       if (res && res.results) {
         setFeedbackData(res.results);
-        setSelectedStatus("");
         setTotalPages(Math.ceil(res.count / PAGE_SIZE));
         setNextPageUrl(res.next || "");
         setPreviousPageUrl(res.previous || "");
