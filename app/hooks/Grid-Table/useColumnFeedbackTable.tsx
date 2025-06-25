@@ -105,8 +105,14 @@ const useColumnFeedbackTable = (
             ...col,
             field: "status",
             headerName: "Status",
-            cellRenderer: (params: { value: string }) =>
-              params.value ? params.value : "-",
+            cellRenderer: (params: { value: string }) => {
+              if (!params.value) return "-";
+
+              return params.value
+                .split("_")
+                .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+                .join(" ");
+            },
             minWidth: 130,
           };
 
