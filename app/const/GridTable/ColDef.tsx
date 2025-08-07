@@ -154,6 +154,7 @@ export const userManagementColumnDefs = [
 
 export const FeedbackColumnDefs = [
   { field: "id" },
+  { field: "created_at" },
   { field: "company_profile" },
   { field: "project" },
   { field: "solution_name" },
@@ -163,10 +164,10 @@ export const FeedbackColumnDefs = [
   { field: "description" },
   { field: "status" },
   { field: "answer_required" },
+  { field: "answer_provided" },
   { field: "responses" },
-  { field: "created_at" },
   { field: "attachments" },
-  { field: "actions" },
+  { field: "actions", sortable: false },
 ];
 
 export const internalColumnDefs = (
@@ -211,7 +212,6 @@ export const internalColumnDefs = (
         <Button
           variant="text"
           color="primary"
-       
           onClick={() => handleViewClick(data)}
         >
           View
