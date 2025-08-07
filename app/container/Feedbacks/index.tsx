@@ -29,6 +29,8 @@ const Feedbacks: React.FC = () => {
   const [selectedFeedback, setSelectedFeedback] = useState<any | null>(null);
   const [isReplyModalOpen, setIsReplyModalOpen] = useState(false);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [sortField, setSortField] = useState("id");
+  const [isInitialLoadDone, setIsInitialLoadDone] = useState(false);
 
   const PAGE_SIZE = 10;
 
@@ -56,7 +58,7 @@ const Feedbacks: React.FC = () => {
         { admin_response: replyText }
       );
 
-      getFeedbacks(selectedStatus, 1);
+      getFeedbacks(selectedStatus, 1, sortField);
       setCurrentPage(1);
       setSelectedStatus("");
       toast.success("Reply submitted successfully");
@@ -74,7 +76,7 @@ const Feedbacks: React.FC = () => {
         { status: "incident_created" }
       );
 
-      getFeedbacks(selectedStatus, 1);
+      getFeedbacks(selectedStatus, 1, sortField);
       setCurrentPage(1);
       setSelectedStatus("");
       toast.success("Moved to incident");
@@ -92,7 +94,7 @@ const Feedbacks: React.FC = () => {
         { status: "improvement_created" }
       );
 
-      getFeedbacks(selectedStatus, 1);
+      getFeedbacks(selectedStatus, 1, sortField);
       setCurrentPage(1);
       setSelectedStatus("");
       toast.success("Moved to improvement");
@@ -110,7 +112,7 @@ const Feedbacks: React.FC = () => {
         { status: "closed" }
       );
 
-      getFeedbacks(selectedStatus, 1);
+      getFeedbacks(selectedStatus, 1, sortField);
       setCurrentPage(1);
       setSelectedStatus("");
       toast.success("Feedback closed");
@@ -128,7 +130,7 @@ const Feedbacks: React.FC = () => {
         { status: "archived" }
       );
 
-      getFeedbacks(selectedStatus, 1);
+      getFeedbacks(selectedStatus, 1, sortField);
       setCurrentPage(1);
       setSelectedStatus("");
       toast.success("Feedback archived");
@@ -149,12 +151,12 @@ const Feedbacks: React.FC = () => {
     onReply
   );
 
-  const getFeedbacks = async (status = "", page = 1) => {
+  const getFeedbacks = async (status = "", page = 1, orderField = "") => {
     setLoading(true);
 
     try {
       const res = await apiCall(
-        `/admin-dashboard/feedback?page=${page}&page_size=${PAGE_SIZE}&status=${status}`,
+        `/admin-dashboard/feedback?page=${page}&page_size=${PAGE_SIZE}&status=${status}&ordering=${orderField}`,
         "GET"
       );
 
@@ -167,6 +169,7 @@ const Feedbacks: React.FC = () => {
         setTotalPages(Math.ceil(res.count / PAGE_SIZE));
         setNextPageUrl(res.next || "");
         setPreviousPageUrl(res.previous || "");
+        setIsInitialLoadDone(true);
       }
     } catch (error) {
       toast.error("Error fetching feedbacks");
@@ -176,18 +179,19 @@ const Feedbacks: React.FC = () => {
     }
   };
   useEffect(() => {
-    getFeedbacks(selectedStatus, 1);
+    getFeedbacks(selectedStatus, 1, sortField);
     setCurrentPage(1);
-  }, [selectedStatus]);
+  }, [selectedStatus, sortField]);
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
     setSelectedStatus(newValue);
+    setIsInitialLoadDone(false);
   };
 
   const handleNextPage = () => {
     if (nextPageUrl) {
       const nextPage = currentPage + 1;
-      getFeedbacks(selectedStatus, nextPage);
+      getFeedbacks(selectedStatus, nextPage, sortField);
       setCurrentPage(nextPage);
     }
   };
@@ -195,7 +199,7 @@ const Feedbacks: React.FC = () => {
   const handlePreviousPage = () => {
     if (previousPageUrl) {
       const prevPage = currentPage - 1;
-      getFeedbacks(selectedStatus, prevPage);
+      getFeedbacks(selectedStatus, prevPage, sortField);
       setCurrentPage(prevPage);
     }
   };
@@ -208,12 +212,35 @@ const Feedbacks: React.FC = () => {
         { status: data.status }
       );
 
-      getFeedbacks(selectedStatus, 1);
+      getFeedbacks(selectedStatus, 1, sortField);
       setCurrentPage(1);
       toast.success("Feedback updated successfully");
     } catch (error) {
       toast.error("Error updating feedback");
       console.error("Error updating feedback:", error);
+    }
+  };
+
+  const onColumnHeaderClicked = (event: any) => {
+    let field = event?.column?.getColDef().field;
+    const sortDirection = event?.column?.getSort();
+
+    if (field === "company_profile") {
+      field = "company_profile__company_name";
+    } else if (field === "project") {
+      field = "project_name";
+    } else if (field === "user") {
+      field = "user_full_name";
+    } else if (field === "responses") {
+      field = "responded_by_name";
+    }
+
+    if (sortDirection === "desc") {
+      setSortField(`-${field}`);
+    } else if (sortDirection === "asc") {
+      setSortField(field);
+    } else {
+      setSortField("id");
     }
   };
 
@@ -263,7 +290,7 @@ const Feedbacks: React.FC = () => {
           ))}
         </Tabs>
 
-        {loading ? (
+        {!isInitialLoadDone && loading ? (
           <Box display="flex" justifyContent="center" mt={4}>
             <CircularProgress />
           </Box>
@@ -283,7 +310,7 @@ const Feedbacks: React.FC = () => {
             <AgGridServerSideTable
               rowData={feedbackData}
               columnDefs={feedbackCols}
-              height={500}
+              height={`calc(100vh - 400px)`}
               currentPage={currentPage}
               totalPages={totalPages}
               nextPageUrl={nextPageUrl}
@@ -291,6 +318,8 @@ const Feedbacks: React.FC = () => {
               onNextPage={handleNextPage}
               onPreviousPage={handlePreviousPage}
               loading={loading}
+              className="feedback-grid-wrapper"
+              onColumnHeaderClicked={onColumnHeaderClicked}
             />
           </Box>
         )}
@@ -310,7 +339,7 @@ const Feedbacks: React.FC = () => {
           onSave={(data) => {
             handleFormSubmit(data);
             setIsDrawerOpen(false);
-            getFeedbacks(selectedStatus, 1);
+            getFeedbacks(selectedStatus, 1, sortField);
             setCurrentPage(1);
           }}
         />

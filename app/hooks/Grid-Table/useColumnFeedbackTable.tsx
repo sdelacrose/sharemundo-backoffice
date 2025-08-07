@@ -28,16 +28,20 @@ const useColumnFeedbackTable = (
             field: "id",
             headerName: "ID",
             minWidth: 80,
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            comparator: (_a: any, _b: any): number => 0,
           };
 
         case "company_profile":
           return {
             ...col,
             field: "company_profile",
-            headerName: "Company",
+            headerName: "Created By",
             valueGetter: (params: ValueGetterParams) =>
-              params.data?.company_profile?.name,
+              params.data?.company_profile?.name || "-",
             minWidth: 150,
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            comparator: (_a: any, _b: any): number => 0,
           };
 
         case "project":
@@ -48,6 +52,8 @@ const useColumnFeedbackTable = (
             valueGetter: (params: ValueGetterParams) =>
               params.data?.project ? params.data?.project?.name : "-",
             minWidth: 150,
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            comparator: (_a: any, _b: any): number => 0,
           };
 
         case "solution_name":
@@ -56,6 +62,8 @@ const useColumnFeedbackTable = (
             field: "solution_name",
             headerName: "Solution Name",
             minWidth: 180,
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            comparator: (_a: any, _b: any): number => 0,
           };
 
         case "user":
@@ -65,6 +73,8 @@ const useColumnFeedbackTable = (
             headerName: "User",
             valueGetter: (params: ValueGetterParams) => params.data?.user?.name,
             minWidth: 150,
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            comparator: (_a: any, _b: any): number => 0,
           };
 
         case "project_team_role":
@@ -77,6 +87,8 @@ const useColumnFeedbackTable = (
                 ? params.data?.project_team_role
                 : "-",
             minWidth: 150,
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            comparator: (_a: any, _b: any): number => 0,
           };
 
         case "feedback_type":
@@ -85,6 +97,8 @@ const useColumnFeedbackTable = (
             field: "feedback_type",
             headerName: "Type",
             minWidth: 120,
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            comparator: (_a: any, _b: any): number => 0,
           };
 
         case "description":
@@ -98,6 +112,8 @@ const useColumnFeedbackTable = (
             },
             flex: 1,
             minWidth: 200,
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            comparator: (_a: any, _b: any): number => 0,
           };
 
         case "status":
@@ -114,6 +130,8 @@ const useColumnFeedbackTable = (
                 .join(" ");
             },
             minWidth: 130,
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            comparator: (_a: any, _b: any): number => 0,
           };
 
         case "answer_required":
@@ -124,23 +142,39 @@ const useColumnFeedbackTable = (
             valueGetter: (params: ValueGetterParams) =>
               params.data?.answer_required ? "Yes" : "No",
             minWidth: 130,
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            comparator: (_a: any, _b: any): number => 0,
+          };
+        case "answer_provided":
+          return {
+            ...col,
+            field: "answer_provided",
+            headerName: "Answer Provided",
+            valueGetter: (params: ValueGetterParams) =>
+              params.data?.answer_provided ? "Yes" : "No",
+            minWidth: 130,
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            comparator: (_a: any, _b: any): number => 0,
           };
 
         case "responses":
           return {
             ...col,
             field: "responses",
-            headerName: "Replies",
-            valueFormatter: (params: ValueFormatterParams) =>
-              Array.isArray(params.value) && params.value.length > 0
-                ? params.value.map((r: any) => r.response).join(", ")
-                : "-",
+            headerName: "Assignee",
+            valueFormatter: (params: ValueFormatterParams) => {
+              return Array.isArray(params.value) && params.value.length > 0
+                ? params.value.map((r: any) => r.responded_by.name).join(", ")
+                : "-";
+            },
             cellStyle: {
               wordWrap: "break-word",
               wordBreak: "break-word",
             },
             minWidth: 200,
             flex: 1,
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            comparator: (_a: any, _b: any): number => 0,
           };
 
         case "created_at":
@@ -151,6 +185,8 @@ const useColumnFeedbackTable = (
             valueFormatter: (params: ValueFormatterParams) =>
               DateFormat(params.value),
             minWidth: 170,
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            comparator: (_a: any, _b: any): number => 0,
           };
 
         case "attachments":
@@ -161,6 +197,8 @@ const useColumnFeedbackTable = (
             valueGetter: (params: ValueGetterParams) =>
               params.data?.attachments?.length || 0,
             minWidth: 130,
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            comparator: (_a: any, _b: any): number => 0,
           };
 
         case "actions":
