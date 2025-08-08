@@ -18,6 +18,58 @@
   /* font-family: "Mulish", sans-serif; */
 }
 
+.feedback-grid-wrapper .ag-theme-material {
+  --ag-row-hover-color: transparent !important;
+}
+
+.feedback-grid-wrapper .ag-theme-material .ag-cell {
+  pointer-events: auto;
+}
+
+.feedback-grid-wrapper .ag-theme-material .ag-row {
+  pointer-events: auto;
+}
+
+.feedback-grid-wrapper .ag-theme-material .ag-row:hover {
+  background-color: transparent !important;
+}
+
+.feedback-grid-wrapper .ag-theme-material .ag-cell:hover {
+  background-color: transparent !important;
+}
+
+.feedback-grid-wrapper .ag-row-hover {
+  background-color: transparent !important;
+}
+
+.feedback-grid-wrapper .ag-theme-material .ag-row .ag-row-hover {
+  background-color: transparent !important;
+}
+
+.feedback-grid-wrapper .ag-theme-material .ag-row[class*="ag-row-hover"] {
+  background-color: transparent !important;
+}
+
+.feedback-grid-wrapper .ag-theme-material .ag-row[style*="background"] {
+  background-color: transparent !important;
+}
+
+.feedback-grid-wrapper .ag-theme-material .ag-row[style*="background-color"] {
+  background-color: transparent !important;
+}
+
+.feedback-row-no-hover {
+  background-color: transparent !important;
+}
+
+.feedback-row-no-hover:hover {
+  background-color: transparent !important;
+}
+
+.feedback-row-no-hover.ag-row-hover {
+  background-color: transparent !important;
+}
+
 .ag-checkbox-input-wrapper {
   font-size: 16px;
 }
@@ -79,6 +131,22 @@
 .ag-theme-material .ag-row-hover {
   /* border-left: 10px solid red; */
   background-color: green;
+}
+
+.feedback-grid-wrapper .ag-theme-material .ag-row {
+  cursor: default;
+}
+
+.feedback-grid-wrapper .ag-theme-material .ag-row-hover {
+  background-color: transparent !important;
+}
+
+.feedback-grid-wrapper .ag-theme-material .ag-row.ag-row-hover {
+  background-color: transparent !important;
+}
+
+.feedback-grid-wrapper .ag-theme-material .ag-row:hover {
+  background-color: transparent !important;
 }
 
 .ag-paging-panel {
