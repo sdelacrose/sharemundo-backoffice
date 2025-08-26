@@ -58,7 +58,7 @@ const AgGridServerSideTable: React.FC<any> = ({
           rowSelection={rowSelection ? rowSelectionMemo : undefined}
           onRowSelected={handleRowSelection}
           onColumnHeaderClicked={onColumnHeaderClicked}
-          getRowClass={(params) => {
+          getRowClass={() => {
             if (className === "feedback-grid-wrapper") {
               return "feedback-row-no-hover";
             }
