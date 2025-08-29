@@ -152,6 +152,24 @@ export const userManagementColumnDefs = [
   { field: "actions", headerName: "Actions" },
 ];
 
+export const FeedbackColumnDefs = [
+  { field: "id" },
+  { field: "created_at" },
+  { field: "company_profile" },
+  { field: "project" },
+  { field: "solution_name" },
+  { field: "user" },
+  { field: "project_team_role" },
+  { field: "feedback_type" },
+  { field: "description" },
+  { field: "status" },
+  { field: "answer_required" },
+  { field: "answer_provided" },
+  { field: "responses" },
+  { field: "attachments" },
+  { field: "actions", sortable: false },
+];
+
 export const internalColumnDefs = (
   handleViewClick,
   setSelectedUserId,
@@ -194,7 +212,6 @@ export const internalColumnDefs = (
         <Button
           variant="text"
           color="primary"
-       
           onClick={() => handleViewClick(data)}
         >
           View

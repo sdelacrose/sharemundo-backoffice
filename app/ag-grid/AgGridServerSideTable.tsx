@@ -22,6 +22,8 @@ const AgGridServerSideTable: React.FC<any> = ({
   onNextPage,
   onPreviousPage,
   loading,
+  className = "",
+  onColumnHeaderClicked = () => {},
 }) => {
   const gridRef = useRef<any>(null);
 
@@ -34,7 +36,7 @@ const AgGridServerSideTable: React.FC<any> = ({
   }, []);
 
   return (
-    <Box sx={{ width: width || "100%" }}>
+    <Box className={className} sx={{ width: width || "100%" }}>
       <div
         className="ag-theme-material"
         style={{
@@ -55,6 +57,13 @@ const AgGridServerSideTable: React.FC<any> = ({
           onRowClicked={onRowClicked}
           rowSelection={rowSelection ? rowSelectionMemo : undefined}
           onRowSelected={handleRowSelection}
+          onColumnHeaderClicked={onColumnHeaderClicked}
+          getRowClass={() => {
+            if (className === "feedback-grid-wrapper") {
+              return "feedback-row-no-hover";
+            }
+            return "";
+          }}
         />
       </div>
 

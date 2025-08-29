@@ -3,6 +3,7 @@ import React from "react";
 import {
     Billings,
     Dashboard,
+    FeedbackWhite,
     ManageCustomers,
     ManageUsers, Promotion,
     SolutionLicenses,
@@ -47,5 +48,10 @@ export const sidebarItems: SidebarItem[] = [
         label: "Promo Code",
         icon: Promotion,
         href: "/promo-code",
+    },
+    {
+        label: "Feedbacks",
+        icon: FeedbackWhite,
+        href: "/feedbacks",
     },
 ];
