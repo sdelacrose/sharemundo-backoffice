@@ -9,7 +9,7 @@ export const getAuthToken = () => {
     !decodedToken?.exp ||
     decodedToken?.exp < Date.now() / 1000
   ) {
-    window.location.href = '/api/auth/logout';
+    window.location.href = '/unauthorized';
   }
   return authToken;
 };

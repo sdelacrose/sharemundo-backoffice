@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.scss";
 import CustomLayout from "./components/CustomLayout";
+import ErrorBoundary from "./components/common/ErrorBoundary";
 
 export const metadata: Metadata = {
   title: "Backoffice",
@@ -19,7 +20,9 @@ export default function RootLayout({
         <meta name="description" content={String(metadata.description)} />
       </head>
       <body>
-        <CustomLayout>{children}</CustomLayout>
+        <ErrorBoundary>
+          <CustomLayout>{children}</CustomLayout>
+        </ErrorBoundary>
       </body>
     </html>
   );
