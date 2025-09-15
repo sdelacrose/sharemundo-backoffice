@@ -45,7 +45,8 @@ export const apiCall = async (
       (response.status === 401 || response.status === 403) &&
       !endpoint.includes("fetch-details?sharemundo_links_id")
     ) {
-      window.location.href = "/api/auth/logout";
+      // Route to unauthorized page instead of logout
+      window.location.href = "/unauthorized";
     }
 
     if (response.status === 204) {

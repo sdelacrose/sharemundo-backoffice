@@ -16,7 +16,7 @@ export const middleware = async (req: NextRequest) => {
     error === 'unauthorized' &&
     errorDescription?.includes('user is blocked')
   ) {
-    url.pathname = '/blocked';
+    url.pathname = '/unauthorized';
     return NextResponse.redirect(url);
   }
 
