@@ -123,7 +123,7 @@ const Unauthorized = () => {
             fontSize: '16px',
           }}
         >
-          You don't have access to this resource. Please login with a different account.
+          You don&apos;t have access to this resource. Please login with a different account.
         </p>
 
         <button
