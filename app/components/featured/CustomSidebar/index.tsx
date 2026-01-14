@@ -8,6 +8,7 @@ import { Box } from "@mui/material";
 import logoMin from "../../../assets/images/logoMin.png";
 import { Dropdown, HambergerIcon } from "@/app/assets/icons";
 import LogoPic from "../../../assets/images/SharemundoLinks.png"
+import versionData from "../../../../version.json";
 
 interface SideBarProps {
   isCollapsed: boolean;
@@ -32,14 +33,13 @@ const SideBar: React.FC<SideBarProps> = ({ isCollapsed, toggleSidebar }) => {
   };
   return (
     <div
-      className={`${styles.sideBar} ${
-        isCollapsed ? styles.collapsed : styles.expanded
-      }`}
+      className={`${styles.sideBar} ${isCollapsed ? styles.collapsed : styles.expanded
+        }`}
     >
       <div
         className={styles.sideBarContainer}
         style={
-          !isCollapsed ? { alignItems: "flex-start" } : { alignItems: "center" }
+          !isCollapsed ? { alignItems: "flex-start", height: "100%" } : { alignItems: "center" }
         }
       >
         {isCollapsed ? (
@@ -135,6 +135,20 @@ const SideBar: React.FC<SideBarProps> = ({ isCollapsed, toggleSidebar }) => {
             )}
           </div>
         ))}
+
+        {!isCollapsed &&
+          <Box
+            sx={{
+              fontSize: "13px",
+              opacity: 0.7,
+              color: "white",
+              textAlign: "center",
+              marginTop: "auto",
+              width: "100%",
+            }}
+          >
+            {`v${versionData.version}`}
+          </Box>}
       </div>
     </div>
   );
