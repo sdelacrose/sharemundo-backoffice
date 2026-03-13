@@ -7,7 +7,6 @@ import "ag-grid-community/styles/ag-theme-alpine.css";
 import { SidebarContext } from "@/app/(pages)/layout";
 import { apiCall } from "@/app/utils/APIUtils";
 import Header from "@/app/components/common/Header";
-import Loader from "@/app/components/common/Loader";
 
 import { promoCodeBreadcrumb } from "../Dashboard/data";
 import AgGridTable from "@/app/ag-grid";
