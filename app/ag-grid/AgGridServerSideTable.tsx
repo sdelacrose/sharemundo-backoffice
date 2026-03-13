@@ -1,7 +1,7 @@
 import React, { useMemo, useRef } from "react";
 import { AgGridReact } from "ag-grid-react";
 import "./index.css";
-import { Box, Typography } from "@mui/material";
+import { Box, Typography, CircularProgress } from "@mui/material";
 import NavButton from "./NavButton";
 import { RowSelectionOptions } from "ag-grid-community";
 
@@ -36,7 +36,26 @@ const AgGridServerSideTable: React.FC<any> = ({
   }, []);
 
   return (
-    <Box className={className} sx={{ width: width || "100%" }}>
+    <Box className={className} sx={{ width: width || "100%", position: "relative" }}>
+      {loading && (
+        <Box
+          sx={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            backgroundColor: "rgba(255, 255, 255, 0.8)",
+            zIndex: 1000,
+            borderRadius: "10px",
+          }}
+        >
+          <CircularProgress />
+        </Box>
+      )}
       <div
         className="ag-theme-material"
         style={{
