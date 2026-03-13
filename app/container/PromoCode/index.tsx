@@ -11,6 +11,7 @@ import Loader from "@/app/components/common/Loader";
 
 import { promoCodeBreadcrumb } from "../Dashboard/data";
 import AgGridTable from "@/app/ag-grid";
+import AgGridServerSideTable from "@/app/ag-grid/AgGridServerSideTable";
 import dayjs from "dayjs";
 import { getCouponColumns } from "./couponColumnDefs";
 import { Coupon } from "@/app/types/CouponProps";
@@ -29,22 +30,43 @@ const CouponManagement = () => {
   const [formData, setFormData] = useState<Partial<Coupon>>({});
   const [promoFormData, setPromoFormData] = useState<any>({});
   const [loading, setLoading] = useState(true);
+  const [hasNextPage, setHasNextPage] = useState(false);
+  const [hasPreviousPage, setHasPreviousPage] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
 
   const selectedPromoCodes: any =
     selectedCoupon &&
     coupons.find((coupon) => coupon.id === selectedCoupon?.id)?.promo_codes;
 
-  const fetchCoupons = useCallback(async (url = "/package-license/coupon/") => {
+  const fetchCoupons = useCallback(async (page: number = 1) => {
     try {
       setLoading(true);
+      const url = `/package-license/coupon/?page=${page}`;
       const data = await apiCall(url, "GET");
-      setCoupons(data.results);
+      setCoupons(data?.results || []);
+      setHasNextPage(!!data?.next);
+      setHasPreviousPage(!!data?.previous);
+      setTotalPages(Math.ceil((data?.count || 0) / 10));
+      setCurrentPage(page);
     } catch (error) {
       console.error("Error fetching coupons:", error);
     } finally {
       setLoading(false);
     }
   }, []);
+
+  const handleNextPage = useCallback(() => {
+    if (!loading && hasNextPage && currentPage < totalPages) {
+      fetchCoupons(currentPage + 1);
+    }
+  }, [loading, hasNextPage, currentPage, totalPages, fetchCoupons]);
+
+  const handlePreviousPage = useCallback(() => {
+    if (!loading && hasPreviousPage && currentPage > 1) {
+      fetchCoupons(currentPage - 1);
+    }
+  }, [loading, hasPreviousPage, currentPage, fetchCoupons]);
 
   useEffect(() => {
     fetchCoupons();
@@ -80,9 +102,9 @@ const CouponManagement = () => {
       toast.success(
         formData.id
           ? "Coupon name updated successfully"
-          : "Coupon created successfully"
+          : "Coupon created successfully",
       );
-      fetchCoupons();
+      fetchCoupons(1);
       setCouponDrawerOpen(false);
     } catch (error) {
       console.error("Error saving coupon:", error);
@@ -98,7 +120,7 @@ const CouponManagement = () => {
     try {
       await apiCall(`/package-license/coupon/${couponId}/`, "DELETE");
       setSelectedCoupon(null);
-      fetchCoupons();
+      fetchCoupons(1);
       toast.success("Coupon deleted successfully");
     } catch (error) {
       console.error("Error deleting coupon:", error);
@@ -119,7 +141,9 @@ const CouponManagement = () => {
       };
 
       await apiCall("/package-license/promo-code/", "POST", payload);
-      if (selectedCoupon) fetchCoupons();
+      if (selectedCoupon) {
+        fetchCoupons(currentPage);
+      }
       setPromoCodeDrawerOpen(false);
       toast.success("Promo code created successfully");
     } catch (error) {
@@ -136,13 +160,13 @@ const CouponManagement = () => {
   };
   const handleChangePromoCodeStatus = async (
     promoCodeId: number,
-    status: boolean
+    status: boolean,
   ) => {
     try {
       await apiCall(`/package-license/promo-code/${promoCodeId}/`, "PATCH", {
         is_active: !status,
       });
-      fetchCoupons();
+      fetchCoupons(currentPage);
       toast.success(`Promo code is ${status ? "inactivated" : "activated"}`);
     } catch (error) {
       console.error("Error editing promo code:", error);
@@ -228,86 +252,84 @@ const CouponManagement = () => {
           </Box>
         </Box>
 
-        {loading ? (
-          <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
-            <Loader />
-          </Box>
-        ) : (
-          <Grid container spacing={3}>
-            <Grid item xs={selectedCoupon ? 7 : 12}>
+        <Grid container spacing={3}>
+          <Grid item xs={selectedCoupon ? 7 : 12}>
+            <Box
+              sx={{
+                borderRadius: "10px",
+                border: "1px solid #E4E7EC",
+                bgcolor: "#FFF",
+                boxShadow: "0px 4px 4px -2px rgba(0, 0, 0, 0.02)",
+                overflow: "hidden",
+              }}
+            >
+              <AgGridServerSideTable
+                rowData={coupons}
+                columnDefs={couponColumns}
+                height={640}
+                currentPage={currentPage}
+                totalPages={totalPages}
+                nextPageUrl={hasNextPage ? "next" : null}
+                previousPageUrl={hasPreviousPage ? "previous" : null}
+                onNextPage={handleNextPage}
+                onPreviousPage={handlePreviousPage}
+                loading={loading}
+              />
+            </Box>
+          </Grid>
+
+          {selectedCoupon && (
+            <Grid item xs={5}>
               <Box
                 sx={{
                   borderRadius: "10px",
                   border: "1px solid #E4E7EC",
                   bgcolor: "#FFF",
                   boxShadow: "0px 4px 4px -2px rgba(0, 0, 0, 0.02)",
-                  overflow: "hidden",
-                  height: "70vh",
                 }}
               >
+                <Stack
+                  direction="row"
+                  justifyContent="space-between"
+                  alignItems="center"
+                  padding={2}
+                >
+                  <Typography fontWeight={600}>
+                    {selectedCoupon.name} Codes
+                  </Typography>
+                  <Button
+                    variant="outlined"
+                    size="small"
+                    onClick={() => {
+                      setPromoFormData({
+                        is_active: true,
+                        currency: "USD",
+                        expires_at: dayjs().add(1, "hour"),
+                      });
+                      setPromoCodeDrawerOpen(true);
+                    }}
+                    sx={{
+                      height: 40,
+                      px: 3,
+                      borderRadius: "8px",
+                      textTransform: "none",
+                      fontWeight: 600,
+                    }}
+                  >
+                    + New Promo Code
+                  </Button>
+                </Stack>
+
                 <AgGridTable
-                  rowData={coupons}
-                  columnDefs={couponColumns}
+                  rowData={selectedPromoCodes}
+                  columnDefs={promoCodeColumns}
                   paginationPageSize={10}
-                  height={640}
+                  height={565}
                 />
               </Box>
             </Grid>
-
-            {selectedCoupon && (
-              <Grid item xs={5}>
-                <Box
-                  sx={{
-                    borderRadius: "10px",
-                    border: "1px solid #E4E7EC",
-                    bgcolor: "#FFF",
-                    boxShadow: "0px 4px 4px -2px rgba(0, 0, 0, 0.02)",
-                    height: "100%",
-                  }}
-                >
-                  <Stack
-                    direction="row"
-                    justifyContent="space-between"
-                    alignItems="center"
-                    padding={2}
-                  >
-                    <Typography fontWeight={600}>
-                      {selectedCoupon.name} Codes
-                    </Typography>
-                    <Button
-                      variant="outlined"
-                      size="small"
-                      onClick={() => {
-                        setPromoFormData({
-                          is_active: true,
-                          currency: "USD",
-                          expires_at: dayjs().add(1, "hour"),
-                        });
-                        setPromoCodeDrawerOpen(true);
-                      }}
-                      sx={{
-                        height: 40,
-                        px: 3,
-                        borderRadius: "8px",
-                        textTransform: "none",
-                        fontWeight: 600,
-                      }}
-                    >
-                      + New Promo Code
-                    </Button>
-                  </Stack>
-
-                  <AgGridTable
-                    rowData={selectedPromoCodes}
-                    columnDefs={promoCodeColumns}
-                    paginationPageSize={10}
-                    height={565}
-                  />
-                </Box>
-              </Grid>
-            )}
-          </Grid>
-        )}
+          )}
+        </Grid>
 
         {/* Coupon Form Drawer */}
         <CouponDrawer
