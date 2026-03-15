@@ -1,5 +1,5 @@
 "use client";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { Box, CircularProgress, Tab, Tabs, Typography } from "@mui/material";
 import Header from "@/app/components/common/Header";
 import { FeedbackBlack } from "@/app/assets/icons";
@@ -10,8 +10,11 @@ import useColumnFeedbackTable from "@/app/hooks/Grid-Table/useColumnFeedbackTabl
 import { FeedbackColumnDefs } from "@/app/const/GridTable/ColDef";
 import toast from "react-hot-toast";
 import ReplyModal from "@/app/components/Modals/ReplyModal";
+import BulkFeedbackActionModal from "@/app/components/Modals/BulkFeedbackActionModal";
 import FeedbackDrawer from "@/app/components/Drawers/FeedbackDrawer";
 import { apiCall } from "@/app/utils/APIUtils";
+import { IRowNode } from "ag-grid-community";
+import CustomButton from "@/app/components/common/CustomButton";
 
 export const feedbacksBreadcrumb = [
   { title: "Feedbacks", icon: FeedbackBlack },
@@ -31,6 +34,9 @@ const Feedbacks: React.FC = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [sortField, setSortField] = useState("id");
   const [isInitialLoadDone, setIsInitialLoadDone] = useState(false);
+  const [selectedRows, setSelectedRows] = useState<any[]>([]);
+  const [isBulkModalOpen, setIsBulkModalOpen] = useState(false);
+  const gridRef = useRef<any>(null);
 
   const PAGE_SIZE = 10;
 
@@ -55,7 +61,7 @@ const Feedbacks: React.FC = () => {
       await apiCall(
         `/admin-dashboard/feedback/${selectedFeedback.id}/respond`,
         "POST",
-        { admin_response: replyText }
+        { admin_response: replyText },
       );
 
       getFeedbacks(selectedStatus, 1, sortField);
@@ -73,7 +79,7 @@ const Feedbacks: React.FC = () => {
       await apiCall(
         `/admin-dashboard/feedback/${data.id}/update-status`,
         "POST",
-        { status: "incident_created" }
+        { status: "incident_created" },
       );
 
       getFeedbacks(selectedStatus, 1, sortField);
@@ -91,7 +97,7 @@ const Feedbacks: React.FC = () => {
       await apiCall(
         `/admin-dashboard/feedback/${data.id}/update-status`,
         "POST",
-        { status: "improvement_created" }
+        { status: "improvement_created" },
       );
 
       getFeedbacks(selectedStatus, 1, sortField);
@@ -109,7 +115,7 @@ const Feedbacks: React.FC = () => {
       await apiCall(
         `/admin-dashboard/feedback/${data.id}/update-status`,
         "POST",
-        { status: "closed" }
+        { status: "closed" },
       );
 
       getFeedbacks(selectedStatus, 1, sortField);
@@ -127,7 +133,7 @@ const Feedbacks: React.FC = () => {
       await apiCall(
         `/admin-dashboard/feedback/${data.id}/update-status`,
         "POST",
-        { status: "archived" }
+        { status: "archived" },
       );
 
       getFeedbacks(selectedStatus, 1, sortField);
@@ -148,7 +154,7 @@ const Feedbacks: React.FC = () => {
     onMoveToImprovement,
     onClose,
     onArchive,
-    onReply
+    onReply,
   );
 
   const getFeedbacks = async (status = "", page = 1, orderField = "") => {
@@ -157,7 +163,7 @@ const Feedbacks: React.FC = () => {
     try {
       const res = await apiCall(
         `/admin-dashboard/feedback?page=${page}&page_size=${PAGE_SIZE}&status=${status}&ordering=${orderField}`,
-        "GET"
+        "GET",
       );
 
       if (!res) {
@@ -186,6 +192,7 @@ const Feedbacks: React.FC = () => {
   const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
     setSelectedStatus(newValue);
     setIsInitialLoadDone(false);
+    handleClearSelection();
   };
 
   const handleNextPage = () => {
@@ -193,6 +200,7 @@ const Feedbacks: React.FC = () => {
       const nextPage = currentPage + 1;
       getFeedbacks(selectedStatus, nextPage, sortField);
       setCurrentPage(nextPage);
+      handleClearSelection();
     }
   };
 
@@ -201,6 +209,7 @@ const Feedbacks: React.FC = () => {
       const prevPage = currentPage - 1;
       getFeedbacks(selectedStatus, prevPage, sortField);
       setCurrentPage(prevPage);
+      handleClearSelection();
     }
   };
 
@@ -209,7 +218,7 @@ const Feedbacks: React.FC = () => {
       await apiCall(
         `/admin-dashboard/feedback/${data.id}/update-status`,
         "POST",
-        { status: data.status }
+        { status: data.status },
       );
 
       getFeedbacks(selectedStatus, 1, sortField);
@@ -241,6 +250,63 @@ const Feedbacks: React.FC = () => {
       setSortField(field);
     } else {
       setSortField("id");
+    }
+  };
+
+  const handleRowSelection = (event: any) => {
+    const selected = event.api.getSelectedRows();
+    setSelectedRows(selected);
+  };
+
+  const isRowSelectable = (node: IRowNode) => {
+    return node.data?.status !== "closed";
+  };
+
+  const handleClearSelection = () => {
+    gridRef.current?.api?.deselectAll();
+    setSelectedRows([]);
+  };
+
+  const handleBulkAction = async (data: {
+    status?: string;
+    reply?: string;
+  }) => {
+    if (!data.status && !data.reply) {
+      toast.error("Please select a status or enter a reply");
+      return;
+    }
+
+    try {
+      const promises: Promise<any>[] = [];
+
+      selectedRows.forEach((row) => {
+        if (data.status) {
+          promises.push(
+            apiCall(
+              `/admin-dashboard/feedback/${row.id}/update-status`,
+              "POST",
+              { status: data.status },
+            ),
+          );
+        }
+        if (data.reply) {
+          promises.push(
+            apiCall(`/admin-dashboard/feedback/${row.id}/respond`, "POST", {
+              admin_response: data.reply,
+            }),
+          );
+        }
+      });
+
+      await Promise.all(promises);
+      toast.success("Bulk action applied successfully");
+      setIsBulkModalOpen(false);
+      handleClearSelection();
+      getFeedbacks(selectedStatus, 1, sortField);
+      setCurrentPage(1);
+    } catch (error) {
+      toast.error("Error applying bulk action");
+      console.error("Bulk action error:", error);
     }
   };
 
@@ -290,6 +356,39 @@ const Feedbacks: React.FC = () => {
           ))}
         </Tabs>
 
+        {selectedRows.length > 0 && (
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "end",
+              gap: 1.25,
+              marginRight: "32px",
+            }}
+          >
+            <Typography
+              sx={{ fontSize: 13, color: "#475467", fontWeight: 600 }}
+            >
+              Selected: {selectedRows.length}
+            </Typography>
+            <CustomButton
+              variant="outlined"
+              background="none"
+              onClick={handleClearSelection}
+              sx={{ height: 36 }}
+            >
+              Clear
+            </CustomButton>
+            <CustomButton
+              variant="contained"
+              onClick={() => setIsBulkModalOpen(true)}
+              sx={{ height: 36 }}
+            >
+              Bulk update
+            </CustomButton>
+          </Box>
+        )}
+
         {!isInitialLoadDone && loading ? (
           <Box display="flex" justifyContent="center" mt={4}>
             <CircularProgress />
@@ -308,6 +407,7 @@ const Feedbacks: React.FC = () => {
             }}
           >
             <AgGridServerSideTable
+              ref={gridRef}
               rowData={feedbackData}
               columnDefs={feedbackCols}
               height={`calc(100vh - 400px)`}
@@ -320,6 +420,9 @@ const Feedbacks: React.FC = () => {
               loading={loading}
               className="feedback-grid-wrapper"
               onColumnHeaderClicked={onColumnHeaderClicked}
+              rowSelection={true}
+              handleRowSelection={handleRowSelection}
+              isRowSelectable={isRowSelectable}
             />
           </Box>
         )}
@@ -342,6 +445,14 @@ const Feedbacks: React.FC = () => {
             getFeedbacks(selectedStatus, 1, sortField);
             setCurrentPage(1);
           }}
+        />
+      )}
+      {isBulkModalOpen && (
+        <BulkFeedbackActionModal
+          open={isBulkModalOpen}
+          onClose={() => setIsBulkModalOpen(false)}
+          onSubmit={handleBulkAction}
+          selectedCount={selectedRows.length}
         />
       )}
     </>
