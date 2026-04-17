@@ -2,7 +2,21 @@ import { getSession } from '@auth0/nextjs-auth0';
 import { redirect } from 'next/navigation';
 
 export const maxDuration = 30;
+
+const hasAuth0Config = () =>
+  Boolean(
+    process.env.AUTH0_SECRET &&
+      process.env.AUTH0_BASE_URL &&
+      process.env.AUTH0_ISSUER_BASE_URL &&
+      process.env.AUTH0_CLIENT_ID &&
+      process.env.AUTH0_CLIENT_SECRET,
+  );
+
 const Callback = async () => {
+  if (!hasAuth0Config()) {
+    redirect('/signin');
+  }
+
   const session = await getSession();
 
   const getAuthToken = async () => {

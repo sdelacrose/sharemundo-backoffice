@@ -9,6 +9,7 @@ import logoMin from "../../../assets/images/logoMin.png";
 import { Dropdown, HambergerIcon } from "@/app/assets/icons";
 import LogoPic from "../../../assets/images/SharemundoLinks.png"
 import versionData from "../../../../version.json";
+import { useBackofficeTranslation } from "@/app/utils/useBackofficeTranslation";
 
 interface SideBarProps {
   isCollapsed: boolean;
@@ -16,6 +17,11 @@ interface SideBarProps {
 }
 const SideBar: React.FC<SideBarProps> = ({ isCollapsed, toggleSidebar }) => {
   const [expanded, setExpanded] = useState<Record<string, boolean>>({});
+  const { t } = useBackofficeTranslation();
+
+  const getLabel = (label: string, translationKey?: string) =>
+    translationKey ? t(translationKey) : label;
+
   const toggleAccordion = (label: string) => {
     setExpanded((prev) => ({
       ...prev,
@@ -65,7 +71,7 @@ const SideBar: React.FC<SideBarProps> = ({ isCollapsed, toggleSidebar }) => {
           <HambergerIcon />
         </Box>
         {sidebarItems.map((item) => (
-          <div key={item.label} className={!isCollapsed ? styles.wFull : ""}>
+          <div key={item.href || item.label} className={!isCollapsed ? styles.wFull : ""}>
             {item.href ? (
               <Link href={item.href} legacyBehavior>
                 <a className={styles.linkWrapper} onClick={handleExpand}>
@@ -77,7 +83,7 @@ const SideBar: React.FC<SideBarProps> = ({ isCollapsed, toggleSidebar }) => {
                     <item.icon />
                     {!isCollapsed && (
                       <span className={styles.sideBarItemName}>
-                        {item.label}
+                        {getLabel(item.label, item.translationKey)}
                       </span>
                     )}
                   </div>
@@ -100,7 +106,7 @@ const SideBar: React.FC<SideBarProps> = ({ isCollapsed, toggleSidebar }) => {
                   <div className={isCollapsed ? "" : styles.dropdown}>
                     {!isCollapsed && (
                       <span className={styles.sideBarItemName}>
-                        {item.label}
+                        {getLabel(item.label, item.translationKey)}
                       </span>
                     )}
                     {!isCollapsed && item.hasDropdown && <Dropdown />}
@@ -111,13 +117,13 @@ const SideBar: React.FC<SideBarProps> = ({ isCollapsed, toggleSidebar }) => {
             {item.hasDropdown && expanded[item.label] && (
               <div>
                 {item.dropdownItems?.map((dropdownItem: any) => (
-                  <div key={dropdownItem.label} className={styles.linkWrapper}>
+                  <div key={dropdownItem.href || dropdownItem.label} className={styles.linkWrapper}>
                     {dropdownItem.href ? (
                       <Link href={dropdownItem.href} legacyBehavior>
                         <a className={styles.linkWrapper}>
                           <div className={styles.dropDownItem}>
                             <span className={styles.sideBarItemNameDropdown}>
-                              {dropdownItem.label}
+                              {getLabel(dropdownItem.label, dropdownItem.translationKey)}
                             </span>
                           </div>
                         </a>
@@ -125,7 +131,7 @@ const SideBar: React.FC<SideBarProps> = ({ isCollapsed, toggleSidebar }) => {
                     ) : (
                       <div className={styles.dropDownItem}>
                         <span className={styles.sideBarItemNameDropdown}>
-                          {dropdownItem.label}
+                          {getLabel(dropdownItem.label, dropdownItem.translationKey)}
                         </span>
                       </div>
                     )}

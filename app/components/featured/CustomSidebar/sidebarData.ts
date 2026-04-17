@@ -11,11 +11,13 @@ import {
 
 export interface DropdownItem {
     label: string;
+    translationKey?: string;
     href?: string;
 }
 
 export interface SidebarItem {
     label: string;
+    translationKey?: string;
     icon: React.ElementType;
     hasDropdown?: boolean;
     dropdownItems?: DropdownItem[];
@@ -53,5 +55,11 @@ export const sidebarItems: SidebarItem[] = [
         label: "Feedbacks",
         icon: FeedbackWhite,
         href: "/feedbacks",
+    },
+    {
+        label: "MCP Servers",
+        translationKey: "sidebar.mcpServers",
+        icon: SolutionLicenses,
+        href: "/ai-chat/review",
     },
 ];
