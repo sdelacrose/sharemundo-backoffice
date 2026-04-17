@@ -9,6 +9,8 @@ import {
     SolutionLicenses,
 } from "@/app/assets/icons";
 
+const isProduction = process.env.NEXT_PUBLIC_IS_PRODUCTION === "true";
+
 export interface DropdownItem {
     label: string;
     translationKey?: string;
@@ -56,10 +58,12 @@ export const sidebarItems: SidebarItem[] = [
         icon: FeedbackWhite,
         href: "/feedbacks",
     },
-    {
-        label: "MCP Servers",
-        translationKey: "sidebar.mcpServers",
-        icon: SolutionLicenses,
-        href: "/ai-chat/review",
-    },
+    ...(!isProduction
+        ? [{
+            label: "MCP Servers",
+            translationKey: "sidebar.mcpServers",
+            icon: SolutionLicenses,
+            href: "/ai-chat/review",
+        } satisfies SidebarItem]
+        : []),
 ];
