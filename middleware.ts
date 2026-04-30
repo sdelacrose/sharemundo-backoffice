@@ -1,9 +1,18 @@
 import { getSession } from '@auth0/nextjs-auth0/edge';
 import { NextRequest, NextResponse } from 'next/server';
 
+const hasAuth0Config = () =>
+  Boolean(
+    process.env.AUTH0_SECRET &&
+      process.env.AUTH0_BASE_URL &&
+      process.env.AUTH0_ISSUER_BASE_URL &&
+      process.env.AUTH0_CLIENT_ID &&
+      process.env.AUTH0_CLIENT_SECRET,
+  );
+
 export const middleware = async (req: NextRequest) => {
   const res = NextResponse.next();
-  const user = await getSession(req, res);
+  const user = hasAuth0Config() ? await getSession(req, res) : null;
 
   const url = req.nextUrl.clone();
   const { searchParams } = url;
