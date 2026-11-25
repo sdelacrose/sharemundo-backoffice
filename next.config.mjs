@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  output: 'standalone',
   images: {
     domains: ['staging-sharemundo.s3.eu-west-3.amazonaws.com'],
   },
@@ -12,6 +13,7 @@ const nextConfig = {
     return config;
   },
   experimental: {
+    cpus: 2,
     turbo: {
       rules: {
         "*.svg": {

@@ -1,0 +1,6 @@
+{
+  "reference": "working recette backoffice 20261124",
+  "admin_api_commit": "e8cec9f05f61c21ab7242dfa11945d1edb6e346c",
+  "models_commit": "a168001dc9d10e577ddedd2e2a9eb305ba5659b0",
+  "deployment": "manual review only; preserve current Auth0 gate, users and business data"
+}
